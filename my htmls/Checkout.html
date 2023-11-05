@@ -86,14 +86,24 @@
           <form>
             <h2 id="recipt-title">Card Information</h2>
             <div class="form-group">
-              <label for="exampleInputEmail1">Card Number:</label>
-              <input type="text" class="form-control" id="card-num" placeholder="XXX XXXX XXXX XXXX">
-              <small id="emailHelp" class="form-text text-muted">on god all card information is secure</small>
+              <label for="card-num">Card Number:</label>
+              <input type="text" class="form-control" id="card-num" placeholder="XXXX XXXX XXXX XXXX">
+              <small id="card-num" class="form-text text-muted">on god all card information is secure</small>
             </div>
             <div class="form-group">
-              <label for="exampleInputPassword1">Cardholder Name:</label>
-              <input type="password" class="form-control" id="exampleInputPassword1" placeholder="John M. Smith">
+              <label for="card-name">Cardholder Name:</label>
+              <input type="card-name" class="form-control" id="card-name">
             </div>
+            <div class="form-group">
+                <label for="cvv-num">CVV:</label>
+                <input type="password" class="form-control" id="cvv-num" placeholder="***">
+                <label for="exp=date">Exp Date:</label>
+                <input type="password" class="form-control" id="exp-date" placeholder="MM/YY">
+            </div>
+            <div class="form-group">
+                <label for="zip-code">Zip Code:</label>
+                <input type="card-name" class="form-control" id="zip-code">
+              </div>
             <div>
                 <button type="submit" class="btn btn-success" style="width: 200px;" id="ch">Submit</button>
             </div>
