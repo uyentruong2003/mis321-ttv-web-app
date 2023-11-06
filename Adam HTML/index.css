@@ -65,7 +65,7 @@
     
 }
 #cart-table tr {
-    border-bottom: 2px solid #000; /* Add a thicker horizontal border between rows */
+    border-bottom: 2px solid #000;
 }
 .center-container {
     display: flex;
@@ -100,4 +100,7 @@
     margin-right: 50px;
     width: 40%;
     float: right;
+}
+.extra-info-box{
+    text-align: center;
 }
