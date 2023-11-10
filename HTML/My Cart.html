@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="./index.css" rel="stylesheet">
-    <title>Individual Machine Dashboard</title>
+    <link href="../client/styles/index.css" rel="stylesheet">
+    <title>My Cart</title>
 </head>
 <body onload="handleOnLoad()">
     <!-- Navbar -->
@@ -28,21 +28,14 @@
           </ul>
         </div>
         <div class="cart-container">
-            <a class="navbar-cart" href="./My Cart.html">Cart</a>
-            <a href="./My Cart.html">    
-                <img src="./images/cart.png" id="cart-img">
-            </a>
+            <a class="navbar-backtomachine" href="./Individual Machine.html">&lt Back To Vending Machine</a>
         </div>
       </nav>
 
-      <!-- Current Machine -->
-      <h4 class="display-machine">Southeast Region > Vending Machine A</h4>
-
-      <!-- Product List -->
-    <div id="app"></div>
-
-
-    <script src="../Adam JS/individual machine.js"></script>
+      <!-- Cart Container -->
+      <div id="app"></div>
+      
+    <script src="../JS/my cart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>
 </html>
