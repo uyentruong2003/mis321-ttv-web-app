@@ -104,3 +104,20 @@
 .extra-info-box{
     text-align: center;
 }
+
+.machines-choose{
+    padding-top: 50px;
+    float: left;
+    margin: auto; /* Center the table */
+    max-width: 800px;
+}
+.card {
+    margin-bottom: 15px; /* Add some space between cards */
+    height: 100px;
+    width:200px;
+}
+
+.banner-img{
+    height: 400px;
+    width: 100%;
+}
