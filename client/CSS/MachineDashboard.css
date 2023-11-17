@@ -1,0 +1,11 @@
+/* Target the button by its class and change its background color to red */
+.container #MachineChoices{
+    background-color: red;
+    /* You can add additional styling here */
+  }
+
+  .btn-secondary {
+    font-size: 1.25rem; /* Adjust the font size as needed */
+    padding: 0.5rem 1rem; /* Adjust padding to increase button size */
+    margin-right: 5px; /* Add margin between buttons */
+  }
