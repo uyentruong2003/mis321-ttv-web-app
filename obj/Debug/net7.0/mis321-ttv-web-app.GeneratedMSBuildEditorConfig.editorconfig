@@ -8,4 +8,6 @@ build_property.PlatformNeutralAssembly =
 build_property.EnforceExtendedAnalyzerRules = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = mis321_ttv_web_app
-build_property.ProjectDir = /Users/ryanlangston/Desktop/Current321Proj/mis321-ttv-web-app/
+build_property.ProjectDir = c:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
