@@ -40,9 +40,9 @@ namespace MyApp.Namespace
                             machines.Add(new Machines
                             {
                                 machineId = Convert.ToInt32(reader["machineId"]),
-                                MachineLocation = reader["machineLocation"].ToString(),
-                                MachineRegion = reader["machineRegion"].ToString(),
-                                MachineType = reader["machineType"].ToString()
+                                machineLocation = reader["machineLocation"].ToString(),
+                                machineRegion = reader["machineRegion"].ToString(),
+                                machineType = reader["machineType"].ToString()
                             });
                         }
                     }
@@ -71,9 +71,9 @@ namespace MyApp.Namespace
                             Machines machine = new Machines
                             {
                                 machineId = Convert.ToInt32(reader["machineId"]),
-                                MachineLocation = reader["machineLocation"].ToString(),
-                                MachineRegion = reader["machineRegion"].ToString(),
-                                MachineType = reader["machineType"].ToString()
+                                machineLocation = reader["machineLocation"].ToString(),
+                                machineRegion = reader["machineRegion"].ToString(),
+                                machineType = reader["machineType"].ToString()
                             };
 
                             return Ok(machine);
@@ -101,9 +101,9 @@ namespace MyApp.Namespace
                         "INSERT INTO machine (machineLocation, machineRegion, machineType) " +
                         "VALUES (@location, @region, @type)", connection))
                     {
-                        command.Parameters.AddWithValue("@location", machine.MachineLocation);
-                        command.Parameters.AddWithValue("@region", machine.MachineRegion);
-                        command.Parameters.AddWithValue("@type", machine.MachineType);
+                        command.Parameters.AddWithValue("@location", machine.machineLocation);
+                        command.Parameters.AddWithValue("@region", machine.machineRegion);
+                        command.Parameters.AddWithValue("@type", machine.machineType);
 
                         command.ExecuteNonQuery();
                     }
@@ -133,9 +133,9 @@ namespace MyApp.Namespace
                         "WHERE machineId = @id", connection))
                     {
                         command.Parameters.AddWithValue("@id", id);
-                        command.Parameters.AddWithValue("@location", machine.MachineLocation);
-                        command.Parameters.AddWithValue("@region", machine.MachineRegion);
-                        command.Parameters.AddWithValue("@type", machine.MachineType);
+                        command.Parameters.AddWithValue("@location", machine.machineLocation);
+                        command.Parameters.AddWithValue("@region", machine.machineRegion);
+                        command.Parameters.AddWithValue("@type", machine.machineType);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
