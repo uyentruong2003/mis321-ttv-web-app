@@ -13,7 +13,6 @@ namespace MyApp.Namespace
     [ApiController]
     public class vendingController : ControllerBase
     {
-
          private readonly string cs;
 
         public vendingController()
@@ -47,7 +46,6 @@ namespace MyApp.Namespace
                         }
                     }
                 }
-
                 return machines;
             }
         }
@@ -89,7 +87,7 @@ namespace MyApp.Namespace
 
         // POST api/<vending>
         [HttpPost]
-        public IActionResult Post([FromBody] Machines machine)
+        public IActionResult Post([FromBody] Machines machine) //we have no plans to add machines on the app
         {
             try
             {
@@ -120,7 +118,7 @@ namespace MyApp.Namespace
 
         // PUT api/<vending>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Machines machine)
+        public IActionResult Put(int id, [FromBody] Machines machine) //will it be possible to edit a machine?
         {
             try
             {
@@ -160,6 +158,7 @@ namespace MyApp.Namespace
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            
         }
     }
 }
