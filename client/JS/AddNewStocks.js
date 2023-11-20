@@ -28,7 +28,15 @@ document.getElementById("product-name").addEventListener("change",() => {
     returnProductInfo(productName, productList);
     // check if the product category matches the machine type
     validateVmType();
+    // display self-input if "Other" is chosen
+    takeSelfInput();
 })
+
+// Validate new input
+document.getElementById('product-name-self-input').addEventListener("change", () => {
+    validateSelfInput();
+})
+
 
 // Set VM List
 setVmList(vmList, "vending-machine-list");
@@ -40,6 +48,18 @@ document.getElementById('vending-machine').addEventListener("change",() => {
 
 //----------------------FUNCTION----------------------
 
+// function to validate self-input product:
+function validateSelfInput() {
+    let newProductName = document.getElementById('product-name-self-input');
+    // check if the name has already existed
+    let contains = false;
+    productList.forEach((item) => {
+        if (newProductName.value === item.productName) {
+            contains = true;
+        }
+    })
+    document.getElementById('error-message').hidden = !contains;
+}
 //function to validate vm:
 function validateVmType() {
     let vmChosen = document.getElementById('vending-machine');
@@ -68,6 +88,32 @@ function setProductList(productList, dataListId){
     let option = document.createElement('option');
     option.value = 'Other';
     dropdown.appendChild(option);
+}
+
+// function to set the datalist for the product name's searchable dropdowns:
+function setCategoryList(categoryList, dataListId){
+    const dropdown = document.querySelector(`#${dataListId}`);
+    categoryList.forEach((item) => {
+        let option = document.createElement('option');
+        option.value = item.categoryName;
+        dropdown.appendChild(option);
+    });
+}
+
+// function to hide/ unhide the self input section depending on if the Other option is selected
+function takeSelfInput() {
+    let dropdownInput = document.getElementById("product-name"); //the searchable dropdown input
+    let otherInputSection = document.getElementById(`other-product-name`); //the div for self input section
+        if (dropdownInput.value === "Other") {
+            otherInputSection.hidden = false; //unhide the section
+            document.getElementById("product-category").readOnly = false;
+            setCategoryList(categoryList,"product-category-list"); //create searchable dropdown
+            document.getElementById("unit-price").readOnly = false;
+            document.getElementById("description").readOnly = false;
+
+        } else {
+            otherInputSection.hidden = true; //hide the section
+        }
 }
 
 function setVmList (vmList, dataListId) {
