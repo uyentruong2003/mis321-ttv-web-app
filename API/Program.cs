@@ -12,6 +12,16 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API Title", Version = "v1" });
 });
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("OpenPolicy",
+    builder =>
+    {
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
+    });
+});
 
 var app = builder.Build();
 
@@ -24,6 +34,9 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseAuthorization();
+
+app.UseCors("OpenPolicy");
+
 
 app.MapControllers();
 

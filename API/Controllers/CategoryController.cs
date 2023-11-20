@@ -1,5 +1,11 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;  
+using System.Collections.Generic;  
+using System;  
+using Microsoft.AspNetCore.Http;
+using mis321_ttv_web_app;
+using mis321_ttv_web_app.API.Models;
 
 namespace MyApp.Namespace
 {
