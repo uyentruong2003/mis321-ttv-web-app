@@ -11,12 +11,11 @@ namespace MyApp.Namespace
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class vendingController : ControllerBase
+    public class VendingController : ControllerBase
     {
-
          private readonly string cs;
 
-        public vendingController()
+        public VendingController()
         {
             cs = new ConnectionString().cs;
         }
@@ -40,14 +39,13 @@ namespace MyApp.Namespace
                             machines.Add(new Machines
                             {
                                 machineId = Convert.ToInt32(reader["machineId"]),
-                                MachineLocation = reader["machineLocation"].ToString(),
-                                MachineRegion = reader["machineRegion"].ToString(),
-                                MachineType = reader["machineType"].ToString()
+                                machineLocation = reader["machineLocation"].ToString(),
+                                machineRegion = reader["machineRegion"].ToString(),
+                                machineType = reader["machineType"].ToString()
                             });
                         }
                     }
                 }
-
                 return machines;
             }
         }
@@ -71,9 +69,9 @@ namespace MyApp.Namespace
                             Machines machine = new Machines
                             {
                                 machineId = Convert.ToInt32(reader["machineId"]),
-                                MachineLocation = reader["machineLocation"].ToString(),
-                                MachineRegion = reader["machineRegion"].ToString(),
-                                MachineType = reader["machineType"].ToString()
+                                machineLocation = reader["machineLocation"].ToString(),
+                                machineRegion = reader["machineRegion"].ToString(),
+                                machineType = reader["machineType"].ToString()
                             };
 
                             return Ok(machine);
@@ -89,7 +87,7 @@ namespace MyApp.Namespace
 
         // POST api/<vending>
         [HttpPost]
-        public IActionResult Post([FromBody] Machines machine)
+        public IActionResult Post([FromBody] Machines machine) //we have no plans to add machines on the app
         {
             try
             {
@@ -101,9 +99,9 @@ namespace MyApp.Namespace
                         "INSERT INTO machine (machineLocation, machineRegion, machineType) " +
                         "VALUES (@location, @region, @type)", connection))
                     {
-                        command.Parameters.AddWithValue("@location", machine.MachineLocation);
-                        command.Parameters.AddWithValue("@region", machine.MachineRegion);
-                        command.Parameters.AddWithValue("@type", machine.MachineType);
+                        command.Parameters.AddWithValue("@location", machine.machineLocation);
+                        command.Parameters.AddWithValue("@region", machine.machineRegion);
+                        command.Parameters.AddWithValue("@type", machine.machineType);
 
                         command.ExecuteNonQuery();
                     }
@@ -120,7 +118,7 @@ namespace MyApp.Namespace
 
         // PUT api/<vending>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Machines machine)
+        public IActionResult Put(int id, [FromBody] Machines machine) //will it be possible to edit a machine?
         {
             try
             {
@@ -133,9 +131,9 @@ namespace MyApp.Namespace
                         "WHERE machineId = @id", connection))
                     {
                         command.Parameters.AddWithValue("@id", id);
-                        command.Parameters.AddWithValue("@location", machine.MachineLocation);
-                        command.Parameters.AddWithValue("@region", machine.MachineRegion);
-                        command.Parameters.AddWithValue("@type", machine.MachineType);
+                        command.Parameters.AddWithValue("@location", machine.machineLocation);
+                        command.Parameters.AddWithValue("@region", machine.machineRegion);
+                        command.Parameters.AddWithValue("@type", machine.machineType);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
@@ -160,6 +158,7 @@ namespace MyApp.Namespace
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+            
         }
     }
 }
