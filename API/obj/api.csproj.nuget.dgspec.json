@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\API\\api.csproj": {}
+    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\API\\api.csproj": {
+    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\API\\api.csproj",
+        "projectUniqueName": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\API\\api.csproj",
+        "projectPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
         "packagesPath": "C:\\Users\\epicn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\API\\obj\\",
+        "outputPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\epicn\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -49,6 +49,10 @@
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
+            },
+            "mysql.data": {
+              "target": "Package",
+              "version": "[8.2.0, )"
             }
           },
           "imports": [

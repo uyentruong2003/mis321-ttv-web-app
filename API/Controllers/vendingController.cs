@@ -11,11 +11,11 @@ namespace MyApp.Namespace
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class vendingController : ControllerBase
+    public class VendingController : ControllerBase
     {
          private readonly string cs;
 
-        public vendingController()
+        public VendingController()
         {
             cs = new ConnectionString().cs;
         }
