@@ -21,18 +21,20 @@ let vmList = [
 
 // Set Product List
 setProductList(productList,"product-name-list");
-// Return the product info based on the product name
+// Everytime new input is made:
 document.getElementById("product-name").addEventListener("change",() => {
     let productName = document.getElementById("product-name").value;
+    // return the product info based on the product name
     returnProductInfo(productName, productList);
-    // check if the product category matches the machine type everytime new input is made
+    // check if the product category matches the machine type
     validateVmType();
 })
 
 // Set VM List
 setVmList(vmList, "vending-machine-list");
+// Everytime new input is made:
 document.getElementById('vending-machine').addEventListener("change",() => {
-    // check if the product category matches the machine type everytime new input is made
+    // check if the product category matches the machine type
     validateVmType();
 })
 
