@@ -14,9 +14,9 @@ let categoryList = [
 ]
 
 let vmList = [
-    {vmID: '1001', vmLoc: '123 Dirt Rd, Tuscaloosa, AL 35487', vmRegion: 'Southeast', vmType: 'Beverage', vmCap: 10},
-    {vmID: '1002', vmLoc: '456 Smith Ave, Milpitas, CA 95035', vmRegion: 'West', vmType: 'Snack', vmCap: 15},
-    {vmID: '1003', vmLoc: '78 John St, Chicago, CA 60007', vmRegion: 'Midwest', vmType: 'Snack', vmCap: 12}
+    {vmID: '1001', vmLoc: '123 Dirt Rd, Tuscaloosa, AL 35487', vmRegion: 'Southeast', vmType: 'Beverage', vmCap: 12},
+    {vmID: '1002', vmLoc: '456 Smith Ave, Milpitas, CA 95035', vmRegion: 'West', vmType: 'Snack', vmCap: 10},
+    {vmID: '1003', vmLoc: '78 John St, Chicago, CA 60007', vmRegion: 'Midwest', vmType: 'Snack', vmCap: 15}
 ]
 
 // Set Product List
@@ -32,7 +32,7 @@ document.getElementById("product-name").addEventListener("change",() => {
     takeSelfInput();
 })
 
-// Validate new input
+// Validate new input in the other-product-name section
 document.getElementById('product-name-self-input').addEventListener("change", () => {
     validateSelfInput();
 })
@@ -42,11 +42,11 @@ document.getElementById('product-name-self-input').addEventListener("change", ()
 setVmList(vmList, "vending-machine-list");
 // Everytime new input is made:
 document.getElementById('vending-machine').addEventListener("change",() => {
-    // check if the product category matches the machine type
+    // check if the machine type matches the product category
     validateVmType();
 })
 
-//----------------------FUNCTION----------------------
+//----------------------FUNCTIONS----------------------
 
 // function to validate self-input product:
 function validateSelfInput() {
@@ -54,12 +54,34 @@ function validateSelfInput() {
     // check if the name has already existed
     let contains = false;
     productList.forEach((item) => {
-        if (newProductName.value === item.productName) {
+        if (newProductName.value.toLowerCase() === item.productName.toLowerCase()) {
             contains = true;
         }
     })
-    document.getElementById('error-message').hidden = !contains;
+    document.getElementById('product-existed-message').hidden = !contains;
 }
+
+// function to hide/ unhide the self input section depending on if the Other option is selected
+function takeSelfInput() {
+    let dropdownInput = document.getElementById("product-name"); //the searchable dropdown input
+    let otherInputSection = document.getElementById(`other-product-name`); //the div for self input section
+        if (dropdownInput.value === "Other") {
+            otherInputSection.hidden = false; //unhide the section
+            document.getElementById("product-category").readOnly = false; // allow input
+            setCategoryList(categoryList,"product-category-list"); //create searchable dropdown
+            document.getElementById("unit-price").readOnly = false; // allow input
+            document.getElementById("description").readOnly = false; // allow input
+
+            //REQUIRE INPUT
+
+        } else {
+            otherInputSection.hidden = true; //hide the section
+            document.getElementById("product-category").readOnly = true;
+            document.getElementById("unit-price").readOnly = true;
+            document.getElementById("description").readOnly = true;
+        }
+}
+
 //function to validate vm:
 function validateVmType() {
     let vmChosen = document.getElementById('vending-machine');
@@ -71,9 +93,9 @@ function validateVmType() {
     })
     let productCategory = document.getElementById('product-category');
     if (vmType !== productCategory.value && vmChosen.value !== "" && productCategory !== "") {
-        document.getElementById('warning-message').hidden = false; //unhide the message
+        document.getElementById('unmatching-type-message').hidden = false; //unhide the message
     } else {
-        document.getElementById('warning-message').hidden = true; //hide the message
+        document.getElementById('unmatching-type-message').hidden = true; //hide the message
     }
 }
 // function to set the datalist for the product name's searchable dropdowns:
@@ -90,40 +112,6 @@ function setProductList(productList, dataListId){
     dropdown.appendChild(option);
 }
 
-// function to set the datalist for the product name's searchable dropdowns:
-function setCategoryList(categoryList, dataListId){
-    const dropdown = document.querySelector(`#${dataListId}`);
-    categoryList.forEach((item) => {
-        let option = document.createElement('option');
-        option.value = item.categoryName;
-        dropdown.appendChild(option);
-    });
-}
-
-// function to hide/ unhide the self input section depending on if the Other option is selected
-function takeSelfInput() {
-    let dropdownInput = document.getElementById("product-name"); //the searchable dropdown input
-    let otherInputSection = document.getElementById(`other-product-name`); //the div for self input section
-        if (dropdownInput.value === "Other") {
-            otherInputSection.hidden = false; //unhide the section
-            document.getElementById("product-category").readOnly = false;
-            setCategoryList(categoryList,"product-category-list"); //create searchable dropdown
-            document.getElementById("unit-price").readOnly = false;
-            document.getElementById("description").readOnly = false;
-
-        } else {
-            otherInputSection.hidden = true; //hide the section
-        }
-}
-
-function setVmList (vmList, dataListId) {
-    const dropdown = document.querySelector(`#${dataListId}`);
-    vmList.forEach((item) => {
-        let option = document.createElement('option');
-        option.value = item.vmType + "VM #" + item.vmID + " - "+item.vmLoc
-        dropdown.appendChild(option);
-    });
-}
 // function to return the product info based on the product name:
 function returnProductInfo(productName, productList) {
     productList.forEach((p) => {
@@ -133,4 +121,24 @@ function returnProductInfo(productName, productList) {
             document.getElementById("description").value = p.description;
         }
     })
+}
+
+// function to set the datalist for the product category's searchable dropdowns (in case input for new product):
+function setCategoryList(categoryList, dataListId){
+    const dropdown = document.querySelector(`#${dataListId}`);
+    categoryList.forEach((item) => {
+        let option = document.createElement('option');
+        option.value = item.categoryName;
+        dropdown.appendChild(option);
+    });
+}
+
+// function to set the datalist for the vending machine's searchable dropdowns:
+function setVmList (vmList, dataListId) {
+    const dropdown = document.querySelector(`#${dataListId}`);
+    vmList.forEach((item) => {
+        let option = document.createElement('option');
+        option.value = item.vmType + "VM #" + item.vmID + " - "+item.vmLoc
+        dropdown.appendChild(option);
+    });
 }

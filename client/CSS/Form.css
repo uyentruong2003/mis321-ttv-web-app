@@ -1,9 +1,13 @@
 .center-container {
   display:flex;
   justify-content: center;
-  padding:20px;
 }
 
 .no-bullet-point {
   list-style: none;
+}
+
+.message-display {
+  color: red;
+  font-style: italic;
 }
