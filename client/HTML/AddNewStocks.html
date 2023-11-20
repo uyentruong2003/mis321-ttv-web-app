@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <link href="../styles/Form.css" rel="stylesheet">
+    <link href="../CSS/Form.css" rel="stylesheet">
     <title>Add New Stocks</title>
 </head>
 <body>
@@ -44,10 +44,11 @@
                 </div>
                 <!-- handle other product-name input -->
                 <div id="other-product-name" hidden>
-                  <label for="product-name-self-input" class="col-form-label">*Specify Other*</label>
+                  <label for="product-name-self-input" class="col-form-label">***If chose "Other", please specify:</label>
                   <div class="col-sm-10">
                     <input type="text" class="form-control" id="product-name-self-input" />
                   </div>
+                  <p id="product-existed-message" class="message-display" hidden>This product already exists</p>  
                 </div>
               </div>
               <!-- PRODUCT CATEGORY -->
@@ -58,13 +59,6 @@
                 <div class="col-sm-10">
                   <input class="form-control" list="product-category-list" id="product-category" placeholder="Choose category..." readonly/>
                   <datalist id="product-category-list"></datalist>
-                </div>
-                <!-- handle other product-category input -->
-                <div id="other-product-category" hidden>
-                  <label for="product-category-self-input" class="col-form-label">*Specify Other*</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="product-category-self-input" />
-                  </div>
                 </div>
               </div>
               <!-- UNIT PRICE -->
@@ -87,20 +81,14 @@
             <!-- *********SECOND COLUMN************ -->
             <div class="col-4">
               <!-- VENDING MACHINE ID -->
-              <div id= 'vm-id-div'>
-                <label for="vm-id" class="col-form-label">Vending Machine ID</label>
+              <div id= 'vending-machine-div'>
+                <label for="vending-machine" class="col-form-label">Vending Machine ID</label>
                 <!-- dropdown for VM id -->
                 <div class="col-sm-10">
-                  <input class="form-control" list="vm-id-list" id="vm-id" placeholder="Look up vending machine..." />
-                  <datalist id="vm-id-list"></datalist>
+                  <input class="form-control" list="vending-machine-list" id="vending-machine" placeholder="Look up vending machine..." />
+                  <datalist id="vending-machine-list"></datalist>
                 </div>
-                <!-- handle other vm-id input -->
-                <div id="other-vm-id" hidden>
-                  <label for="vm-id-self-input" class="col-form-label">*Specify Other*</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="vm-id-self-input" />
-                  </div>
-                </div>
+                <p id="unmatching-type-message" class="message-display" hidden>This machine is not for this product type</p>  
               </div>
               <!-- QUANTITY -->
               <div>

@@ -1,0 +1,5 @@
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\obj\Debug\net7.0\mis321-ttv-web-app.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\obj\Debug\net7.0\mis321-ttv-web-app.AssemblyInfoInputs.cache
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\obj\Debug\net7.0\mis321-ttv-web-app.AssemblyInfo.cs
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\obj\Debug\net7.0\mis321-ttv-web-app.csproj.CoreCompileInputs.cache
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\obj\Debug\net7.0\mis321-ttv-web-app.sourcelink.json
