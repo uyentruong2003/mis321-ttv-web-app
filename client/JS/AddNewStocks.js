@@ -38,6 +38,8 @@ function setProductList(productList, dataListId){
 // function to find:
 function returnProductInfo(productName, productList) {
     productList.forEach((product) => {
-        if (productName)
+        if (productName){
+            
+        }
     })
 }
