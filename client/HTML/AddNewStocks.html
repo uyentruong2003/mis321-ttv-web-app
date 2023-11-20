@@ -87,18 +87,23 @@
             <!-- *********SECOND COLUMN************ -->
             <div class="col-4">
               <!-- VENDING MACHINE ID -->
-              <div id= 'vm-id-div'>
-                <label for="vm-id" class="col-form-label">Vending Machine ID</label>
+              <div id= 'vending-machine-div'>
+                <label for="vending-machine" class="col-form-label">Vending Machine ID</label>
                 <!-- dropdown for VM id -->
                 <div class="col-sm-10">
-                  <input class="form-control" list="vm-id-list" id="vm-id" placeholder="Look up vending machine..." />
-                  <datalist id="vm-id-list"></datalist>
+                  <input class="form-control" list="vending-machine-list" id="vending-machine" placeholder="Look up vending machine..." />
+                  <datalist id="vending-machine-list"></datalist>
+                  <p id="error-message-vm-input" hidden>This vending machine is not for this type of product</p>
                 </div>
-                <!-- handle other vm-id input -->
-                <div id="other-vm-id" hidden>
-                  <label for="vm-id-self-input" class="col-form-label">*Specify Other*</label>
+                <!-- handle other vending-machine input -->
+                <div id="other-vending-machine" hidden>
+                  <label for="vending-machine-self-input" class="col-form-label">*If chose "Other", enter the new vending machine's name*</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="vm-id-self-input" />
+                    <input type="text" class="form-control" id="vending-machine-self-input" />
+                  </div>
+                  <label for="vm-type-self-input" class="col-form-label">*Enter the vending machine's type*</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="vm-type-self-input" list="product-category-list" />
                   </div>
                 </div>
               </div>
