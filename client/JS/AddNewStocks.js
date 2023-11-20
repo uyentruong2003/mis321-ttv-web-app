@@ -1,8 +1,8 @@
 let productList = [
-    {productName: 'Coca-Cola', productCategory: 'Beverages', unitPrice: 2.50},
-    {productName: 'Sprite', productCategory: 'Beverages', unitPrice: 2.50},
-    {productName: "Lay's Potato Chips", productCategory: 'Snacks', unitPrice: 1.75},
-    {productName: 'KitKat', productCategory: 'Snacks', unitPrice: 1.75}
+    {productName: 'Coca-Cola', productCategory: 'Beverages', unitPrice: 2.50, description:'Calories 100 kcal'},
+    {productName: 'Sprite', productCategory: 'Beverages', unitPrice: 2.50, description:'Calories 102 kcal'},
+    {productName: "Lay's Potato Chips", productCategory: 'Snacks', unitPrice: 1.75, description:'Calories 75 kcal'},
+    {productName: 'KitKat', productCategory: 'Snacks', unitPrice: 1.75, description:'Calories 80 kcal'}
 ]
 
 let categoryList = [
@@ -19,9 +19,15 @@ let vendingMachineList = [
     {vmName: 'Vending Machine #3', vmLoc: '78 John St, Chicago, CA 60007', vmRegion: 'Midwest'}
 ]
 
+// Set Product List
 setProductList(productList,"product-name-list");
+// Return the product info based on the product name
+document.getElementById("product-name").addEventListener("change",() => {
+    let productName = document.getElementById("product-name").value;
+    returnProductInfo(productName, productList);
+})
 
-// function to set the datalist for the searchable dropdowns:
+// function to set the datalist for the product name's searchable dropdowns:
 function setProductList(productList, dataListId){
     const dropdown = document.querySelector(`#${dataListId}`);
     productList.forEach((item) => {
@@ -35,11 +41,13 @@ function setProductList(productList, dataListId){
     dropdown.appendChild(option);
 }
 
-// function to find:
+// function to return the product info based on the product name:
 function returnProductInfo(productName, productList) {
-    productList.forEach((product) => {
-        if (productName){
-            
+    productList.forEach((p) => {
+        if (productName === p.productName){
+            document.getElementById("product-category").value = p.productCategory;
+            document.getElementById("unit-price").value = p.unitPrice;
+            document.getElementById("description").value = p.description;
         }
     })
 }
