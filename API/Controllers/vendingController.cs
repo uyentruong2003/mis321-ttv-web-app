@@ -22,7 +22,7 @@ namespace MyApp.Namespace
 
         // GET: api/<vending>
         [HttpGet]
-        public IEnumerable<Machines> Get()
+        public List<Machines> Get()
         {
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
