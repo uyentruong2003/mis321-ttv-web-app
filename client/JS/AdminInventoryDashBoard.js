@@ -3,7 +3,7 @@ const inventoryData = [
     {
       productId: 1,
       name: 'Doritos',
-      category: 'Snack',
+      category: 'Drink',
       machineId: 'SE12',
       quantity: 10,
       unitPrice: 2.99,
@@ -49,6 +49,16 @@ const inventoryData = [
       tableBody.appendChild(row);
     });
   }
+
+  function filterData(category) {
+    tableBody.innerHTML = '';
+    const filteredData = inventoryData.filter(item => item.category === category);
+    populateTable(filteredData);
+}
+
+function UpdateSalesDataBanner(){
+  
+}
   
   // Call the function to populate the table with the inventory data
   populateTable(inventoryData);
