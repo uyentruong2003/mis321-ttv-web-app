@@ -48,6 +48,11 @@ document.getElementById('vending-machine').addEventListener("change",() => {
 
 //----------------------FUNCTIONS----------------------
 
+// function to add the "Other" product into the list & update the database
+// function to add the stock into the stock database (consider the Other case)
+// function to validate the quantity of stocks added
+
+
 // function to validate self-input product:
 function validateSelfInput() {
     let newProductName = document.getElementById('product-name-self-input');
@@ -76,9 +81,9 @@ function takeSelfInput() {
 
         } else {
             otherInputSection.hidden = true; //hide the section
-            document.getElementById("product-category").readOnly = true;
-            document.getElementById("unit-price").readOnly = true;
-            document.getElementById("description").readOnly = true;
+            document.getElementById("product-category").readOnly = true; //read-only on
+            document.getElementById("unit-price").readOnly = true; //read-only on
+            document.getElementById("description").readOnly = true; //read-only on
         }
 }
 
