@@ -97,5 +97,5 @@ function handleSubmitButton(){
 
 
 // need a fetch api to get the list of the productNameList and the Vending Machine List and the product category list
-// product name determine the price and description
-// vending machine determines the product category
+// product name determine the category, price and description
+// vending machine determines
