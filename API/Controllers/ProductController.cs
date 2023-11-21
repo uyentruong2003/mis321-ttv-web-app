@@ -53,15 +53,17 @@ namespace MyApp.Namespace
                                 categoryid = Convert.ToInt32(reader["categoryId"]),
                                 imgURL = reader["imgURL"].ToString(),
                             };
-
+                            connection.Close();
                             return Ok(product);
                         }
                         else
                         {
+                            connection.Close();
                             return NotFound();
                         }
                     }
                 }
+                
             }
         }
 
