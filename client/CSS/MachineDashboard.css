@@ -9,3 +9,17 @@
     padding: 0.5rem 1rem; /* Adjust padding to increase button size */
     margin-right: 5px; /* Add margin between buttons */
   }
+
+  .region-table{
+    padding-left: 500px;
+    padding-right: 500px;
+    padding-top: 50px;
+  }
+
+  .dont-know{
+    text-decoration: underline;
+    color: crimson;
+    font-style: italic;
+    font-size: small;
+    padding-top: 10px;
+  }
