@@ -1,16 +1,22 @@
 let productList = [
-    {productName: 'Coca-Cola', productCategory: 'Beverage', unitPrice: 2.50, description:'Calories 100 kcal'},
-    {productName: 'Sprite', productCategory: 'Beverage', unitPrice: 2.50, description:'Calories 102 kcal'},
-    {productName: "Lay's Potato Chips", productCategory: 'Snack', unitPrice: 1.75, description:'Calories 75 kcal'},
-    {productName: 'KitKat', productCategory: 'Snack', unitPrice: 1.75, description:'Calories 80 kcal'}
+    {productId: 1, productName: 'Coca-Cola', categoryId: 1, productPrice: 2.50, productDescription:'Calories 100 kcal'},
+    {productId: 2, productName: 'Sprite', categoryId: 1, productPrice: 2.50, productDescription:'Calories 102 kcal'},
+    {productId: 3, productName: "Lay's Potato Chips", categoryId: 2, productPrice: 1.75, productDescription:'Calories 75 kcal'},
+    {productId: 4, productName: 'KitKat', categoryId: 2, productPrice: 1.75, productDescription:'Calories 80 kcal'}
 ]
 
+// dashboard table: 
+// stockdetails table: stockId, productId, machineId, stockQty, addDate
+// product table: productId, productName, productPrice, categoryId, productDescription
+// category table: categoryId, categoryName
+// machine table: machineId, machineLocation, machineRegion, machineQty, machineType
+
 let categoryList = [
-    {categoryName: 'Beverage'},
-    {categoryName: 'Snack'},
-    {categoryName: 'Electronics'},
-    {categoryName: 'Movie'},
-    {categoryName: 'Video Game'}
+    {categoryId: 1, categoryName: 'Beverage'},
+    {categoryId: 2, categoryName: 'Snack'},
+    {categoryId: 3, categoryName: 'Electronics'},
+    {categoryId: 4, categoryName: 'Movie'},
+    {categoryId: 5, categoryName: 'Video Game'}
 ]
 
 let vmList = [
@@ -19,13 +25,13 @@ let vmList = [
     {vmID: '1003', vmLoc: '78 John St, Chicago, CA 60007', vmRegion: 'Midwest', vmType: 'Snack', vmCap: 15}
 ]
 
-// Set Product List
+// Set Stock List
 setProductList(productList,"product-name-list");
 // Everytime new input is made:
 document.getElementById("product-name").addEventListener("change",() => {
     let productName = document.getElementById("product-name").value;
     // return the product info based on the product name
-    returnProductInfo(productName, productList);
+    returnProductInfo(productName);
     // check if the product category matches the machine type
     validateVmType();
     // display self-input if "Other" is chosen
@@ -52,6 +58,12 @@ document.getElementById('vending-machine').addEventListener("change",() => {
 // function to add the stock into the stock database (consider the Other case)
 // function to validate the quantity of stocks added
 
+function handleSubmission() {
+    
+    // submit the obj to the stock database
+    console.log(newStock);
+    // addNewStock(newStock, "#"); --> THEN, re-render in admin dashboard
+}
 
 // function to validate self-input product:
 function validateSelfInput() {
@@ -75,15 +87,17 @@ function takeSelfInput() {
             document.getElementById("product-category").readOnly = false; // allow input
             setCategoryList(categoryList,"product-category-list"); //create searchable dropdown
             document.getElementById("unit-price").readOnly = false; // allow input
-            document.getElementById("description").readOnly = false; // allow input
+            document.getElementById("productDescription").readOnly = false; // allow input
 
-            //REQUIRE INPUT
-
+            // required input for other specification
+            document.getElementById('product-name-self-input').required = true;
+            
         } else {
             otherInputSection.hidden = true; //hide the section
             document.getElementById("product-category").readOnly = true; //read-only on
             document.getElementById("unit-price").readOnly = true; //read-only on
-            document.getElementById("description").readOnly = true; //read-only on
+            document.getElementById("productDescription").readOnly = true; //read-only on
+            document.getElementById('product-name-self-input').required = false;
         }
 }
 
@@ -117,13 +131,24 @@ function setProductList(productList, dataListId){
     dropdown.appendChild(option);
 }
 
+// function to return the product category based on the category Id:
+function returnProductCategory(categoryId) {
+    let productCategory = '';
+    categoryList.forEach((c) => {
+        if (categoryId === c.categoryId){
+            productCategory =  c.categoryName;
+        }
+    })
+    return productCategory;
+}
+
 // function to return the product info based on the product name:
-function returnProductInfo(productName, productList) {
+function returnProductInfo(productName) {
     productList.forEach((p) => {
         if (productName === p.productName){
-            document.getElementById("product-category").value = p.productCategory;
-            document.getElementById("unit-price").value = p.unitPrice;
-            document.getElementById("description").value = p.description;
+            document.getElementById("product-category").value = returnProductCategory(p.categoryId);
+            document.getElementById("unit-price").value = p.productPrice;
+            document.getElementById("productDescription").value = p.productDescription;
         }
     })
 }
