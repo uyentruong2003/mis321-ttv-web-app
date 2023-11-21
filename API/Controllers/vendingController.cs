@@ -46,6 +46,7 @@ namespace MyApp.Namespace
                         }
                     }
                 }
+                connection.Close();
                 return machines;
             }
         }
@@ -73,11 +74,12 @@ namespace MyApp.Namespace
                                 machineRegion = reader["machineRegion"].ToString(),
                                 machineType = reader["machineType"].ToString()
                             };
-
+                            connection.Close();
                             return Ok(machine);
                         }
                         else
                         {
+                            connection.Close();
                             return NotFound();
                         }
                     }
@@ -105,8 +107,9 @@ namespace MyApp.Namespace
 
                         command.ExecuteNonQuery();
                     }
+                    connection.Close();
                 }
-
+                
                 return Ok("Machine added successfully");
             }
             catch (Exception ex)
@@ -139,13 +142,16 @@ namespace MyApp.Namespace
 
                         if (rowsAffected > 0)
                         {
+                            connection.Close();
                             return Ok("Machine updated successfully");
                         }
                         else
                         {
+                            connection.Close();
                             return NotFound("Machine not found");
                         }
                     }
+                    
                 }
             }
             catch (Exception ex)
