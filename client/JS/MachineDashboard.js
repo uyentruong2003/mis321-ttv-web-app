@@ -71,7 +71,7 @@ function createRedDropdown(array, containerId, region) {
     array.forEach(item => {
         const dropdownItem = document.createElement('a');
         dropdownItem.classList.add('dropdown-item');
-        dropdownItem.href = './Individual Machine.html';
+        dropdownItem.href = './IndividualMachine.html';
         dropdownItem.textContent = item.machineLocation;
 
         // Add a click event listener to each dropdown item

@@ -47,15 +47,20 @@ setMachineList();
 productName.addEventListener('change', () => {
     displaySelectedProductInfo();
     takeSelfInput();
+    if(checkInputInDataList('product-name','product-name-list')) {
+        
+    };
 })
 
 productCategory.addEventListener('change', () => {
     checkMatchingType();
+    checkInputInDataList('product-category','product-category-list');
 })
 
 vendingMachine.addEventListener('change', () => {
     checkMatchingType();
     checkQtyLimit();
+    checkInputInDataList('vending-machine','vending-machine-list');
     
 })
 
@@ -151,7 +156,7 @@ function takeSelfInput () {
 
 // validate that self-input product hasn't appear in the dropdown list
 function checkProductDup () {
-    let existed = productList.find((p) => p.productName === selfInputProduct.value);
+    let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProduct.value.toLowerCase());
     if (existed) {
         document.getElementById('product-existed-message').hidden = false;
     } else {
@@ -194,12 +199,41 @@ function checkQtyLimit () {
         document.getElementById('overcap-message').hidden = true;
     }
 }
-
         // function to return the machineId given the machine name
         function returnMachineId(machineName) {
             let machine = machineList.find ((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
             return machine ? machine.machineId : '';  
         }
+
+// validate that user input belongs to the predefined list
+function checkInputInDataList(inputId, datalistId) {
+    let input = document.getElementById(inputId).value;
+    let optionList = document.getElementById(datalistId).options;
+    for (i=0; i<optionList.length; i++) {
+        if(optionList[i] === input) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
 // STEP 4: HANDLE SUBMISSION
 
 // add the new product (if there's any) into the product table
+function addNewToProductTable() {
+    if (productName.value === "Other") {
+        let newProduct = {
+            productName: selfInputProduct.value, 
+            categoryId: returnCategoryId(productCategory.value), 
+            productPrice: productPrice.value, 
+            productDescription:productDescription.value
+        }
+        // POST the object to the table
+    }
+}
+        // function to return categoryId given the categoryName:
+        function returnCategoryId(categoryName) {
+            let category = categoryList.find((c) => c.categoryName === categoryName);
+            return category ? category.categoryId : -1;
+        }
+
