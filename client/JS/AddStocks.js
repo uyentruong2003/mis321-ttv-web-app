@@ -102,7 +102,6 @@ function displaySelectedProductInfo() {
             return category ? category.categoryName : '';
         }
 
-
 // function to take self input when "Other" is selected:
 function takeSelfInput () {
     let selfInputSection = document.getElementById(`other-product-name`); //the div for self input section
@@ -130,3 +129,14 @@ function takeSelfInput () {
     }
 }
 
+// STEP 3: INPUT VALIDATION
+
+// validate that self-input product hasn't appear in the dropdown list
+
+// validate that product category and machine type is a match
+
+// validate that the qty added doesn't make the machine qty exceed its capacity of 75
+
+// STEP 4: HANDLE SUBMISSION
+
+// add the new product (if there's any) into the product
