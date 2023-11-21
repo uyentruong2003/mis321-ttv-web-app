@@ -7289,8 +7289,8 @@
     "net8.0": [
       "Microsoft.AspNetCore.OpenApi >= 8.0.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 8.0.0",
-      "MySql.Data >= 8.2.0",
-      "Swashbuckle.AspNetCore >= 6.4.0"
+      "Swashbuckle.AspNetCore >= 6.4.0",
+      "mysql.data >= 8.2.0"
     ]
   },
   "packageFolders": {
@@ -7338,13 +7338,13 @@
             "target": "Package",
             "version": "[8.0.0, )"
           },
-          "MySql.Data": {
-            "target": "Package",
-            "version": "[8.2.0, )"
-          },
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.4.0, )"
+          },
+          "mysql.data": {
+            "target": "Package",
+            "version": "[8.2.0, )"
           }
         },
         "imports": [

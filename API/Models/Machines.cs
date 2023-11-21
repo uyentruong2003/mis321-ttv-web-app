@@ -10,7 +10,8 @@ namespace mis321_ttv_web_app.API.Models
         public int machineId{get; set;}
         public string machineLocation{get; set;}
         public string machineRegion{get; set;}
-        public string machineType{get; set;
-        }
+        public string machineType{get; set;}
+        public int machineStock{get; set;}
+        
     }
 }

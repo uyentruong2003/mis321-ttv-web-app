@@ -33,12 +33,15 @@
           <div class="row">
             <div class="col">
               <p>Inventory Available</p>
+              <span id="inventoryAvailableNumber">100</span>
             </div>
             <div class="col">
               <p>Sold Inventory</p>
+              <span id="soldInventoryNumber">50</span>
             </div>
             <div class="col">
               <p>Sales Revenue</p>
+              <span id="salesRevenueNumber">$500</span>
             </div>
           </div>
         </div>
@@ -46,7 +49,7 @@
       
       
 
-      <div class="form-outline mb-4" style="width: 500px; margin: auto; outline: black; outline-width: thick;">
+      <!-- <div class="form-outline mb-4" style="width: 500px; margin: auto; outline: black; outline-width: thick;">
         <input type="text" id="form2Example1" class="form-control" placeholder="Search for a product" />
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,6 +61,19 @@
               <button class="dropdown-item" type="button">Something else here</button>
             </div>
           </div>
+      </div> -->
+
+      <div class="container mt-4" id="MachineChoices">
+        <div class="dropdown">
+          <button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: blue" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter By Category
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="#" onclick="filterData('Snack')">Snack</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData('Drink')">Drink</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData('Electronic')">Electronic</a></li>
+          </ul>
+        </div>
       </div>
       
 
