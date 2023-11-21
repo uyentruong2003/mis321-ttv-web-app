@@ -45,23 +45,26 @@ setCategoryList();
 setMachineList();
 
 productName.addEventListener('change', () => {
+    checkInputInDataList('product-name')
     displaySelectedProductInfo();
-    takeSelfInput();
-    if(checkInputInDataList('product-name','product-name-list')) {
-        
-    };
+    checkMatchingType();
+    takeSelfInput();  
+})
+
+selfInputProduct.addEventListener('change', () => {
+    checkProductDup();
 })
 
 productCategory.addEventListener('change', () => {
+    checkInputInDataList('product-category')
     checkMatchingType();
-    checkInputInDataList('product-category','product-category-list');
 })
 
 vendingMachine.addEventListener('change', () => {
-    checkMatchingType();
-    checkQtyLimit();
-    checkInputInDataList('vending-machine','vending-machine-list');
-    
+    if(checkInputInDataList('vending-machine')){
+        checkMatchingType();
+        checkQtyLimit();
+    }    
 })
 
 quantity.addEventListener('change',() => {
@@ -178,7 +181,6 @@ function checkMatchingType () {
         let machine = machineList.find((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
         return machine ? machine.machineType : '';
     }
-
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
 function checkQtyLimit () {
     let stockQtyInput = parseInt(quantity.value);
@@ -206,16 +208,18 @@ function checkQtyLimit () {
         }
 
 // validate that user input belongs to the predefined list
-function checkInputInDataList(inputId, datalistId) {
+function checkInputInDataList(inputId) {
     let input = document.getElementById(inputId).value;
-    let optionList = document.getElementById(datalistId).options;
+    let optionList = document.getElementById(`${inputId}-list`).options;
+    let inList = false;
     for (i=0; i<optionList.length; i++) {
-        if(optionList[i] === input) {
-            return true;
-        } else {
-            return false;
+        if(input === optionList[i].value) {
+            inList = true;
+            i = optionList.length; // stop loop once input is found in list
         }
     }
+    document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
+    return inList;
 }
 // STEP 4: HANDLE SUBMISSION
 
