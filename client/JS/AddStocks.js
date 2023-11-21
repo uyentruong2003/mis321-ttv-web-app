@@ -36,14 +36,26 @@ let productName = document.getElementById('product-name');
 let productCategory = document.getElementById('product-category');
 let productPrice= document.getElementById('unit-price');
 let productDescription = document.getElementById('description');
+let selfInputProduct = document.getElementById('product-name-self-input');
+let vendingMachine = document.getElementById('vending-machine')
 
 setProductList();
 setCategoryList();
+setMachineList();
 
-document.querySelector('#product-name').addEventListener('change', () => {
+productName.addEventListener('change', () => {
     displaySelectedProductInfo();
     takeSelfInput();
 })
+
+productCategory.addEventListener('change', () => {
+    checkMatchingType();
+})
+
+vendingMachine.addEventListener('change', () => {
+    checkMatchingType();
+})
+
 
 //--------------------------------------------------------------------------------------------------
 
@@ -116,7 +128,7 @@ function takeSelfInput () {
         productDescription.value = '';
         productDescription.readOnly = false;
         // required input for the new product name
-        document.getElementById('product-name-self-input').required = true;
+        selfInputProduct.required = true;
     } else {
         // hide the self input section
         selfInputSection.hidden = true;
@@ -125,15 +137,36 @@ function takeSelfInput () {
         productPrice.readOnly = true;
         productDescription.readOnly = true;
         // unrequire self-input product name
-        document.getElementById('product-name-self-input').required = false;
+        selfInputProduct.required = false;
     }
 }
 
 // STEP 3: INPUT VALIDATION
 
 // validate that self-input product hasn't appear in the dropdown list
+function checkProductDup () {
+    let existed = productList.find((p) => p.productName === selfInputProduct.value);
+    if (existed) {
+        document.getElementById('product-existed-message').hidden = false;
+    } else {
+        document.getElementById('product-existed-message').hidden = true;
+    }
+}
 
 // validate that product category and machine type is a match
+function checkMatchingType () {
+    let machineType = returnMachineType(vendingMachine.value);
+    if (machineType !== productCategory.value) {
+        document.getElementById('unmatching-type-message').hidden = false;
+    } else {
+        document.getElementById('unmatching-type-message').hidden = true;
+    }
+}
+    // function to return the machine type given the machine name
+    function returnMachineType (machineName) {
+        let machine = machineList.find((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
+        return machine ? machine.machineType : '';
+    }
 
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
 
