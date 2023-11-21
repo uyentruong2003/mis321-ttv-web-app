@@ -81,6 +81,13 @@ const inventoryData = [
     });
 }
 
+
+function filterData(category) {
+  tableBody.innerHTML = '';
+  const filteredData = inventoryData.filter(item => item.category === category);
+  populateTable(filteredData);
+}
+
 fetchData(apiUrl)
 .then(apiResponse => {
     // Call the function to populate the table with the fetched data
