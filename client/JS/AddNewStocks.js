@@ -5,7 +5,12 @@ let productList = [
     {productId: 4, productName: 'KitKat', categoryId: 2, productPrice: 1.75, productDescription:'Calories 80 kcal'}
 ]
 
-// dashboard table: 
+let stockdetailsList = [
+    {stockId: 1, productId: 2, machineId: 1003, stockQty: 5},
+    {stockId: 2, productId: 2, machineId: 1003, stockQty: 10},
+    {stockId: 3, productId: 1, machineId: 1001, stockQty: 12}
+]
+// dashboard table: stockId, productName, productPrice, categoryName, machineId, machineLocation, machineRegion, stockQty
 // stockdetails table: stockId, productId, machineId, stockQty, addDate
 // product table: productId, productName, productPrice, categoryId, productDescription
 // category table: categoryId, categoryName
@@ -19,10 +24,10 @@ let categoryList = [
     {categoryId: 5, categoryName: 'Video Game'}
 ]
 
-let vmList = [
-    {vmID: '1001', vmLoc: '123 Dirt Rd, Tuscaloosa, AL 35487', vmRegion: 'Southeast', vmType: 'Beverage', vmCap: 12},
-    {vmID: '1002', vmLoc: '456 Smith Ave, Milpitas, CA 95035', vmRegion: 'West', vmType: 'Snack', vmCap: 10},
-    {vmID: '1003', vmLoc: '78 John St, Chicago, CA 60007', vmRegion: 'Midwest', vmType: 'Snack', vmCap: 15}
+let machineList = [
+    {machineId: 1001, machineLocation: '123 Dirt Rd, Tuscaloosa, AL 35487', machineRegion: 'Southeast', machineType: 'Beverage', machineQty: 12},
+    {machineId: 1002, machineLocation: '456 Smith Ave, Milpitas, CA 95035', machineRegion: 'West', machineType: 'Snack', machineQty: 10},
+    {machineId: 1003, machineLocation: '78 John St, Chicago, CA 60007', machineRegion: 'Midwest', machineType: 'Snack', machineQty: 15}
 ]
 
 // Set Stock List
@@ -45,12 +50,16 @@ document.getElementById('product-name-self-input').addEventListener("change", ()
 
 
 // Set VM List
-setVmList(vmList, "vending-machine-list");
+setVmList(machineList, "vending-machine-list");
 // Everytime new input is made:
 document.getElementById('vending-machine').addEventListener("change",() => {
     // check if the machine type matches the product category
     validateVmType();
+    // check if adding the qty exceeds the cap of each machine
+    validateStockQty();
 })
+
+console.log(returnMachineType('BeverageVM #1001 - 123 Dirt Rd, Tuscaloosa, AL 35487'));
 
 //----------------------FUNCTIONS----------------------
 
@@ -58,11 +67,33 @@ document.getElementById('vending-machine').addEventListener("change",() => {
 // function to add the stock into the stock database (consider the Other case)
 // function to validate the quantity of stocks added
 
-function handleSubmission() {
-    
-    // submit the obj to the stock database
-    console.log(newStock);
-    // addNewStock(newStock, "#"); --> THEN, re-render in admin dashboard
+function addNewProductFromOtherInput() {
+    // add the Other product
+    let newProduct = {
+        productName:"",
+        categoryId: 1,
+        productPrice: 1,
+        productDescription:""
+    }
+    // add this to the product table
+}
+
+function validateStockQty() {
+    let stockQtyInput = parseInt(document.getElementById('quantity').value);
+    let machineName = document.getElementById('vending-machine').value;
+    let machineId = returnMachineId(machineName);
+    let currentmachineQty = 0;
+    //loop thru stockdetailsList to calc the current qty in the specified machine
+    stockdetailsList.forEach((s) => {
+        if(s.machineId === machineId) {
+            currentmachineQty += s.machineQty;
+        }
+    })
+    // assume each machine holds 75 items, check if adding this quantity will exceeds the limit:
+    if (currentmachineQty + stockQtyInput > 75) {
+        document.getElementById('overcap-message').hidden = false;
+        document.getElementById('overcap-message').textContent = `You can only add ${75 - currentmachineQty} more items to this machine`;
+    }
 }
 
 // function to validate self-input product:
@@ -103,20 +134,38 @@ function takeSelfInput() {
 
 //function to validate vm:
 function validateVmType() {
-    let vmChosen = document.getElementById('vending-machine');
-    let vmType = "";
-    vmList.forEach((item) => {
-        if (vmChosen.value === item.vmType + "VM #" + item.vmID + " - "+item.vmLoc) {
-            vmType = item.vmType; 
-        }
-    })
+    let machineName = document.getElementById('vending-machine');
+    let machineType = returnMachineType(machineName.value);
     let productCategory = document.getElementById('product-category');
-    if (vmType !== productCategory.value && vmChosen.value !== "" && productCategory !== "") {
+    if (machineType !== productCategory.value && machineName.value !== "" && productCategory !== "") {
         document.getElementById('unmatching-type-message').hidden = false; //unhide the message
     } else {
         document.getElementById('unmatching-type-message').hidden = true; //hide the message
     }
 }
+
+//retrieve machine type from machine name chosen
+function returnMachineType(machineName) {
+    let machineType = "";
+    machineList.forEach((item) => {
+        if (machineName.value === item.machineType + "VM #" + item.machineId + " - "+item.machineLocation) {
+            machineType = item.machineType; 
+        }
+    })
+    return machineType;
+}
+
+//retrieve machine Id from machine name chosen
+function returnMachineId(machineName) {
+    let machineId = 0;
+    machineList.forEach((item) => {
+        if (machineName.value === item.machineType + "VM #" + item.machineId + " - "+item.machineLocation) {
+            machineId = item.machineId; 
+        }
+    })
+    return machineId;
+}
+
 // function to set the datalist for the product name's searchable dropdowns:
 function setProductList(productList, dataListId){
     const dropdown = document.querySelector(`#${dataListId}`);
@@ -146,9 +195,9 @@ function returnProductCategory(categoryId) {
 function returnProductInfo(productName) {
     productList.forEach((p) => {
         if (productName === p.productName){
-            document.getElementById("product-category").value = returnProductCategory(p.categoryId);
-            document.getElementById("unit-price").value = p.productPrice;
-            document.getElementById("productDescription").value = p.productDescription;
+            document.querySelector("#product-category").value = returnProductCategory(p.categoryId);
+            document.querySelector("#unit-price").value = p.productPrice;
+            document.querySelector("#description").value = p.productDescription;
         }
     })
 }
@@ -164,11 +213,11 @@ function setCategoryList(categoryList, dataListId){
 }
 
 // function to set the datalist for the vending machine's searchable dropdowns:
-function setVmList (vmList, dataListId) {
+function setVmList (machineList, dataListId) {
     const dropdown = document.querySelector(`#${dataListId}`);
-    vmList.forEach((item) => {
+    machineList.forEach((item) => {
         let option = document.createElement('option');
-        option.value = item.vmType + "VM #" + item.vmID + " - "+item.vmLoc
+        option.value = item.machineType + "VM #" + item.machineId + " - "+item.machineLocation
         dropdown.appendChild(option);
     });
 }
