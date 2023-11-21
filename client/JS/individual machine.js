@@ -1,27 +1,23 @@
 let products = []
 
-// let product1 = {ID: 1, Name: "Diet Coke", Price: 2, Quantity: 18, IMGURL: "./images/Diet Coke.png"}
-// let product2 = {ID: 2, Name: "Cherry Coke", Price: 2.5, Quantity: 22, IMGURL: "./images/Cherry Coke.png"}
-// let product3 = {ID: 3, Name: "Fanta", Price: 1.95, Quantity: 19, IMGURL: "./images/Fanta.png"}
-// let product4 = {ID: 4, Name: "Sprite", Price: 2.75, Quantity: 15, IMGURL: "./images/Sprite.png"}
-// let product5 = {ID: 5, Name: "Pepsi", Price: 1.75, Quantity: 25, IMGURL: "./images/Pepsi.png"}
-// let product6 = {ID: 6, Name: "Diet Vanilla Coke", Price: 2.25, Quantity: 12, IMGURL: "./images/Diet Vanilla Coke.png"}
-
-// products.push(product1)
-// products.push(product2)
-// products.push(product3)
-// products.push(product4)
-// products.push(product5)
-// products.push(product6)
 
 //Onload
-async function handleOnLoad(){
-    populateProductTable()
-    populateArray().then(console.log(products))
+async function handleOnLoad() {
+    try {
+        let data = await populateArray();
+        console.log('Products:', data);
+        populateProductTable(); // Move this line inside the try block
+    } catch (error) {
+        console.error('Error during onload:', error);
+        // Handle the error appropriately in your application
+    }
 }
+
+
 
 //DOM Manipulation
 function populateProductTable(){
+    console.log("populating table")
     let html=`
     <table class="product-table">
             <thead>
@@ -41,11 +37,11 @@ function populateProductTable(){
                 <td>
                     <div class="card" style="width: 18rem;">
                         <div class="card-body">
-                            <h5 class="card-title">${item.Name}</h5>
-                            <img src="${item.IMGURL}">
-                            <p class="card-text">${item.Price}</p>
-                            <p class="card-text">${item.Quantity}</p>
-                            <button class="add-to-cart" onclick="handleAddItem(${item.ID})">Add to Cart</button>
+                            <h5 class="card-title">${item.name}</h5>
+                            <img src="${item.imgURL}" class="card-img">
+                            <p class="card-text">${item.price}</p>
+                            <p class="card-text">${item.qtyInMachine}</p>
+                            <button class="add-to-cart" onclick="handleAddItem(${item.id})" referrerpolicy="no-referrer">Add to Cart</button>
                         </div>
                     </div>
                 </td>
@@ -53,6 +49,7 @@ function populateProductTable(){
         }
         html += '</tr>';
     }
+    
                 
     html+=`
             </tbody>
@@ -70,8 +67,19 @@ function handleAddItem(id){
     })
 }
 
-//Data Manipulation
-async function populateArray(){
-    let response = await fetch('http://localhost:5141/api/product')
-    returnArray = await response.json()
+async function populateArray() {
+    try {
+        let response = await fetch('http://localhost:5141/api/product');
+        let data = await response.json();
+        console.log('Data fetched:', data);
+
+        // Assuming that the fetched data is an array of products
+        products = data;
+
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // You might want to handle the error appropriately in your application
+    }
 }
+
