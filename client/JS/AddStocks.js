@@ -6,9 +6,9 @@ let productList = [
 ]
 
 let stockdetailsList = [
-    {stockId: 1, productId: 2, machineId: 1003, stockQty: 5},
-    {stockId: 2, productId: 2, machineId: 1003, stockQty: 10},
-    {stockId: 3, productId: 1, machineId: 1001, stockQty: 12}
+    {stockId: 1, productId: 2, machineId: 1003, stockQty: 5, addDate: '2023-11-20'},
+    {stockId: 2, productId: 2, machineId: 1003, stockQty: 10, addDate: '2023-11-21'},
+    {stockId: 3, productId: 1, machineId: 1001, stockQty: 12, addDate: '2023-11-30'}
 ]
 
 let categoryList = [
@@ -37,7 +37,8 @@ let productCategory = document.getElementById('product-category');
 let productPrice= document.getElementById('unit-price');
 let productDescription = document.getElementById('description');
 let selfInputProduct = document.getElementById('product-name-self-input');
-let vendingMachine = document.getElementById('vending-machine')
+let vendingMachine = document.getElementById('vending-machine');
+let quantity = document.getElementById('quantity');
 
 setProductList();
 setCategoryList();
@@ -54,8 +55,13 @@ productCategory.addEventListener('change', () => {
 
 vendingMachine.addEventListener('change', () => {
     checkMatchingType();
+    checkQtyLimit();
+    
 })
 
+quantity.addEventListener('change',() => {
+    checkQtyLimit();
+})
 
 //--------------------------------------------------------------------------------------------------
 
@@ -156,7 +162,7 @@ function checkProductDup () {
 // validate that product category and machine type is a match
 function checkMatchingType () {
     let machineType = returnMachineType(vendingMachine.value);
-    if (machineType !== productCategory.value) {
+    if (machineType !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
         document.getElementById('unmatching-type-message').hidden = false;
     } else {
         document.getElementById('unmatching-type-message').hidden = true;
@@ -169,7 +175,31 @@ function checkMatchingType () {
     }
 
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
+function checkQtyLimit () {
+    let stockQtyInput = parseInt(quantity.value);
+    let machineId = returnMachineId(vendingMachine.value);
+    let currentMachineQty = 0;
+    //loop thru stockdetailsList to calc the current qty in the specified machine
+    stockdetailsList.forEach((s) => {
+        if(s.machineId === machineId) {
+            currentMachineQty += s.stockQty;
+        }
+    })
+    // assume each machine holds 75 items, check if adding this quantity will exceeds the limit:
+    if (currentMachineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== 0) {
+        document.getElementById('overcap-message').textContent = `You can only add ${75 - currentMachineQty} more items to this machine`;
+        document.getElementById('overcap-message').hidden = false;
+    }
+    else {
+        document.getElementById('overcap-message').hidden = true;
+    }
+}
 
+        // function to return the machineId given the machine name
+        function returnMachineId(machineName) {
+            let machine = machineList.find ((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
+            return machine ? machine.machineId : '';  
+        }
 // STEP 4: HANDLE SUBMISSION
 
-// add the new product (if there's any) into the product
+// add the new product (if there's any) into the product table
