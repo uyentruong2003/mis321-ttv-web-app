@@ -30,41 +30,12 @@ namespace MyApp.Namespace
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public Product Get(int id)
         {
-            using (MySqlConnection connection = new MySqlConnection(cs))
-            {
-                connection.Open();
-
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM product WHERE productId = @id", connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Product product = new Product
-                            {
-                                id = Convert.ToInt32(reader["productId"]),
-                                name = reader["productName"].ToString(),
-                                price = Convert.ToDouble(reader["productPrice"]),
-                                desciption = reader["productDescription"].ToString(),
-                                categoryid = Convert.ToInt32(reader["categoryId"]),
-                                imgURL = reader["imgURL"].ToString(),
-                            };
-                            connection.Close();
-                            return Ok(product);
-                        }
-                        else
-                        {
-                            connection.Close();
-                            return NotFound();
-                        }
-                    }
-                }
-                
-            }
+            ProductUtility produtil = new ProductUtility();
+            Product myProduct = produtil.GetProductByID(id);
+            return myProduct;
+            
         }
 
         // POST api/<ProductController>
