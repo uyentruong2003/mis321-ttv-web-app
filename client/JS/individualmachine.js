@@ -5,9 +5,7 @@ let currentCart = []
 //Onload
 async function handleOnLoad() {
     machineId = parseInt(localStorage.getItem("selectedMachineId"))
-    console.log("machine id is ", machineId)
-    localStorage.clear()
-    localStorage.setItem("selectedMachineId", machineId)
+    console.log("machine id is ", machineId)    
     try {
         let data = await populateArray();
         console.log('Products:', data);
@@ -68,17 +66,25 @@ function populateProductTable(){
 }
 
 //Handling
-function handleAddItem(id){
-    //add item code
+function handleAddItem(id) {
+    // Retrieve existing items from localStorage
+    var existingCartString = localStorage.getItem("currentCartArray");
+    var existingCart = JSON.parse(existingCartString) || []; // If no items, initialize as an empty array
+
+    // Fetch the selected product based on the given id
     const filteredProducts = products.filter(item => item.machineId === machineId);
-    const addProduct = filteredProducts.filter(item => item.id == id)
-    console.log("final product: ", addProduct)
-    console.log(currentCart, addProduct[0].id)
-    currentCart.push(addProduct[0])
-    // localStorage.setItem("currentCartArray", currentCart)
-    var currentCartString = JSON.stringify(currentCart);
-    localStorage.setItem("currentCartArray", currentCartString);
-    
+    const addProduct = filteredProducts.find(item => item.id == id);
+
+    // Add the selected product to the existing array
+    existingCart.push(addProduct);
+
+    // Convert the array to a JSON string
+    var updatedCartString = JSON.stringify(existingCart);
+
+    // Update the currentCartArray in localStorage
+    localStorage.setItem("currentCartArray", updatedCartString);
+
+    console.log("Updated Cart:", existingCart);
 }
 
 async function populateArray() {

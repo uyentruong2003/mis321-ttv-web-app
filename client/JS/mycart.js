@@ -23,6 +23,9 @@ function populateCart(){
             <th>
                 Price
             </th>
+            <th>
+              Remove
+            </th>
           </thead>
           <tbody>
             <div id="cart-rows">
@@ -38,6 +41,9 @@ function populateCart(){
                     </td>
                     <td>
                         <h3 id="cart-rows">${item.price}</h3>
+                    </td>
+                    <td>
+                      <button onclick="handleRemove(${item.id})" type="button" class="btn btn-danger">Remove</button>
                     </td>
                 </tr>
         `
@@ -63,6 +69,11 @@ function populateContinue(){
 }
 
 //Handling
+function handleRemove(id) {
+  itemsInCart = itemsInCart.filter(item => item.id != id);
+  localStorage.setItem("currentCartArray", JSON.stringify(itemsInCart));
+  handleOnLoad();
+}
 
 //Data Manipulation
 function populateArray(){
@@ -88,6 +99,3 @@ async function setCurrentMachineInfo(){
     throw error; // You might want to handle the error appropriately in your application
 }
 }
-
-
-

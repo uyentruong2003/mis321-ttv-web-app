@@ -67,6 +67,9 @@
     margin: 0 auto !important;
     max-width: 600px !important;
     margin-top: 50px !important;
+    position: relative; /* Set position to relative */
+    z-index: 1; /* Set a higher z-index to make it appear over other elements */
+
     
 }
 #cart-table tr {
@@ -139,4 +142,22 @@
     color: white;
     font-weight: bold;
     height: 350px;
+}
+
+.cart-img{
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;  /* Center the image horizontally */
+    max-width: 100%; /* Make sure the image doesn't exceed the container width */
+    display: block;
+    height: 150px; /* Set a fixed height for all images (adjust as needed) */
+    object-fit: cover;
+}
+.table-container {
+    max-height: 300px; /* Set the desired height */
+    overflow-y: auto;
+}
+#display-info-cart,
+.btn-checkout {
+    margin-top: 20px; /* Adjust the margin as needed */
 }
