@@ -9,28 +9,22 @@
 </head>
 <body onload="handleOnLoad()">
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+      <div class="container-fluid">
         <a class="navbar-brand" href="#">TTV</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-          <ul class="navbar-nav">
-            <li class="nav-item active">
-              <a class="nav-link" href="#">Home <span class="sr-only">*</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Contact</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">About Us</a>
-            </li>
-          </ul>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div class="navbar-nav">
+            <a class="nav-link active" aria-current="page" href="./LandingPage.html">Home</a>
+            <a class="nav-link" href="./AboutUs.html">About Us</a>
+            <a class="nav-link" href="./ContactUs.html">Contact</a>
+          </div>
         </div>
-        <div class="cart-container">
-            <a class="navbar-backtomachine" href="./Individual Machine.html">&lt Back To Vending Machine</a>
-        </div>
-      </nav>
+      </div>
+    </nav>
+     <!-- Navbar -->
 
       <!-- Cart Container -->
       <div id="app"></div>
