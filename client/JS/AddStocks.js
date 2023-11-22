@@ -71,7 +71,8 @@ quantity.addEventListener('change',() => {
     checkQtyLimit();
 })
 
-//--------------------------------------------------------------------------------------------------
+
+//-=================================================================================================
 
 // STEP 1: SET DATALIST FOR SEARCHABLE DROPDOWNS:
 
@@ -109,6 +110,7 @@ function setMachineList() {
     });
 }
 
+//--------------------------------------------------------------------------------------------
 // STEP 2: REGULATE PRODUCT NAME INPUT
 
 // function to populate product info when a product is selected
@@ -155,6 +157,7 @@ function takeSelfInput () {
     }
 }
 
+//-----------------------------------------------------------------------------------------------------------
 // STEP 3: INPUT VALIDATION
 
 // validate that self-input product hasn't appear in the dropdown list
@@ -172,8 +175,10 @@ function checkMatchingType () {
     let machineType = returnMachineType(vendingMachine.value);
     if (machineType !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
         document.getElementById('unmatching-type-message').hidden = false;
+        
     } else {
         document.getElementById('unmatching-type-message').hidden = true;
+        
     }
 }
     // function to return the machine type given the machine name
@@ -221,7 +226,10 @@ function checkInputInDataList(inputId) {
     document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
     return inList;
 }
+
+//---------------------------------------------------------------------------------------
 // STEP 4: HANDLE SUBMISSION
+
 
 // add the new product (if there's any) into the product table
 function addNewToProductTable() {
@@ -230,14 +238,50 @@ function addNewToProductTable() {
             productName: selfInputProduct.value, 
             categoryId: returnCategoryId(productCategory.value), 
             productPrice: productPrice.value, 
-            productDescription:productDescription.value
+            productDescription:productDescription.value,
+            imgUrl: '#'
         }
-        // POST the object to the table
+        // POST the object to the product table
+        // Re-call the GET API for all product
+        // productList = ASYNC AWAIT ... ;
+        productList.push(newProduct);
     }
 }
-        // function to return categoryId given the categoryName:
+        // function to return categoryId given the categoryName
         function returnCategoryId(categoryName) {
             let category = categoryList.find((c) => c.categoryName === categoryName);
             return category ? category.categoryId : -1;
         }
 
+
+// add the stock into the stockdetails table
+function addNewToStockTable() {
+    let newStock = {
+        productId: returnProductId(productName.value),
+        machineId: returnMachineId(vendingMachine.value),
+        stockQty: parseInt(quantity.value),
+        lastUpdate: getCurrentDateTime(),
+    }
+    // POST it to the stockdetails table
+    stockdetailsList.push(newStock);
+}
+    // function to return productId given the productName
+    function returnProductId(productName) {
+        let product = productList.find((p) => p.productName === productName);
+        return product ? product.productId : -1;
+    }
+
+    // function to get current date and time
+    function getCurrentDateTime () {
+        let date = Date(Date.now());
+        return date.toString();
+    }
+
+function handleSubmission() {
+        // When submit button is clicked...
+        document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
+            e.preventDefault();
+            addNewToProductTable(); // in case "Other" is chosen, add the new product to the product table
+            addNewToStockTable(); // THEN, add to stock table
+        })
+}

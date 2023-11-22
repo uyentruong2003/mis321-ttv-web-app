@@ -29,7 +29,7 @@
         <div class="center-container" style="background-color: firebrick;">
           <h1 style="color:whitesmoke">Form: Add New Stocks</h1>
         </div>
-        <form id="add-new-product-form">
+        <form id="add-new-stock-form">
           <div class="row justify-content-center">
             <!-- ******FIRST COLUMN********* -->
             <div class="col-4">
@@ -39,7 +39,7 @@
                 <label for="product-name" class="col-form-label">Product Name</label>
                 <!-- dropdown for product name -->
                 <div class="col-sm-10">
-                  <input class="form-control" list="product-name-list" id="product-name" placeholder="Search product..." />
+                  <input class="form-control" list="product-name-list" id="product-name" placeholder="Search product..." required />
                   <datalist id="product-name-list"></datalist>
                 </div>
                 <p id="not-predefined-product-name-message" class="message-display" hidden>Please choose from list only</p>  
@@ -58,7 +58,7 @@
                 <label for="product-category" class="col-form-label">Product Category</label>
                 <!-- dropdown for product category -->
                 <div class="col-sm-10">
-                  <input class="form-control" list="product-category-list" id="product-category" placeholder="Choose category..." readonly/>
+                  <input class="form-control" list="product-category-list" id="product-category" placeholder="Choose category..." readonly required/>
                   <datalist id="product-category-list"></datalist>
                 </div>
                 <p id="not-predefined-product-category-message" class="message-display" hidden>Please choose from list only</p>
@@ -69,7 +69,7 @@
                 <label for="unit-price" class="col-form-label">Unit Price ($)</label>
                 <!-- number input for unit price -->
                 <div class="col-sm-10">
-                  <input type="number" step="0.01" class="form-control" min="0" id="unit-price" readonly>
+                  <input type="number" step="0.01" class="form-control" min="0" id="unit-price" readonly required>
                 </div>
               </div>
               <!-- DESCRIPTION -->
@@ -87,7 +87,7 @@
                 <label for="vending-machine" class="col-form-label">Vending Machine ID</label>
                 <!-- dropdown for VM -->
                 <div class="col-sm-10">
-                  <input class="form-control" list="vending-machine-list" id="vending-machine" placeholder="Look up vending machine..." />
+                  <input class="form-control" list="vending-machine-list" id="vending-machine" placeholder="Look up vending machine..." required/>
                   <datalist id="vending-machine-list"></datalist>
                 </div>
                 <p id="unmatching-type-message" class="message-display" hidden>Product category and vending machine type are incompatible</p>  
@@ -100,7 +100,7 @@
                 <label for="quantity" class="col-form-label">Quantity</label>
                 <!-- number input for quantity -->
                 <div class="col-sm-10">
-                  <input type="number" min=1 class="form-control" id="quantity">
+                  <input type="number" min=1 class="form-control" id="quantity" required>
                 </div>
                 <p id="overcap-message" class="message-display" hidden></p>
               </div>
