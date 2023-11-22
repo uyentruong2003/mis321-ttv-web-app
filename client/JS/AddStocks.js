@@ -39,6 +39,7 @@ let productDescription = document.getElementById('description');
 let selfInputProduct = document.getElementById('product-name-self-input');
 let vendingMachine = document.getElementById('vending-machine');
 let quantity = document.getElementById('quantity');
+let submitButton = document.getElementById('submit-button');
 
 setProductList();
 setCategoryList();
@@ -48,7 +49,7 @@ productName.addEventListener('change', () => {
     checkInputInDataList('product-name')
     displaySelectedProductInfo();
     checkMatchingType();
-    takeSelfInput();  
+    takeSelfInput(); 
 })
 
 selfInputProduct.addEventListener('change', () => {
@@ -278,6 +279,7 @@ function addNewToStockTable() {
     }
 
 function handleSubmission() {
+
         // When submit button is clicked...
         document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
             e.preventDefault();
