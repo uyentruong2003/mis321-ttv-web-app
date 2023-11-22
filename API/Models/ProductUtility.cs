@@ -1,6 +1,12 @@
-using mis321_ttv_web_app.API.Models;
-using MySql.Data.MySqlClient; 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;  
+using System.Collections.Generic;  
+using System;  
+using Microsoft.AspNetCore.Http;
 using mis321_ttv_web_app;
+using mis321_ttv_web_app.API.Models;
+using API;
 
 namespace API
 {
@@ -38,6 +44,42 @@ namespace API
                     }
                 }
                 return products;
+            }
+        }
+        public Product GetProductByID(int id)
+        {
+            using (MySqlConnection connection = new MySqlConnection(cs))
+            {
+                connection.Open();
+
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM product JOIN stockdetails WHERE productId = @id", connection))
+                {
+                    command.Parameters.AddWithValue("@id", id);
+
+                    using (MySqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            Product product = new Product
+                            {
+                                id = Convert.ToInt32(reader["productId"]),
+                                name = reader["productName"].ToString(),
+                                price = Convert.ToDouble(reader["productPrice"]),
+                                desciption = reader["productDescription"].ToString(),
+                                categoryid = Convert.ToInt32(reader["categoryId"]),
+                                imgURL = reader["imgURL"].ToString(),
+                            };
+
+                            connection.Close();
+                            return product;
+                        }
+                        else
+                        {
+                            connection.Close();
+                            return null; // Return null or throw an exception to indicate not found
+                        }
+                    }
+                }
             }
         }
     }

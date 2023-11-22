@@ -221,3 +221,61 @@ function setVmList (machineList, dataListId) {
         dropdown.appendChild(option);
     });
 }
+
+// STEP 4: HANDLE SUBMISSION
+
+
+// add the new product (if there's any) into the product table
+function addNewToProductTable() {
+    if (productName.value === "Other") {
+        let newProduct = {
+            productName: selfInputProduct.value, 
+            categoryId: returnCategoryId(productCategory.value), 
+            productPrice: productPrice.value, 
+            productDescription:productDescription.value,
+            imgUrl: '#'
+        }
+        // POST the object to the product table
+        // Re-call the GET API for all product
+        // productList = ASYNC AWAIT ... ;
+        productList.push(newProduct);
+    }
+}
+        // function to return categoryId given the categoryName
+        function returnCategoryId(categoryName) {
+            let category = categoryList.find((c) => c.categoryName === categoryName);
+            return category ? category.categoryId : -1;
+        }
+
+
+// add the stock into the stockdetails table
+function addNewToStockTable() {
+    let newStock = {
+        productId: returnProductId(productName.value),
+        machineId: returnMachineId(vendingMachine.value),
+        stockQty: parseInt(quantity.value),
+        lastUpdate: getCurrentDateTime(),
+    }
+    // POST it to the stockdetails table
+    stockdetailsList.push(newStock);
+}
+    // function to return productId given the productName
+    function returnProductId(productName) {
+        let product = productList.find((p) => p.productName === productName);
+        return product ? product.productId : -1;
+    }
+
+    // function to get current date and time
+    function getCurrentDateTime () {
+        let date = Date(Date.now());
+        return date.toString();
+    }
+
+function handleSubmission() {
+        // When submit button is clicked...
+        document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
+            e.preventDefault();
+            addNewToProductTable(); // in case "Other" is chosen, add the new product to the product table
+            addNewToStockTable(); // THEN, add to stock table
+        })
+}

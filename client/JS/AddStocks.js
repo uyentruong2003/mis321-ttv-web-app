@@ -6,9 +6,9 @@ let productList = [
 ]
 
 let stockdetailsList = [
-    {stockId: 1, productId: 2, machineId: 1003, stockQty: 5},
-    {stockId: 2, productId: 2, machineId: 1003, stockQty: 10},
-    {stockId: 3, productId: 1, machineId: 1001, stockQty: 12}
+    {productId: 2, machineId: 1003, stockQty: 5, lastUpdate: '2023-11-20'},
+    {productId: 2, machineId: 1003, stockQty: 10, lastUpdate: '2023-11-21'},
+    {productId: 1, machineId: 1001, stockQty: 12, lastUpdate: '2023-11-30'}
 ]
 
 let categoryList = [
@@ -37,27 +37,50 @@ let productCategory = document.getElementById('product-category');
 let productPrice= document.getElementById('unit-price');
 let productDescription = document.getElementById('description');
 let selfInputProduct = document.getElementById('product-name-self-input');
-let vendingMachine = document.getElementById('vending-machine')
+let vendingMachine = document.getElementById('vending-machine');
+let quantity = document.getElementById('quantity');
+let submitButton = document.getElementById('submit-button');
 
 setProductList();
 setCategoryList();
 setMachineList();
 
 productName.addEventListener('change', () => {
+    checkInputInDataList('product-name')
     displaySelectedProductInfo();
-    takeSelfInput();
+    checkMatchingType();
+    takeSelfInput(); 
+    manipulateSubmitButton();
+})
+
+selfInputProduct.addEventListener('change', () => {
+    checkProductDup();
+    manipulateSubmitButton();
 })
 
 productCategory.addEventListener('change', () => {
+    checkInputInDataList('product-category')
     checkMatchingType();
+    manipulateSubmitButton();
 })
 
 vendingMachine.addEventListener('change', () => {
-    checkMatchingType();
+    if(checkInputInDataList('vending-machine')){
+        checkMatchingType();
+        checkQtyLimit();
+    }
+    manipulateSubmitButton();    
 })
 
+quantity.addEventListener('change',() => {
+    checkQtyLimit();
+    manipulateSubmitButton();
+})
 
-//--------------------------------------------------------------------------------------------------
+handleSubmission();
+
+
+//-=================================================================================================
 
 // STEP 1: SET DATALIST FOR SEARCHABLE DROPDOWNS:
 
@@ -95,6 +118,7 @@ function setMachineList() {
     });
 }
 
+//--------------------------------------------------------------------------------------------
 // STEP 2: REGULATE PRODUCT NAME INPUT
 
 // function to populate product info when a product is selected
@@ -141,25 +165,30 @@ function takeSelfInput () {
     }
 }
 
+//-----------------------------------------------------------------------------------------------------------
 // STEP 3: INPUT VALIDATION
 
 // validate that self-input product hasn't appear in the dropdown list
 function checkProductDup () {
-    let existed = productList.find((p) => p.productName === selfInputProduct.value);
+    let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProduct.value.toLowerCase());
     if (existed) {
         document.getElementById('product-existed-message').hidden = false;
+        return false;
     } else {
         document.getElementById('product-existed-message').hidden = true;
+        return true;
     }
 }
 
 // validate that product category and machine type is a match
 function checkMatchingType () {
     let machineType = returnMachineType(vendingMachine.value);
-    if (machineType !== productCategory.value) {
+    if (machineType !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
         document.getElementById('unmatching-type-message').hidden = false;
+        return false;
     } else {
         document.getElementById('unmatching-type-message').hidden = true;
+        return true;
     }
 }
     // function to return the machine type given the machine name
@@ -167,9 +196,125 @@ function checkMatchingType () {
         let machine = machineList.find((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
         return machine ? machine.machineType : '';
     }
-
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
+function checkQtyLimit () {
+    let stockQtyInput = parseInt(quantity.value);
+    let machineId = returnMachineId(vendingMachine.value);
+    let currentMachineQty = 0;
+    //loop thru stockdetailsList to calc the current qty in the specified machine
+    stockdetailsList.forEach((s) => {
+        if(s.machineId === machineId) {
+            currentMachineQty += s.stockQty;
+        }
+    })
+    // assume each machine holds 75 items, check if adding this quantity will exceeds the limit:
+    if (currentMachineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== 0) {
+        document.getElementById('overcap-message').textContent = `You can only add ${75 - currentMachineQty} more items to this machine`;
+        document.getElementById('overcap-message').hidden = false;
+        return false;
+    }
+    else {
+        document.getElementById('overcap-message').hidden = true;
+        return true;
+    }
+}
+        // function to return the machineId given the machine name
+        function returnMachineId(machineName) {
+            let machine = machineList.find ((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
+            return machine ? machine.machineId : '';  
+        }
 
+// validate that user input belongs to the predefined list
+function checkInputInDataList(inputId) {
+    let input = document.getElementById(inputId).value;
+    let optionList = document.getElementById(`${inputId}-list`).options;
+    let inList = false;
+    for (i=0; i<optionList.length; i++) {
+        if(input === optionList[i].value) {
+            inList = true;
+            i = optionList.length; // stop loop once input is found in list
+        } else if (input === "") { // if there's no input yet, don't pop out the error
+            inList = true;
+        } else {
+            inList = false;
+        }
+    }
+    document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
+    return inList;
+}
+
+//---------------------------------------------------------------------------------------
 // STEP 4: HANDLE SUBMISSION
 
-// add the new product (if there's any) into the product
+
+// add the new product (if there's any) into the product table
+function addNewToProductTable() {
+    if (productName.value === "Other") {
+        let newProduct = {
+            productName: selfInputProduct.value, 
+            categoryId: returnCategoryId(productCategory.value), 
+            productPrice: productPrice.value, 
+            productDescription:productDescription.value,
+            imgUrl: '#'
+        }
+        // POST the object to the product table
+        // Re-call the GET API for all product
+        // productList = ASYNC AWAIT ... ;
+        productList.push(newProduct);
+    }
+}
+        // function to return categoryId given the categoryName
+        function returnCategoryId(categoryName) {
+            let category = categoryList.find((c) => c.categoryName === categoryName);
+            return category ? category.categoryId : -1;
+        }
+
+
+// add the stock into the stockdetails table
+function addNewToStockTable() {
+    let newStock = {
+        productId: returnProductId(productName.value),
+        machineId: returnMachineId(vendingMachine.value),
+        stockQty: parseInt(quantity.value),
+        lastUpdate: getCurrentDateTime(),
+    }
+    // POST it to the stockdetails table
+    stockdetailsList.push(newStock);
+
+    // UPDATE the vendingMachine table:
+    let machine = machineList.find((m) => m.machineId === newStock.machineId);
+    machine.machineQty += newStock.stockQty;
+}
+    // function to return productId given the productName
+    function returnProductId(productName) {
+        let product = productList.find((p) => p.productName === productName);
+        return product ? product.productId : -1;
+    }
+
+    // function to get current date and time
+    function getCurrentDateTime () {
+        let date = Date(Date.now());
+        return date.toString();
+    }
+
+function handleSubmission() {
+    // When submit button is clicked...
+    document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
+        e.preventDefault();
+        addNewToProductTable(); // in case "Other" is chosen, add the new product to the product table
+        addNewToStockTable(); // THEN, add to stock table
+        console.log(stockdetailsList);
+        console.log(productList);
+        console.log(machineList);
+    })
+}
+
+function manipulateSubmitButton() {
+    const isProductNameValid = checkInputInDataList('product-name') && checkProductDup();
+    const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingType();
+    const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingType() && checkQtyLimit();
+    const isQuantityValid = checkQtyLimit();
+
+    // Disable the submit button if any validation fails
+    submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
+}
