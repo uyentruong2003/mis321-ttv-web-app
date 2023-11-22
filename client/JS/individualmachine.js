@@ -1,11 +1,14 @@
 let products = []
 let machineId = 0
 let currentCart = []
+let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
 
 //Onload
 async function handleOnLoad() {
     machineId = parseInt(localStorage.getItem("selectedMachineId"))
-    console.log("machine id is ", machineId)    
+    console.log("machine id is ", machineId)
+    await setCurrentMachineInfo()    
+    populateMachineInfo()
     try {
         let data = await populateArray();
         console.log('Products:', data);
@@ -46,8 +49,8 @@ function populateProductTable(){
                 <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
                     <h5 class="card-title">${item.name}</h5>
                     <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
-                    <p class="card-text">${item.price}</p>
-                    <p class="card-text">${item.qtyInMachine}</p>
+                    <p class="card-text">$${(item.price).toFixed(2)}</p>
+                    <p class="card-text">Stock: ${item.qtyInMachine}</p>
                     <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
                 </div>
             </div>
@@ -62,6 +65,10 @@ function populateProductTable(){
             </tbody>
         </table>
     `
+    document.getElementById('app').innerHTML+=html
+}
+function populateMachineInfo(){
+    let html = `<h4 class="display-machine">${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} #${currentMachineInfo.machineId}</h4>`
     document.getElementById('app').innerHTML+=html
 }
 
@@ -102,4 +109,20 @@ async function populateArray() {
         throw error; // You might want to handle the error appropriately in your application
     }
 }
+async function setCurrentMachineInfo(){
+    let url = 'http://localhost:5141/api/vending/'
+    let targetURL = url.concat(localStorage.getItem("selectedMachineId"))
+    try {
+      let response = await fetch(targetURL);
+      let data = await response.json();
+      console.log('Data fetched:', data);
+  
+      currentMachineInfo = data
+      console.log('current machine: ', currentMachineInfo)
+      return data;
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error; // You might want to handle the error appropriately in your application
+  }
+  }
 

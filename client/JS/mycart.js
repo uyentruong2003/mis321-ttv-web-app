@@ -40,7 +40,7 @@ function populateCart(){
                         <h3 id="cart-rows">${item.name}</h3>
                     </td>
                     <td>
-                        <h3 id="cart-rows">${item.price}</h3>
+                        <h3 id="cart-rows">$${(item.price).toFixed(2)}</h3>
                     </td>
                     <td>
                       <button onclick="handleRemove(${item.id})" type="button" class="btn btn-danger">Remove</button>
@@ -70,7 +70,12 @@ function populateContinue(){
 
 //Handling
 function handleRemove(id) {
-  itemsInCart = itemsInCart.filter(item => item.id != id);
+  for (let i = 0; i < itemsInCart.length; i++) {
+    if (itemsInCart[i].id === id) {
+      itemsInCart.splice(i, 1);
+      break; // Stop the loop after deleting the first occurrence
+    }
+  }
   localStorage.setItem("currentCartArray", JSON.stringify(itemsInCart));
   handleOnLoad();
 }
