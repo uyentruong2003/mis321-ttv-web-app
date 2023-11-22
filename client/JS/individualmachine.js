@@ -52,6 +52,7 @@ function populateProductTable(){
                     <p class="card-text">$${(item.price).toFixed(2)}</p>
                     <p class="card-text">Stock: ${item.qtyInMachine}</p>
                     <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
+                    <span id="temporary-message-${item.id}" class="temporary-message"></span>
                 </div>
             </div>
         </td>
@@ -92,6 +93,14 @@ function handleAddItem(id) {
     localStorage.setItem("currentCartArray", updatedCartString);
 
     console.log("Updated Cart:", existingCart);
+
+    const temporaryMessage = document.getElementById(`temporary-message-${id}`);
+    if (temporaryMessage) {
+        temporaryMessage.textContent = "Added to Cart!";
+        setTimeout(() => {
+            temporaryMessage.textContent = ""; // Clear the message after a short duration
+        }, 2000); // Adjust the duration (in milliseconds) as needed
+    }
 }
 
 async function populateArray() {

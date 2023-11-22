@@ -29,7 +29,7 @@ function populateReciptTable(){
                     <h6>${item.name}</h6>
                 </td>
                 <td>
-                    <h6>${(item.price).toFixed(2)}</h6>
+                    <h6>$${(item.price).toFixed(2)}</h6>
                 </td>
             </tr>
         `
@@ -42,7 +42,7 @@ function populateReciptTable(){
                         <h5 class="total-row">Total:</h5>
                     </td>
                     <td>
-                        <h5 class="total-row">${total.toFixed(2)}</h5>
+                        <h5 class="total-row">$${total.toFixed(2)}</h5>
                     </td>
                 </tr>
                 </div>
