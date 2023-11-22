@@ -1,6 +1,6 @@
 // TODO FIGURE HOW DELETE IS BEING HANDELED
 
-const apiUrl = 'http://localhost:5141/api/Product';
+const apiUrl = 'http://localhost:5141/api/AdminDash';
 
 
 function fetchData(url) {
@@ -71,10 +71,11 @@ const inventoryData = [
         row.innerHTML = `
             <td>${item.id}</td>
             <td>${item.name}</td>
-            <td>${item.price}</td>
-            <td>${item.desciption}</td>
             <td>${item.categoryid}</td>
-            <td><img src="${item.imgURL}" alt="${item.name}" style="width: 50px; height: 50px;"></td>
+            <td>${item.machineId}</td>
+            <td>${item.qtyInMachine}</td>
+            <td>${item.price}</td>
+            <td>${item.region}</td>
         `;
 
         tableBody.appendChild(row);
