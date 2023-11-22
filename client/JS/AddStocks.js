@@ -6,9 +6,9 @@ let productList = [
 ]
 
 let stockdetailsList = [
-    {stockId: 1, productId: 2, machineId: 1003, stockQty: 5, addDate: '2023-11-20'},
-    {stockId: 2, productId: 2, machineId: 1003, stockQty: 10, addDate: '2023-11-21'},
-    {stockId: 3, productId: 1, machineId: 1001, stockQty: 12, addDate: '2023-11-30'}
+    {productId: 2, machineId: 1003, stockQty: 5, lastUpdate: '2023-11-20'},
+    {productId: 2, machineId: 1003, stockQty: 10, lastUpdate: '2023-11-21'},
+    {productId: 1, machineId: 1001, stockQty: 12, lastUpdate: '2023-11-30'}
 ]
 
 let categoryList = [
@@ -50,27 +50,34 @@ productName.addEventListener('change', () => {
     displaySelectedProductInfo();
     checkMatchingType();
     takeSelfInput(); 
+    manipulateSubmitButton();
 })
 
 selfInputProduct.addEventListener('change', () => {
     checkProductDup();
+    manipulateSubmitButton();
 })
 
 productCategory.addEventListener('change', () => {
     checkInputInDataList('product-category')
     checkMatchingType();
+    manipulateSubmitButton();
 })
 
 vendingMachine.addEventListener('change', () => {
     if(checkInputInDataList('vending-machine')){
         checkMatchingType();
         checkQtyLimit();
-    }    
+    }
+    manipulateSubmitButton();    
 })
 
 quantity.addEventListener('change',() => {
     checkQtyLimit();
+    manipulateSubmitButton();
 })
+
+handleSubmission();
 
 
 //-=================================================================================================
@@ -166,8 +173,10 @@ function checkProductDup () {
     let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProduct.value.toLowerCase());
     if (existed) {
         document.getElementById('product-existed-message').hidden = false;
+        return false;
     } else {
         document.getElementById('product-existed-message').hidden = true;
+        return true;
     }
 }
 
@@ -176,10 +185,10 @@ function checkMatchingType () {
     let machineType = returnMachineType(vendingMachine.value);
     if (machineType !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
         document.getElementById('unmatching-type-message').hidden = false;
-        
+        return false;
     } else {
         document.getElementById('unmatching-type-message').hidden = true;
-        
+        return true;
     }
 }
     // function to return the machine type given the machine name
@@ -202,9 +211,11 @@ function checkQtyLimit () {
     if (currentMachineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== 0) {
         document.getElementById('overcap-message').textContent = `You can only add ${75 - currentMachineQty} more items to this machine`;
         document.getElementById('overcap-message').hidden = false;
+        return false;
     }
     else {
         document.getElementById('overcap-message').hidden = true;
+        return true;
     }
 }
         // function to return the machineId given the machine name
@@ -222,6 +233,10 @@ function checkInputInDataList(inputId) {
         if(input === optionList[i].value) {
             inList = true;
             i = optionList.length; // stop loop once input is found in list
+        } else if (input === "") { // if there's no input yet, don't pop out the error
+            inList = true;
+        } else {
+            inList = false;
         }
     }
     document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
@@ -265,6 +280,10 @@ function addNewToStockTable() {
     }
     // POST it to the stockdetails table
     stockdetailsList.push(newStock);
+
+    // UPDATE the vendingMachine table:
+    let machine = machineList.find((m) => m.machineId === newStock.machineId);
+    machine.machineQty += newStock.stockQty;
 }
     // function to return productId given the productName
     function returnProductId(productName) {
@@ -279,11 +298,23 @@ function addNewToStockTable() {
     }
 
 function handleSubmission() {
+    // When submit button is clicked...
+    document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
+        e.preventDefault();
+        addNewToProductTable(); // in case "Other" is chosen, add the new product to the product table
+        addNewToStockTable(); // THEN, add to stock table
+        console.log(stockdetailsList);
+        console.log(productList);
+        console.log(machineList);
+    })
+}
 
-        // When submit button is clicked...
-        document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
-            e.preventDefault();
-            addNewToProductTable(); // in case "Other" is chosen, add the new product to the product table
-            addNewToStockTable(); // THEN, add to stock table
-        })
+function manipulateSubmitButton() {
+    const isProductNameValid = checkInputInDataList('product-name') && checkProductDup();
+    const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingType();
+    const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingType() && checkQtyLimit();
+    const isQuantityValid = checkQtyLimit();
+
+    // Disable the submit button if any validation fails
+    submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
 }
