@@ -46,8 +46,7 @@ namespace API
                 return products;
             }
         }
-        public Product GetProductByID(int id)
-        {
+        public Product GetProductByID(int id){
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
@@ -69,17 +68,17 @@ namespace API
                                 categoryid = Convert.ToInt32(reader["categoryId"]),
                                 imgURL = reader["imgURL"].ToString(),
                             };
-
                             connection.Close();
-                            return product;
+                            return Ok(product);
                         }
                         else
                         {
                             connection.Close();
-                            return null; // Return null or throw an exception to indicate not found
+                            return NotFound();
                         }
                     }
                 }
+                
             }
         }
     }
