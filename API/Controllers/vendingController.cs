@@ -41,7 +41,7 @@ namespace MyApp.Namespace
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 machineLocation = reader["machineLocation"].ToString(),
                                 machineRegion = reader["machineRegion"].ToString(),
-                                machineType = reader["machineType"].ToString()
+                                machineType = Convert.ToInt32(reader["categoryId"]),
                             });
                         }
                     }
@@ -72,7 +72,7 @@ namespace MyApp.Namespace
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 machineLocation = reader["machineLocation"].ToString(),
                                 machineRegion = reader["machineRegion"].ToString(),
-                                machineType = reader["machineType"].ToString()
+                                machineType = Convert.ToInt32(reader["categoryId"]),
                             };
                             connection.Close();
                             return Ok(machine);

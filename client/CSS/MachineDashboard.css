@@ -1,11 +1,30 @@
 /* Target the button by its class and change its background color to red */
 .container #MachineChoices{
-    background-color: red;
-    /* You can add additional styling here */
-  }
+  background-color: red;
+  /* You can add additional styling here */
+}
 
-  .btn-secondary {
-    font-size: 1.25rem; /* Adjust the font size as needed */
-    padding: 0.5rem 1rem; /* Adjust padding to increase button size */
-    margin-right: 5px; /* Add margin between buttons */
-  }
+.btn-secondary {
+  font-size: 1.25rem; /* Adjust the font size as needed */
+  padding: 0.5rem 1rem; /* Adjust padding to increase button size */
+  margin-right: 5px;
+  margin-top: 100px;
+  margin-bottom: 100px;
+}
+
+.region-table{
+  padding-left: 200px;
+  padding-right: 200px;
+  padding-top: 50px;
+}
+.region-table tr td {
+  padding-bottom: 50px; /* Add vertical spacing between table cells (buttons) */
+}
+
+.dont-know{
+  text-decoration: underline;
+  color: crimson;
+  font-style: italic;
+  font-size: small;
+  padding-top: 10px;
+}
