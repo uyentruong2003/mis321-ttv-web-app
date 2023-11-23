@@ -6,6 +6,8 @@ using System;
 using Microsoft.AspNetCore.Http;
 using mis321_ttv_web_app;
 using mis321_ttv_web_app.API.Models;
+using API.Models;
+
 
 namespace MyApp.Namespace
 {
@@ -29,8 +31,11 @@ namespace MyApp.Namespace
 
         // POST api/<TransactionController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] int id)
         {
+        Transaction myTransaction = new Transaction(id);
+        TransactionUtility transutil = new TransactionUtility();
+        transutil.PostTransaction(myTransaction);
         }
 
         // PUT api/<TransactionController>/5

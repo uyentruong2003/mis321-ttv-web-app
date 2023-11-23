@@ -1,10 +1,14 @@
 let products = []
-let machineId=0
+let machineId = 0
+let currentCart = []
+let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
 
 //Onload
 async function handleOnLoad() {
     machineId = parseInt(localStorage.getItem("selectedMachineId"))
     console.log("machine id is ", machineId)
+    await setCurrentMachineInfo()    
+    populateMachineInfo()
     try {
         let data = await populateArray();
         console.log('Products:', data);
@@ -45,9 +49,10 @@ function populateProductTable(){
                 <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
                     <h5 class="card-title">${item.name}</h5>
                     <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
-                    <p class="card-text">${item.price}</p>
-                    <p class="card-text">${item.qtyInMachine}</p>
-                    <button class="add-to-cart" onclick="handleAddItem(${item.id})" referrerpolicy="no-referrer">Add to Cart</button>
+                    <p class="card-text">$${(item.price).toFixed(2)}</p>
+                    <p class="card-text">Stock: ${item.qtyInMachine}</p>
+                    <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
+                    <span id="temporary-message-${item.id}" class="temporary-message"></span>
                 </div>
             </div>
         </td>
@@ -63,14 +68,39 @@ function populateProductTable(){
     `
     document.getElementById('app').innerHTML+=html
 }
+function populateMachineInfo(){
+    let html = `<h4 class="display-machine">${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} #${currentMachineInfo.machineId}</h4>`
+    document.getElementById('app').innerHTML+=html
+}
 
 //Handling
-function handleAddItem(id){
-    //add item code
-    products.forEach(function(item){
-        if(item.ID == id)
-            console.log(item.Name)
-    })
+function handleAddItem(id) {
+    // Retrieve existing items from localStorage
+    var existingCartString = localStorage.getItem("currentCartArray");
+    var existingCart = JSON.parse(existingCartString) || []; // If no items, initialize as an empty array
+
+    // Fetch the selected product based on the given id
+    const filteredProducts = products.filter(item => item.machineId === machineId);
+    const addProduct = filteredProducts.find(item => item.id == id);
+
+    // Add the selected product to the existing array
+    existingCart.push(addProduct);
+
+    // Convert the array to a JSON string
+    var updatedCartString = JSON.stringify(existingCart);
+
+    // Update the currentCartArray in localStorage
+    localStorage.setItem("currentCartArray", updatedCartString);
+
+    console.log("Updated Cart:", existingCart);
+
+    const temporaryMessage = document.getElementById(`temporary-message-${id}`);
+    if (temporaryMessage) {
+        temporaryMessage.textContent = "Added to Cart!";
+        setTimeout(() => {
+            temporaryMessage.textContent = ""; // Clear the message after a short duration
+        }, 2000); // Adjust the duration (in milliseconds) as needed
+    }
 }
 
 async function populateArray() {
@@ -88,4 +118,19 @@ async function populateArray() {
         throw error; // You might want to handle the error appropriately in your application
     }
 }
-
+async function setCurrentMachineInfo(){
+    let url = 'http://localhost:5141/api/vending/'
+    let targetURL = url.concat(localStorage.getItem("selectedMachineId"))
+    try {
+      let response = await fetch(targetURL);
+      let data = await response.json();
+      console.log('Data fetched:', data);
+  
+      currentMachineInfo = data
+      console.log('current machine: ', currentMachineInfo)
+      return data;
+  } catch (error) {
+      console.error('Error fetching data:', error);
+      throw error; // You might want to handle the error appropriately in your application
+  }
+  }

@@ -36,30 +36,30 @@ namespace API
                         }
                     }
                 }
+                connection.Close();
                 return AdminDashProducts;
-                connection.close();
             }
         }
 
         
-        public void SaveToStockTable (AdminDashUtility newStock) {
-            using var con = new MySqlConnection (cs);
-            con.Open();
-            using var cmd = new MySqlCommand(con);
-            // Adding data to stockdetails table:
-            cmd.CommandText = @"INSERT INTO stockdetails(productId, machineId, stockQty, lastUpdate) 
-            VALUES(@productId, @machineId, @stockQty, @lastUpdate)";
-            cmd.Parameters.AddWithValue("@id",exercise.id);
-            cmd.Parameters.AddWithValue("@activityName",exercise.activityName);
-            cmd.Parameters.AddWithValue("@activityType",exercise.activityType);
-            cmd.Parameters.AddWithValue("@distance",exercise.distance);
-            cmd.Parameters.AddWithValue("@dateCompleted",exercise.dateCompleted);
-            cmd.Parameters.AddWithValue("@pinned",exercise.pinned);
-            cmd.Parameters.AddWithValue("@deleted",exercise.deleted);
-            cmd.Prepare();
-            cmd.ExecuteNonQuery();
-            con.Close();
-        }
+        // public void SaveToStockTable (AdminDashUtility newStock) {
+        //     using var con = new MySqlConnection (cs);
+        //     con.Open();
+        //     using var cmd = new MySqlCommand(con);
+        //     // Adding data to stockdetails table:
+        //     cmd.CommandText = @"INSERT INTO stockdetails(productId, machineId, stockQty, lastUpdate) 
+        //     VALUES(@productId, @machineId, @stockQty, @lastUpdate)";
+        //     cmd.Parameters.AddWithValue("@id",exercise.id);
+        //     cmd.Parameters.AddWithValue("@activityName",exercise.activityName);
+        //     cmd.Parameters.AddWithValue("@activityType",exercise.activityType);
+        //     cmd.Parameters.AddWithValue("@distance",exercise.distance);
+        //     cmd.Parameters.AddWithValue("@dateCompleted",exercise.dateCompleted);
+        //     cmd.Parameters.AddWithValue("@pinned",exercise.pinned);
+        //     cmd.Parameters.AddWithValue("@deleted",exercise.deleted);
+        //     cmd.Prepare();
+        //     cmd.ExecuteNonQuery();
+        //     con.Close();
+        // }
     }
 }
 // let stockdetailsList = [
