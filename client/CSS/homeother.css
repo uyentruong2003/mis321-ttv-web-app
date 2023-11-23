@@ -1,0 +1,46 @@
+/* LANDING */
+.jumbotron {
+    margin-top: 50px;
+    padding: 40px;
+    background-color: #ffffff; /* White background for the Jumbotron */
+}
+.btn-danger,
+.btn-secondary {
+    margin-top: 20px;
+    padding: 10px 20px;
+}
+
+
+/*  */
+.overlay-container {
+    position: relative;
+    width: 100%;
+    height: 35vh; /* Adjust the height as needed */
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.text-overlay {
+    color: #fff; /* Text color */
+    font-size: 2em; /* Adjust the font size as needed */
+    /* Add additional styling as desired */
+}
+.container {
+    background-color: #f8f9fa; /* Light gray background */
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle box shadow */
+    text-align: center;
+}
+
+h1 {
+    color: crimson; /* Bootstrap primary color */
+}
+
+#contact-us{
+    color: crimson
+}
+.container ul {
+    list-style: none; /* Remove default list-style (bullet points) */
+    padding: 0; /* Remove default padding */
+}
