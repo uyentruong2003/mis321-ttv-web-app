@@ -52,7 +52,7 @@ function populateReciptTable(){
 
     //Other information below the table
     let orderNumber = Date.now() //generate AND OR pull recipt number here
-    let machineLocation = "Hewson 1st Floor - Commons"
+    localStorage.setItem("orderNumber", orderNumber)
     
     html+=`
     <div class="extra-info-box">
@@ -89,7 +89,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button>
+            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -108,6 +108,7 @@ function handleCheckout(){
     let myCard = {Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode}
     
     //do whatever with the card object
+    localStorage.setItem("cardInfo", JSON.stringify(myCard))
     console.log('Card information received: ', JSON.stringify(myCard))
     document.getElementById('checkout-form').reset();
 }
