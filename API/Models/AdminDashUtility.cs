@@ -40,30 +40,5 @@ namespace API
                 return AdminDashProducts;
             }
         }
-
-        
-        // public void SaveToStockTable (AdminDashUtility newStock) {
-        //     using var con = new MySqlConnection (cs);
-        //     con.Open();
-        //     using var cmd = new MySqlCommand(con);
-        //     // Adding data to stockdetails table:
-        //     cmd.CommandText = @"INSERT INTO stockdetails(productId, machineId, stockQty, lastUpdate) 
-        //     VALUES(@productId, @machineId, @stockQty, @lastUpdate)";
-        //     cmd.Parameters.AddWithValue("@id",exercise.id);
-        //     cmd.Parameters.AddWithValue("@activityName",exercise.activityName);
-        //     cmd.Parameters.AddWithValue("@activityType",exercise.activityType);
-        //     cmd.Parameters.AddWithValue("@distance",exercise.distance);
-        //     cmd.Parameters.AddWithValue("@dateCompleted",exercise.dateCompleted);
-        //     cmd.Parameters.AddWithValue("@pinned",exercise.pinned);
-        //     cmd.Parameters.AddWithValue("@deleted",exercise.deleted);
-        //     cmd.Prepare();
-        //     cmd.ExecuteNonQuery();
-        //     con.Close();
-        // }
     }
 }
-// let stockdetailsList = [
-//     {productId: 2, machineId: 1003, stockQty: 5, lastUpdate: '2023-11-20'},
-//     {productId: 2, machineId: 1003, stockQty: 10, lastUpdate: '2023-11-21'},
-//     {productId: 1, machineId: 1001, stockQty: 12, lastUpdate: '2023-11-30'}
-// ]

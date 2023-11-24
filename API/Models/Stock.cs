@@ -6,5 +6,6 @@ namespace API.Models
         public int machineId {get; set;}
         public int stockQty {get; set;}
         public string lastUpdate {get; set;}
+        public bool deleted {get; set;}
     }
 }

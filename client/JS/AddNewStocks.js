@@ -277,6 +277,7 @@ function addNewToStockTable() {
         machineId: returnMachineId(vendingMachine.value),
         stockQty: parseInt(quantity.value),
         lastUpdate: getCurrentDateTime(),
+        deleted: false
     }
     // POST it to the stockdetails table
     stockdetailsList.push(newStock);
@@ -293,8 +294,10 @@ function addNewToStockTable() {
 
     // function to get current date and time
     function getCurrentDateTime () {
-        let date = Date(Date.now());
-        return date.toString();
+        let date = new Date();
+        // Format the date to 'YYYY-MM-DD HH:MM:SS' format
+        let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+        return formattedDate
     }
 
 // add the submitted info to the database
