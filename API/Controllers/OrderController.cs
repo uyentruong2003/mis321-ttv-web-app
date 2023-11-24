@@ -11,28 +11,28 @@ namespace MyApp.Namespace
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly string cs;
-        public ProductController(){
+        public OrderController(){
             cs = new ConnectionString().cs;
         }
         // GET: api/<ProductController>
         [HttpGet]
-        public List<Product> Get()
+        public List<OrderProduct> Get()
         {
-            ProductUtility productutil = new ProductUtility();
-            List<Product> products = new List<Product>();
+            OrderUtility productutil = new OrderUtility();
+            List<OrderProduct> products = new List<OrderProduct>();
             products = productutil.GetAllProducts();
             return products;
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public Product Get(int id)
+        public OrderProduct Get(int id)
         {
-            ProductUtility produtil = new ProductUtility();
-            Product myProduct = produtil.GetProductByID(id);
+            OrderUtility produtil = new OrderUtility();
+            OrderProduct myProduct = produtil.GetProductByID(id);
             return myProduct;
             
         }

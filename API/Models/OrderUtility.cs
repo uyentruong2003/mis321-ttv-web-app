@@ -10,18 +10,18 @@ using API;
 
 namespace API
 {
-    public class ProductUtility
+    public class OrderUtility
     {
         private readonly string cs;
-        public ProductUtility(){
+        public OrderUtility(){
             cs = new ConnectionString().cs;
         }
-        public List<Product> GetAllProducts(){
+        public List<OrderProduct> GetAllProducts(){
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
 
-                var products = new List<Product>();
+                var products = new List<OrderProduct>();
 
                 using (MySqlCommand command = new MySqlCommand("SELECT * FROM product JOIN stockdetails", connection))
                 {
@@ -29,7 +29,7 @@ namespace API
                     {
                         while (reader.Read())
                         {
-                            products.Add(new Product
+                            products.Add(new OrderProduct
                             {
                                 id = Convert.ToInt32(reader["productId"]),
                                 name = reader["productName"].ToString(),
@@ -46,7 +46,7 @@ namespace API
                 return products;
             }
         }
-        public Product GetProductByID(int id){
+        public OrderProduct GetProductByID(int id){
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
@@ -59,7 +59,7 @@ namespace API
                     {
                         if (reader.Read())
                         {
-                            Product product = new Product
+                            OrderProduct product = new OrderProduct
                             {
                                 id = Convert.ToInt32(reader["productId"]),
                                 name = reader["productName"].ToString(),

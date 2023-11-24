@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace mis321_ttv_web_app.API.Models
 {
-    public class Product
+    public class OrderProduct
     {
         public int id {get; set;}
         public string name {get; set;}

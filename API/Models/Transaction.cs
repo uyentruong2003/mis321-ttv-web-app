@@ -9,7 +9,7 @@ namespace mis321_ttv_web_app.API.Models
     {
         public DateTime date {get; set;}
         public int orderID {get; set;}
-        public Product[] products {get; set;}
+        public OrderProduct[] products {get; set;}
         public Transaction(int id){
             date = DateTime.Today;
             orderID = id;
