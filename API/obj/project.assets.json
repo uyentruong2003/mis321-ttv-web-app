@@ -7294,19 +7294,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\dylan\\.nuget\\packages\\": {}
+    "C:\\Users\\ryanl\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\api.csproj",
+      "projectUniqueName": "C:\\Users\\ryanl\\Desktop\\Group\\mis321-ttv-web-app\\API\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\api.csproj",
-      "packagesPath": "C:\\Users\\dylan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\obj\\",
+      "projectPath": "C:\\Users\\ryanl\\Desktop\\Group\\mis321-ttv-web-app\\API\\api.csproj",
+      "packagesPath": "C:\\Users\\ryanl\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\ryanl\\Desktop\\Group\\mis321-ttv-web-app\\API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\dylan\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\ryanl\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"

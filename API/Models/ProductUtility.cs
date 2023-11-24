@@ -69,12 +69,14 @@ namespace API
                                 imgURL = reader["imgURL"].ToString(),
                             };
                             connection.Close();
-                            return Ok(product);
+                            // return Ok(product);
+                            return null;
                         }
                         else
                         {
                             connection.Close();
-                            return NotFound();
+                            // return NotFound();
+                            return null;
                         }
                     }
                 }
