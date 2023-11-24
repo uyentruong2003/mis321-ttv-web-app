@@ -11,7 +11,7 @@ namespace mis321_ttv_web_app.API.Models
         public string machineLocation{get; set;}
         public string machineRegion{get; set;}
         public int machineType{get; set;}
-        public int machineStock{get; set;}
+        public int machineQty{get; set;}
         
     }
 }
