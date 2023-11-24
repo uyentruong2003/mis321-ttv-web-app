@@ -12,7 +12,7 @@ namespace API
         }
         
     // POST REQUEST
-        public void SaveToStockTable(StockUtility newStock) {
+        public void SaveToStockTable(Stock newStock) {
             using var con = new MySqlConnection(cs);
             con.Open();
             using var cmd = new MySqlCommand(con);
@@ -43,47 +43,47 @@ namespace API
             using MySqlDataReader rdr = cmd.ExecuteReader();
             while (rdr.Read()) {
                 Stock stock = new Stock(){
-                    productId = rdr.GetString(0),
-                    machineId = rdr.GetString(1),
+                    productId = rdr.GetInt32(0),
+                    machineId = rdr.GetInt32(1),
                     stockQty = rdr.GetInt32(2),
-                    lastUpdate = rdr.GetString(3),
+                    lastUpdate = rdr.GetDateTime(3),
                     deleted = rdr.GetBoolean(4) 
                 };
                 stockList.Add(stock);
             }
-            return stockList;
             con.Close();
+            return stockList;
         }
 
-    // GET BY ID REQUEST
-    public Stock GetStockById(int productId, int machineId) {
-        using var con = new MySqlConnection(cs);
-        con.Open();
-        
-        using var cmd = new MySqlCommand(con);
-        cmd.CommandText = @"SELECT productId, machineId, stockQty, lastUpdate FROM stockdetails
-                            WHERE productId = @productId AND machineId = @machineId";
-        cmd.Parameters.AddWithValue("@productId", productId);
-        cmd.Parameters.AddWithValue("@machineId", machineId);
-        using var reader = cmd.ExecuteReader();
-        // Check if there are rows in the result set
-        if (reader.Read()) {
-            // Create a Stock object and populate it with data from the database
-            Stock stock = new Stock {
-                productId = reader.GetInt32("productId"),
-                machineId = reader.GetInt32("machineId"),
-                stockQty = reader.GetInt32("stockQty"),
-                lastUpdate = reader.GetDateTime("lastUpdate"),
-                deleted = reader.GetBoolean("deleted")
-            };
-            con.Close(); // Close the connection after reading the data
-            return stock;
-        } else {
-            // No rows found, return null or throw an exception as appropriate
-            con.Close(); // Close the connection
-            return null;
+        // GET BY ID REQUEST
+        public Stock GetStockById(int productId, int machineId) {
+            using var con = new MySqlConnection(cs);
+            con.Open();
+            
+            using var cmd = new MySqlCommand(con);
+            cmd.CommandText = @"SELECT productId, machineId, stockQty, lastUpdate FROM stockdetails
+                                WHERE productId = @productId AND machineId = @machineId";
+            cmd.Parameters.AddWithValue("@productId", productId);
+            cmd.Parameters.AddWithValue("@machineId", machineId);
+            using var reader = cmd.ExecuteReader();
+            // Check if there are rows in the result set
+            if (reader.Read()) {
+                // Create a Stock object and populate it with data from the database
+                Stock stock = new Stock {
+                    productId = reader.GetInt32("productId"),
+                    machineId = reader.GetInt32("machineId"),
+                    stockQty = reader.GetInt32("stockQty"),
+                    lastUpdate = reader.GetDateTime("lastUpdate"),
+                    deleted = reader.GetBoolean("deleted")
+                };
+                con.Close(); // Close the connection after reading the data
+                return stock;
+            } else {
+                // No rows found, return null or throw an exception as appropriate
+                con.Close(); // Close the connection
+                return null;
+            }
         }
-    }
 
         // PUT REQUEST
         public void UpdateStock(Stock stock) {

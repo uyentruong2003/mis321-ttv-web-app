@@ -282,7 +282,7 @@ function addNewToStockTable() {
     // POST it to the stockdetails table
     stockdetailsList.push(newStock);
 
-    // UPDATE the vendingMachine table:
+    // PUT (Update) the vendingMachine table:
     let machine = machineList.find((m) => m.machineId === newStock.machineId);
     machine.machineQty += newStock.stockQty;
 }
@@ -324,4 +324,15 @@ function manipulateSubmitButton() {
 
     // Disable the submit button if any validation fails
     submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
+}
+
+// STEP 5: API fetch calls
+async function saveStocks(stock) {
+    await fetch("", {
+        method: "POST",
+        body: JSON.stringify(stock),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
 }
