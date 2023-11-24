@@ -59,7 +59,6 @@ namespace API
             cmd.Prepare();
             cmd.ExecuteNonQuery();
             con.Close(); 
-        }
     }
 }
 
