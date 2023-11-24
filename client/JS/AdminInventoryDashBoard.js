@@ -13,33 +13,35 @@ function fetchData(url) {
 }
 
 const inventoryData = [
-    {
-      productId: 1,
-      name: 'Doritos',
-      category: 'Snack',
-      machineId: 'SE12',
-      quantity: 10,
-      unitPrice: 2.99,
-      region: 'SE'
-    },
-    {
-      productId: 2,
-      name: 'Sun Chips',
-      category: 'Snack',
-      machineId: 'SE12',
-      quantity: 9,
-      unitPrice: 2.50,
-      region: 'SE'
-    },
+    // {
+    //   productId: 1,
+    //   name: 'Doritos',
+    //   category: 'Snack',
+    //   machineId: 'SE12',
+    //   quantity: 10,
+    //   unitPrice: 2.99,
+    //   region: 'SE'
+    // },
+    // {
+    //   productId: 2,
+    //   name: 'Sun Chips',
+    //   category: 'Snack',
+    //   machineId: 'SE12',
+    //   quantity: 9,
+    //   unitPrice: 2.50,
+    //   region: 'SE'
+    // },
     // Add more items as needed
   ];
 
-  populateTable(inventoryData);
+  // populateTable(inventoryData);
   
   // Function to populate the table with data
   function populateTable(data) {
     const tableBody = document.getElementById('tableBody');
   
+    tableBody.innerHTML = '';
+
     data.forEach(item => {
       const row = document.createElement('tr');
 
@@ -86,17 +88,32 @@ const inventoryData = [
 }
 
 
-function filterData(category) {
-  tableBody.innerHTML = '';
-  const filteredData = inventoryData.filter(item => item.category === category);
-  populateTable(filteredData);
+// function filterData(category) {
+//   tableBody.innerHTML = '';
+//   const filteredData = inventoryData.filter(item => item.category === category);
+//   populateTable(filteredData);
+  
+// }
+
+function filterData(categoryNumber) {
+  fetchData(`${apiUrl}?filter=${categoryNumber}`)
+      .then(filteredData => {
+          populateTable(filteredData);
+          updateBannerAndInventory(filteredData);
+      });
 }
+
 
 fetchData(apiUrl)
 .then(apiResponse => {
     // Call the function to populate the table with the fetched data
     populateTable(apiResponse);
 });
+
+function updateBannerAndInventory(data) {
+  const totalInventory = data.reduce((acc, item) => acc + item.qtyInMachine, 0);
+  inventoryAvailableNumber.textContent = totalInventory;
+}
   
   // Call the function to populate the table with the inventory data
   // populateTable(inventoryData);
