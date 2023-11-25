@@ -1,23 +1,6 @@
-let productList = [];
-let stockdetailsList = [];
-let categoryList = [];
-let machineList = [];
-
-async function SetUpForm() {
-    productList = fetchProducts();
-    stockdetailsList = await fetchStocks();
-    categoryList = await fetchCategories();
-    machineList = await fetchMachines();
-    console.log(productList);
-    console.log(stockdetailsList);
-    console.log(categoryList);
-    console.log(machineList);
-    setProductList();
-    setCategoryList();
-    setMachineList();
-}
-
-SetUpForm();
+setProductList();
+setCategoryList();
+setMachineList();
 
 productName.addEventListener('change', () => {
     checkInputInDataList('product-name')

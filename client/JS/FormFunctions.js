@@ -1,3 +1,8 @@
+let productList = [];
+let stockdetailsList = [];
+let categoryList = [];
+let machineList = [];
+
 let productName = document.getElementById('product-name');
 let productCategory = document.getElementById('product-category');
 let productPrice= document.getElementById('unit-price');
@@ -6,9 +11,11 @@ let selfInputProduct = document.getElementById('product-name-self-input');
 let vendingMachine = document.getElementById('vending-machine');
 let quantity = document.getElementById('quantity');
 let submitButton = document.getElementById('submit-button');
-// STEP 1: SET DATALIST FOR SEARCHABLE DROPDOWNS:
+
+// SET DATALIST FOR SEARCHABLE DROPDOWNS ==============================================================
 // set list for "product-name" searchable dropdown
-function setProductList() {
+async function setProductList() {
+    productList = await fetchProducts();
     const dropdown = document.querySelector('#product-name-list');
     productList.forEach((item) => {
         let option = document.createElement('option');
@@ -22,7 +29,8 @@ function setProductList() {
 }
 
 // set list for "product-category" searchable dropdown
-function setCategoryList() {
+async function setCategoryList() {
+    categoryList = await fetchCategories();
     const dropdown = document.querySelector('#product-category-list');
     categoryList.forEach((item) => {
         let option = document.createElement('option');
@@ -32,7 +40,8 @@ function setCategoryList() {
 }
 
 // set list for "vending-machine" searchable dropdown
-function setMachineList() {
+async function setMachineList(machineList) {
+    machineList = await fetchMachines();
     const dropdown = document.querySelector('#vending-machine-list');
     machineList.forEach((item) => {
         let option = document.createElement('option');
@@ -46,8 +55,7 @@ function setMachineList() {
             return category ? category.categoryName : '';
         }
 
-//--------------------------------------------------------------------------------------------
-// STEP 2: REGULATE PRODUCT NAME INPUT
+// REGULATE PRODUCT NAME INPUT =================================================================================
 
 // function to populate product info when a product is selected
 function displaySelectedProductInfo() {
@@ -87,8 +95,7 @@ function takeSelfInput () {
     }
 }
 
-//-----------------------------------------------------------------------------------------------------------
-// STEP 3: INPUT VALIDATION
+// INPUT VALIDATION ===================================================================================================
 
 // validate that self-input product hasn't appear in the dropdown list
 function checkProductDup () {
@@ -168,9 +175,7 @@ function checkInputInDataList(inputId) {
     return inList;
 }
 
-//---------------------------------------------------------------------------------------
-// STEP 4: HANDLE SUBMISSION
-
+// HANDLE SUBMISSION ==========================================================================================
 
 // add the new product (if there's any) into the product table
 async function addNewToProductTable() {
@@ -254,7 +259,10 @@ function manipulateSubmitButton() {
     submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
 }
 
-// STEP 5: API fetch calls
+// API CALLS ======================================================================================================
+
+// For Stocks:
+// POST:
 async function saveStock(newStock) {
     await fetch("http://localhost:5141/api/Stock", {
         method: "POST",
@@ -264,7 +272,7 @@ async function saveStock(newStock) {
         }
     })
 }
-
+//GET ALL:
 async function fetchStocks() {
     try{
         const response = await fetch('http://localhost:5141/api/Stock');
@@ -279,6 +287,8 @@ async function fetchStocks() {
     }
 }
 
+// For Machines:
+// GET ALL:
 async function fetchMachines() {
     try{
         const response = await fetch('http://localhost:5141/api/Vending');
@@ -293,6 +303,7 @@ async function fetchMachines() {
     }
 }
 
+// PUT:
 async function updateMachine(machine,id) {
     await fetch(`http://localhost:5141/api/Stock/${id}`, {
         method: "PUT",
@@ -303,6 +314,8 @@ async function updateMachine(machine,id) {
     })
 }
 
+// For Product:
+// POST:
 async function saveProduct(newProduct) {
     await fetch("http://localhost:5141/api/Product", {
         method: "POST",
@@ -312,7 +325,7 @@ async function saveProduct(newProduct) {
         }
     })
 }
-
+// GET ALL:
 async function fetchProducts() {
     try{
         const response = await fetch('http://localhost:5141/api/Product');
