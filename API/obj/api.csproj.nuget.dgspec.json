@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj": {}
+    "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj": {
+    "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
+        "projectUniqueName": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
+        "projectPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\api\\api.csproj",
         "packagesPath": "C:\\Users\\uyenk\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\obj\\",
+        "outputPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\uyenk\\AppData\\Roaming\\NuGet\\NuGet.Config"
