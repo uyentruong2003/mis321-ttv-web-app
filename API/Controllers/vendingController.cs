@@ -87,41 +87,9 @@ namespace MyApp.Namespace
             }
         }
 
-        // POST api/<vending>
-        [HttpPost]
-        public IActionResult Post([FromBody] Machine machine) //we have no plans to add machines on the app
-        {
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(cs))
-                {
-                    connection.Open();
-
-                    using (MySqlCommand command = new MySqlCommand(
-                        "INSERT INTO machine (machineLocation, machineRegion, categoryId) " +
-                        "VALUES (@location, @region, @type)", connection))
-                    {
-                        command.Parameters.AddWithValue("@location", machine.machineLocation);
-                        command.Parameters.AddWithValue("@region", machine.machineRegion);
-                        command.Parameters.AddWithValue("@type", machine.categoryId);
-
-                        command.ExecuteNonQuery();
-                    }
-                    connection.Close();
-                }
-                
-                return Ok("Machine added successfully");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
-            }
-        }
-
-
         // PUT api/<vending>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Machine machine) //will it be possible to edit a machine?
+        public IActionResult Put(int id, [FromBody] Machine machine) //Yes. we need to update the machineQty so we can validate the next stock input quantity
         {
             try
             {
