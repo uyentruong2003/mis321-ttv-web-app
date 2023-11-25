@@ -20,9 +20,9 @@ let categoryList = [
 ]
 
 let machineList = [
-    {machineId: 1001, machineLocation: '123 Dirt Rd, Tuscaloosa, AL 35487', machineRegion: 'Southeast', machineType: 'Beverage', machineQty: 12},
-    {machineId: 1002, machineLocation: '456 Smith Ave, Milpitas, CA 95035', machineRegion: 'West', machineType: 'Snack', machineQty: 10},
-    {machineId: 1003, machineLocation: '78 John St, Chicago, CA 60007', machineRegion: 'Midwest', machineType: 'Snack', machineQty: 15}
+    {machineId: 1001, machineLocation: '123 Dirt Rd, Tuscaloosa, AL 35487', machineRegion: 'Southeast', categoryId: 1, machineQty: 12},
+    {machineId: 1002, machineLocation: '456 Smith Ave, Milpitas, CA 95035', machineRegion: 'West', categoryId: 2, machineQty: 10},
+    {machineId: 1003, machineLocation: '78 John St, Chicago, CA 60007', machineRegion: 'Midwest', categoryId: 2, machineQty: 15}
 ]
 
 // DASHBOARD: stockId, productName, productPrice, categoryName, machineId, machineLocation, machineRegion, stockQty
@@ -30,7 +30,7 @@ let machineList = [
 // stockdetails table: stockId, productId, machineId, stockQty, addDate
 // product table: productId, productName, productPrice, categoryId, productDescription
 // category table: categoryId, categoryName
-// machine table: machineId, machineLocation, machineRegion, machineQty, machineType
+// machine table: machineId, machineLocation, machineRegion, machineQty, categoryId
 
 let productName = document.getElementById('product-name');
 let productCategory = document.getElementById('product-category');
@@ -48,7 +48,7 @@ setMachineList();
 productName.addEventListener('change', () => {
     checkInputInDataList('product-name')
     displaySelectedProductInfo();
-    checkMatchingType();
+    checkMatchingCategory();
     takeSelfInput(); 
     manipulateSubmitButton();
 })
@@ -60,13 +60,13 @@ selfInputProduct.addEventListener('change', () => {
 
 productCategory.addEventListener('change', () => {
     checkInputInDataList('product-category')
-    checkMatchingType();
+    checkMatchingCategory();
     manipulateSubmitButton();
 })
 
 vendingMachine.addEventListener('change', () => {
     if(checkInputInDataList('vending-machine')){
-        checkMatchingType();
+        checkMatchingCategory();
         checkQtyLimit();
     }
     manipulateSubmitButton();    
@@ -113,10 +113,15 @@ function setMachineList() {
     const dropdown = document.querySelector('#vending-machine-list');
     machineList.forEach((item) => {
         let option = document.createElement('option');
-        option.value = `VM${item.machineId}-${item.machineType}: ${item.machineLocation}`;
+        option.value = `VM${item.machineId}-${returnCategoryName(item.categoryId)}: ${item.machineLocation}`;
         dropdown.appendChild(option);
     });
 }
+        // function to return category name based on a given category id
+        function returnCategoryName(categoryId) {
+            let category = categoryList.find((c) => c.categoryId === categoryId);
+            return category ? category.categoryName : '';
+        }
 
 //--------------------------------------------------------------------------------------------
 // STEP 2: REGULATE PRODUCT NAME INPUT
@@ -128,15 +133,9 @@ function displaySelectedProductInfo() {
             productCategory.value = returnCategoryName(p.categoryId);
             productPrice.value = p.productPrice;
             productDescription.value = p.productDescription;
-
         }
     })
 }
-        // function to return category name based on a given category id
-        function returnCategoryName(categoryId) {
-            let category = categoryList.find((c) => c.categoryId === categoryId);
-            return category ? category.categoryName : '';
-        }
 
 // function to take self input when "Other" is selected:
 function takeSelfInput () {
@@ -181,9 +180,9 @@ function checkProductDup () {
 }
 
 // validate that product category and machine type is a match
-function checkMatchingType () {
-    let machineType = returnMachineType(vendingMachine.value);
-    if (machineType !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
+function checkMatchingCategory () {
+    let machineCategoryName = returnMachineCategory(vendingMachine.value);
+    if (machineCategoryName !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
         document.getElementById('unmatching-type-message').hidden = false;
         return false;
     } else {
@@ -191,10 +190,13 @@ function checkMatchingType () {
         return true;
     }
 }
-    // function to return the machine type given the machine name
-    function returnMachineType (machineName) {
-        let machine = machineList.find((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
-        return machine ? machine.machineType : '';
+    // function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
+    function returnMachineCategory (machineName) {
+        // Find the index of the hyphen and colon
+        let hyphenIndex = machineName.indexOf('-');
+        let colonIndex = machineName.indexOf(':');
+        // Extract the substring between the hyphen and colon
+        return machineName.substring(hyphenIndex + 1, colonIndex).trim();
     }
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
 function checkQtyLimit () {
@@ -220,7 +222,7 @@ function checkQtyLimit () {
 }
         // function to return the machineId given the machine name
         function returnMachineId(machineName) {
-            let machine = machineList.find ((m) => `VM${m.machineId}-${m.machineType}: ${m.machineLocation}` === machineName);
+            let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
             return machine ? machine.machineId : '';  
         }
 
@@ -318,21 +320,21 @@ function handleSubmission() {
 //disable and enable submit button
 function manipulateSubmitButton() {
     const isProductNameValid = checkInputInDataList('product-name') && checkProductDup();
-    const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingType();
-    const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingType() && checkQtyLimit();
+    const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingCategory();
+    const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingCategory() && checkQtyLimit();
     const isQuantityValid = checkQtyLimit();
 
     // Disable the submit button if any validation fails
     submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
 }
 
-// STEP 5: API fetch calls
-async function saveStocks(stock) {
-    await fetch("", {
-        method: "POST",
-        body: JSON.stringify(stock),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
-        }
-    })
-}
+// // STEP 5: API fetch calls
+// async function saveStocks(stock) {
+//     await fetch("", {
+//         method: "POST",
+//         body: JSON.stringify(stock),
+//         headers: {
+//             "Content-type": "application/json; charset=UTF-8"
+//         }
+//     })
+// }
