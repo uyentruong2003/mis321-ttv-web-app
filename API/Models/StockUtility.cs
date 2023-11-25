@@ -45,12 +45,12 @@ namespace API
             using var cmd = new MySqlCommand(stm, con); 
             using var rdr = cmd.ExecuteReader();
             while (rdr.Read()) {
-                Stock stock = new Stock(){
-                    productId = rdr.GetInt32(0),
-                    machineId = rdr.GetInt32(1),
-                    stockQty = rdr.GetInt32(2),
-                    lastUpdate = rdr.GetDateTime(3).ToString("yyyy-MM-dd HH:mm:ss"),
-                    deleted = rdr.GetBoolean(4) 
+                Stock stock = new Stock {
+                    productId = rdr.GetInt32("productId"),
+                    machineId = rdr.GetInt32("machineId"),
+                    stockQty = rdr.GetInt32("stockQty"),
+                    lastUpdate = rdr.GetDateTime("lastUpdate").ToString("yyyy-MM-dd HH:mm:ss"),
+                    deleted = rdr.GetBoolean("deleted")
                 };
                 stockList.Add(stock);
             }
@@ -62,7 +62,7 @@ namespace API
         public Stock GetStockById(int productId, int machineId) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            string stm = @"SELECT productId, machineId, stockQty, lastUpdate FROM stockdetails
+            string stm = @"SELECT productId, machineId, stockQty, lastUpdate, deleted FROM stockdetails
                                 WHERE productId = @productId AND machineId = @machineId";
             using var cmd = new MySqlCommand(stm,con);
             cmd.Parameters.AddWithValue("@productId", productId);

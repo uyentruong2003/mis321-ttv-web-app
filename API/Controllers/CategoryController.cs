@@ -18,13 +18,13 @@ namespace MyApp.Namespace
         public List<Category> Get()
         {
             CategoryUtility utility = new CategoryUtility();
-            List<Category> categorys = new List<Category>();
-            categorys = utility.GetAllCategorys();
-            return categorys;
+            List<Category> categories = new List<Category>();
+            categories = utility.GetAllCategories();
+            return categories;
         }
 
         // GET api/<CategoryController>/5
-        [HttpGet("{id}")]
+        [HttpGet("{categoryId}")]
         public Category Get(int categoryId)
         {
             CategoryUtility utility = new CategoryUtility();

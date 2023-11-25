@@ -12,7 +12,7 @@ namespace mis321_ttv_web_app.API.Models
         }
         
         // GET ALL REQUEST
-        public List<Category> GetAllCategorys (){
+        public List<Category> GetAllCategories (){
             List<Category> categoryList = new List<Category>();
             using var con = new MySqlConnection(cs); 
             con.Open(); 
