@@ -1,6 +1,11 @@
-using mis321_ttv_web_app.API.Models;
-using MySql.Data.MySqlClient; 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using MySql.Data.MySqlClient;  
+using System.Collections.Generic;  
+using System;  
+using Microsoft.AspNetCore.Http;
 using mis321_ttv_web_app;
+using mis321_ttv_web_app.API.Models;
 
 namespace API
 {
@@ -15,12 +20,10 @@ namespace API
         public void SaveToStockTable(Stock newStock) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            using var cmd = new MySqlCommand(con);
-            
-            // Adding data to stockdetails table:
-            cmd.CommandText = @"INSERT INTO stockdetails(productId, machineId, stockQty, lastUpdate, deleted) 
+            string stm = @"INSERT INTO stockdetails(productId, machineId, stockQty, lastUpdate, deleted) 
                                 VALUES(@productId, @machineId, @stockQty, @lastUpdate, @deleted)";
-
+            using var cmd = new MySqlCommand(stm, con);
+        
             cmd.Parameters.AddWithValue("@productId", newStock.productId);
             cmd.Parameters.AddWithValue("@machineId", newStock.machineId);
             cmd.Parameters.AddWithValue("@stockQty", newStock.stockQty);
@@ -40,13 +43,13 @@ namespace API
             con.Open(); 
             string stm = "SELECT * FROM stockdetails"; 
             using var cmd = new MySqlCommand(stm, con); 
-            using MySqlDataReader rdr = cmd.ExecuteReader();
+            using var rdr = cmd.ExecuteReader();
             while (rdr.Read()) {
                 Stock stock = new Stock(){
                     productId = rdr.GetInt32(0),
                     machineId = rdr.GetInt32(1),
                     stockQty = rdr.GetInt32(2),
-                    lastUpdate = rdr.GetDateTime(3),
+                    lastUpdate = rdr.GetDateTime(3).ToString("yyyy-MM-dd HH:mm:ss"),
                     deleted = rdr.GetBoolean(4) 
                 };
                 stockList.Add(stock);
@@ -59,22 +62,21 @@ namespace API
         public Stock GetStockById(int productId, int machineId) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            
-            using var cmd = new MySqlCommand(con);
-            cmd.CommandText = @"SELECT productId, machineId, stockQty, lastUpdate FROM stockdetails
+            string stm = @"SELECT productId, machineId, stockQty, lastUpdate FROM stockdetails
                                 WHERE productId = @productId AND machineId = @machineId";
+            using var cmd = new MySqlCommand(stm,con);
             cmd.Parameters.AddWithValue("@productId", productId);
             cmd.Parameters.AddWithValue("@machineId", machineId);
-            using var reader = cmd.ExecuteReader();
+            using var rdr = cmd.ExecuteReader();
             // Check if there are rows in the result set
-            if (reader.Read()) {
+            if (rdr.Read()) {
                 // Create a Stock object and populate it with data from the database
                 Stock stock = new Stock {
-                    productId = reader.GetInt32("productId"),
-                    machineId = reader.GetInt32("machineId"),
-                    stockQty = reader.GetInt32("stockQty"),
-                    lastUpdate = reader.GetDateTime("lastUpdate"),
-                    deleted = reader.GetBoolean("deleted")
+                    productId = rdr.GetInt32("productId"),
+                    machineId = rdr.GetInt32("machineId"),
+                    stockQty = rdr.GetInt32("stockQty"),
+                    lastUpdate = rdr.GetDateTime("lastUpdate").ToString("yyyy-MM-dd HH:mm:ss"),
+                    deleted = rdr.GetBoolean("deleted")
                 };
                 con.Close(); // Close the connection after reading the data
                 return stock;
@@ -89,12 +91,9 @@ namespace API
         public void UpdateStock(Stock stock) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            using var cmd = new MySqlCommand(con);
-            
-            // Updating the data in the table where productId and machineId = stock.productId and stock.machineId:
-            cmd.CommandText = @"UPDATE stockdetails SET stockQty = @stockQty, lastUpdate = @lastUpdate, deleted = @deleted
+            string stm = @"UPDATE stockdetails SET stockQty = @stockQty, lastUpdate = @lastUpdate, deleted = @deleted
                                 WHERE productId = @productId AND machineId = @machineId";
-
+            using var cmd = new MySqlCommand(stm, con);
             cmd.Parameters.AddWithValue("@productId", stock.productId);
             cmd.Parameters.AddWithValue("@machineId", stock.machineId);
             cmd.Parameters.AddWithValue("@stockQty", stock.stockQty);

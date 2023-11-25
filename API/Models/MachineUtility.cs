@@ -1,8 +1,16 @@
-namespace API.Models
+using mis321_ttv_web_app.API.Models;
+using MySql.Data.MySqlClient; 
+using mis321_ttv_web_app;
+
+namespace mis321_ttv_web_app.API.Models
 {
     public class MachineUtility
     {
-
+        private readonly string cs;
+        public MachineUtility() {
+            cs = new ConnectionString().cs;
+        }
+        
         // GET ALL REQUEST
         public List<Machine> GetAllMachines (){
             List<Machine> machineList = new List<Machine>();
@@ -16,7 +24,7 @@ namespace API.Models
                     machineId = rdr.GetInt32(0),
                     machineLocation = rdr.GetString(1),
                     machineRegion = rdr.GetString(2),
-                    machineType = rdr.GetString(3),
+                    categoryId = rdr.GetInt32(3),
                     machineQty = rdr.GetInt32(4) 
                 };
                 machineList.Add(machine);
@@ -29,20 +37,21 @@ namespace API.Models
         public Machine GetMachineById(int productId, int machineId) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            
-            using var cmd = new MySqlCommand(con);
-            cmd.CommandText = @"SELECT machineId, machineLocation, machineRegion, machineType,machineQty FROM machine
+            string stm = @"SELECT machineId, machineLocation, machineRegion, categoryId,machineQty FROM machine
                                 WHERE machineId = @machineId";
+            using var cmd = new MySqlCommand(stm,con);
+            // cmd.CommandText = @"SELECT machineId, machineLocation, machineRegion, categoryId,machineQty FROM machine
+            //                     WHERE machineId = @machineId";
             cmd.Parameters.AddWithValue("@machineId", machineId);
-            using var reader = cmd.ExecuteReader();
+            using var rdr = cmd.ExecuteReader();
             // Check if there are rows in the result set
-            if (reader.Read()) {
+            if (rdr.Read()) {
                 // Create a Machine object and populate it with data from the database
                 Machine machine = new Machine {
                     machineId = rdr.GetInt32(0),
                     machineLocation = rdr.GetString(1),
                     machineRegion = rdr.GetString(2),
-                    machineType = rdr.GetString(3),
+                    categoryId = rdr.GetInt32(3),
                     machineQty = rdr.GetInt32(4) 
                 };
                 con.Close(); // Close the connection after reading the data
@@ -58,16 +67,14 @@ namespace API.Models
         public void UpdateMachine(Machine machine) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            using var cmd = new MySqlCommand(con);
-            
-            // Updating the data in the table where productId and machineId = machine.productId and machine.machineId:
-            cmd.CommandText = @"UPDATE machine SET machineQty = @machineQty, lastUpdate = @lastUpdate, deleted = @deleted
+            string stm = @"UPDATE machine SET machineId = @machineId, machineLocation = @machineLocation, machineRegion = @machineRegion, categoryId = @categoryId,machineQty = @machineQty
                                 WHERE machineId = @machineId";
-
+            using var cmd = new MySqlCommand(stm,con);
             cmd.Parameters.AddWithValue("@machineId", machine.machineId);
+            cmd.Parameters.AddWithValue("@machineLocation", machine.machineLocation);
+            cmd.Parameters.AddWithValue("@machineRegion", machine.machineRegion);
+            cmd.Parameters.AddWithValue("@categoryId", machine.categoryId);
             cmd.Parameters.AddWithValue("@machineQty", machine.machineQty);
-            cmd.Parameters.AddWithValue("@lastUpdate", machine.lastUpdate);
-            cmd.Parameters.AddWithValue("@deleted", machine.deleted);
 
             // Execute the UPDATE statement and get the number of affected rows
             int rowsAffected = cmd.ExecuteNonQuery();
@@ -81,6 +88,5 @@ namespace API.Models
                 Console.WriteLine("No rows matched the update condition");
             }
         }
-
     }
 }

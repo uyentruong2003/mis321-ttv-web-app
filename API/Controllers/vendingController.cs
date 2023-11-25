@@ -22,13 +22,13 @@ namespace MyApp.Namespace
 
         // GET: api/<vending>
         [HttpGet]
-        public List<Machines> Get()
+        public List<Machine> Get()
         {
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
 
-                var machines = new List<Machines>();
+                var machines = new List<Machine>();
 
                 using (MySqlCommand command = new MySqlCommand("SELECT * FROM machine", connection))
                 {
@@ -36,12 +36,12 @@ namespace MyApp.Namespace
                     {
                         while (reader.Read())
                         {
-                            machines.Add(new Machines
+                            machines.Add(new Machine
                             {
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 machineLocation = reader["machineLocation"].ToString(),
                                 machineRegion = reader["machineRegion"].ToString(),
-                                machineType = Convert.ToInt32(reader["categoryId"]),
+                                categoryId = Convert.ToInt32(reader["categoryId"]),
                             });
                         }
                     }
@@ -67,12 +67,12 @@ namespace MyApp.Namespace
                     {
                         if (reader.Read())
                         {
-                            Machines machine = new Machines
+                            Machine machine = new Machine
                             {
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 machineLocation = reader["machineLocation"].ToString(),
                                 machineRegion = reader["machineRegion"].ToString(),
-                                machineType = Convert.ToInt32(reader["categoryId"]),
+                                categoryId = Convert.ToInt32(reader["categoryId"]),
                             };
                             connection.Close();
                             return Ok(machine);
@@ -89,7 +89,7 @@ namespace MyApp.Namespace
 
         // POST api/<vending>
         [HttpPost]
-        public IActionResult Post([FromBody] Machines machine) //we have no plans to add machines on the app
+        public IActionResult Post([FromBody] Machine machine) //we have no plans to add machines on the app
         {
             try
             {
@@ -98,12 +98,12 @@ namespace MyApp.Namespace
                     connection.Open();
 
                     using (MySqlCommand command = new MySqlCommand(
-                        "INSERT INTO machine (machineLocation, machineRegion, machineType) " +
+                        "INSERT INTO machine (machineLocation, machineRegion, categoryId) " +
                         "VALUES (@location, @region, @type)", connection))
                     {
                         command.Parameters.AddWithValue("@location", machine.machineLocation);
                         command.Parameters.AddWithValue("@region", machine.machineRegion);
-                        command.Parameters.AddWithValue("@type", machine.machineType);
+                        command.Parameters.AddWithValue("@type", machine.categoryId);
 
                         command.ExecuteNonQuery();
                     }
@@ -121,7 +121,7 @@ namespace MyApp.Namespace
 
         // PUT api/<vending>/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Machines machine) //will it be possible to edit a machine?
+        public IActionResult Put(int id, [FromBody] Machine machine) //will it be possible to edit a machine?
         {
             try
             {
@@ -130,13 +130,13 @@ namespace MyApp.Namespace
                     connection.Open();
 
                     using (MySqlCommand command = new MySqlCommand(
-                        "UPDATE machine SET machineLocation = @location, machineRegion = @region, machineType = @type " +
+                        "UPDATE machine SET machineLocation = @location, machineRegion = @region, categoryId = @type " +
                         "WHERE machineId = @id", connection))
                     {
                         command.Parameters.AddWithValue("@id", id);
                         command.Parameters.AddWithValue("@location", machine.machineLocation);
                         command.Parameters.AddWithValue("@region", machine.machineRegion);
-                        command.Parameters.AddWithValue("@type", machine.machineType);
+                        command.Parameters.AddWithValue("@type", machine.categoryId);
 
                         int rowsAffected = command.ExecuteNonQuery();
 
