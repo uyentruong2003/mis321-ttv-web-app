@@ -15,29 +15,39 @@ namespace MyApp.Namespace
     {
         // GET: api/<CategoryController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public List<Category> Get()
         {
-            return new string[] { "value1", "value2" };
+            CategoryUtility utility = new CategoryUtility();
+            List<Category> categorys = new List<Category>();
+            categorys = utility.GetAllCategorys();
+            return categorys;
         }
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public Category Get(int categoryId)
         {
-            return "value";
+            CategoryUtility utility = new CategoryUtility();
+            Category category = new Category();
+            category = utility.GetCategoryById(categoryId);
+            return category;
         }
 
-        // POST api/<CategoryController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        // // POST api/<CategoryController>
+        // [HttpPost]
+        // public void Post([FromBody] Category newCategory)
+        // {
+        //     CategoryUtility utility = new CategoryUtility();
+        //     utility.SaveToCategoryTable(newCategory);
+        // }
 
-        // PUT api/<CategoryController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        // // PUT api/<CategoryController>/5
+        // [HttpPut("{id}")]
+        // public void Put(int id, [FromBody] string category)
+        // {
+        //     CategoryUtility utility = new CategoryUtility();
+        //     utility.UpdateCategory(category);
+        // }
 
         // DELETE api/<CategoryController>/5
         [HttpDelete("{id}")]

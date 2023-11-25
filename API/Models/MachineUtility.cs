@@ -18,7 +18,7 @@ namespace mis321_ttv_web_app.API.Models
             con.Open(); 
             string stm = "SELECT * FROM machine"; 
             using var cmd = new MySqlCommand(stm, con); 
-            using MySqlDataReader rdr = cmd.ExecuteReader();
+            using var rdr = cmd.ExecuteReader();
             while (rdr.Read()) {
                 Machine machine = new Machine(){
                     machineId = rdr.GetInt32(0),
