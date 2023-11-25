@@ -250,7 +250,7 @@ function checkInputInDataList(inputId) {
 
 
 // add the new product (if there's any) into the product table
-function addNewToProductTable() {
+async function addNewToProductTable() {
     if (productName.value === "Other") {
         let newProduct = {
             productName: selfInputProduct.value, 
@@ -283,6 +283,7 @@ function addNewToStockTable() {
     }
     // POST it to the stockdetails table
     stockdetailsList.push(newStock);
+    saveStocks(newStock);
 
     // PUT (Update) the vendingMachine table:
     let machine = machineList.find((m) => m.machineId === newStock.machineId);
@@ -329,12 +330,23 @@ function manipulateSubmitButton() {
 }
 
 // // STEP 5: API fetch calls
-// async function saveStocks(stock) {
-//     await fetch("", {
-//         method: "POST",
-//         body: JSON.stringify(stock),
-//         headers: {
-//             "Content-type": "application/json; charset=UTF-8"
-//         }
-//     })
-// }
+async function saveStocks(stock) {
+    await fetch("http://localhost:5141/api/Stock", {
+        method: "POST",
+        body: JSON.stringify(stock),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
+async function updateMachine(machine) {
+    await fetch("http://localhost:5141/api/Stock", {
+        method: "PUT",
+        body: JSON.stringify(machine),
+        headers: {
+            "Content-type": "application/json; charset=UTF-8"
+        }
+    })
+}
+
