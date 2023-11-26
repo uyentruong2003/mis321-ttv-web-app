@@ -27,8 +27,8 @@ namespace MyApp.Namespace
             return stocks;
         }
 
-        // GET api/<StockController>/5
-        [HttpGet("{productId}/{machineId}}")]
+        // GET api/<StockController>/5/1
+        [HttpGet("{productId}/{machineId}")]
         public Stock Get(int productId, int machineId)
         {
             StockUtility utility = new StockUtility();
@@ -39,20 +39,21 @@ namespace MyApp.Namespace
 
         // POST api/<StockController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Stock newStock)
         {
+            StockUtility utility = new StockUtility();
+            utility.SaveToStockTable(newStock);
         }
 
         // PUT api/<StockController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{productId}/{machineId}")]
+        public void Put(int productId, int machineId, [FromBody] Stock stock)
         {
+            StockUtility utility = new StockUtility();
+            utility.UpdateStock(stock);
         }
 
-        // DELETE api/<StockController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+    //     // DELETE api/<StockController>/5
+    //     [HttpDelete("{productId}/{machineId}")]
     }
 }
