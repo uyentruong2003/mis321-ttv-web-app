@@ -88,44 +88,11 @@ namespace MyApp.Namespace
         }
 
         // PUT api/<vending>/5
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Machine machine) //Yes. we need to update the machineQty so we can validate the next stock input quantity
+        [HttpPut("{machineId}")]
+        public void Put(int machineId, [FromBody] Machine machine)
         {
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(cs))
-                {
-                    connection.Open();
-
-                    using (MySqlCommand command = new MySqlCommand(
-                        "UPDATE machine SET machineLocation = @location, machineRegion = @region, categoryId = @type " +
-                        "WHERE machineId = @id", connection))
-                    {
-                        command.Parameters.AddWithValue("@id", id);
-                        command.Parameters.AddWithValue("@location", machine.machineLocation);
-                        command.Parameters.AddWithValue("@region", machine.machineRegion);
-                        command.Parameters.AddWithValue("@type", machine.categoryId);
-
-                        int rowsAffected = command.ExecuteNonQuery();
-
-                        if (rowsAffected > 0)
-                        {
-                            connection.Close();
-                            return Ok("Machine updated successfully");
-                        }
-                        else
-                        {
-                            connection.Close();
-                            return NotFound("Machine not found");
-                        }
-                    }
-                    
-                }
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, $"Error: {ex.Message}");
-            }
+            MachineUtility utility = new MachineUtility();
+            utility.UpdateMachine(machine);
         }
 
         // DELETE api/<vending>/5

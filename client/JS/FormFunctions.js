@@ -1,5 +1,5 @@
 let productList = [];
-let stockdetailsList = [];
+let stockList = [];
 let categoryList = [];
 let machineList = [];
 
@@ -7,11 +7,24 @@ let productName = document.getElementById('product-name');
 let productCategory = document.getElementById('product-category');
 let productPrice= document.getElementById('unit-price');
 let productDescription = document.getElementById('description');
-let selfInputProduct = document.getElementById('product-name-self-input');
+let selfInputProductName = document.getElementById('product-name-self-input');
+let selfInputProductImageURL = document.getElementById('product-imgURL-self-input');
 let vendingMachine = document.getElementById('vending-machine');
 let quantity = document.getElementById('quantity');
 let submitButton = document.getElementById('submit-button');
 
+// GET THE CURRENT STOCK LIST FROM DATABASE:
+async function getStockList() {
+    stockList = await fetchStocks();
+    // filter & get only the ones that is not deleted
+    let filteredStockList = [];
+    stockList.forEach((item) => {
+        if (item.deleted === false){
+            filteredStockList.push(item);
+        }
+    })
+    stockList = filteredStockList;
+}
 // SET DATALIST FOR SEARCHABLE DROPDOWNS ==============================================================
 // set list for "product-name" searchable dropdown
 async function setProductList() {
@@ -40,8 +53,9 @@ async function setCategoryList() {
 }
 
 // set list for "vending-machine" searchable dropdown
-async function setMachineList(machineList) {
+async function setMachineList() {
     machineList = await fetchMachines();
+    categoryList = await fetchCategories();
     const dropdown = document.querySelector('#vending-machine-list');
     machineList.forEach((item) => {
         let option = document.createElement('option');
@@ -82,7 +96,8 @@ function takeSelfInput () {
         productDescription.value = '';
         productDescription.readOnly = false;
         // required input for the new product name
-        selfInputProduct.required = true;
+        selfInputProductName.required = true;
+        selfInputProductImageURL.required = true;
     } else {
         // hide the self input section
         selfInputSection.hidden = true;
@@ -91,7 +106,8 @@ function takeSelfInput () {
         productPrice.readOnly = true;
         productDescription.readOnly = true;
         // unrequire self-input product name
-        selfInputProduct.required = false;
+        selfInputProductName.required = false;
+        selfInputProductImageURL.required = false;
     }
 }
 
@@ -99,7 +115,7 @@ function takeSelfInput () {
 
 // validate that self-input product hasn't appear in the dropdown list
 function checkProductDup () {
-    let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProduct.value.toLowerCase());
+    let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProductName.value.toLowerCase());
     if (existed) {
         document.getElementById('product-existed-message').hidden = false;
         return false;
@@ -133,8 +149,8 @@ function checkQtyLimit () {
     let stockQtyInput = parseInt(quantity.value);
     let machineId = returnMachineId(vendingMachine.value);
     let currentMachineQty = 0;
-    //loop thru stockdetailsList to calc the current qty in the specified machine
-    stockdetailsList.forEach((s) => {
+    //loop thru stockList to calc the current qty in the specified machine
+    stockList.forEach((s) => {
         if(s.machineId === machineId) {
             currentMachineQty += s.stockQty;
         }
@@ -179,19 +195,20 @@ function checkInputInDataList(inputId) {
 
 // add the new product (if there's any) into the product table
 async function addNewToProductTable() {
-    if (productName.value === "Other") {
-        let newProduct = {
-            productName: selfInputProduct.value, 
-            categoryId: returnCategoryId(productCategory.value), 
-            productPrice: productPrice.value, 
-            productDescription:productDescription.value,
-            imgUrl: '#'
+    try{
+        if (productName.value === "Other") {
+            let newProduct = {
+                productName: selfInputProductName.value, 
+                categoryId: returnCategoryId(productCategory.value), 
+                productPrice: productPrice.value, 
+                productDescription:productDescription.value,
+                imgURL: selfInputProductImageURL.value,
+            }
+            // POST the object to the product table
+            await saveProduct(newProduct)
         }
-        // POST the object to the product table
-        saveProduct(newProduct);
-        // Re-call the GET API for all product
-        // productList = ASYNC AWAIT ... ;
-        productList.push(newProduct);
+    } catch(error) {
+        console.log(error)
     }
 }
         // function to return categoryId given the categoryName
@@ -202,23 +219,24 @@ async function addNewToProductTable() {
 
 
 // add the stock into the stockdetails table
-function addNewToStockTable() {
-    let newStock = {
-        productId: returnProductId(productName.value),
-        machineId: returnMachineId(vendingMachine.value),
-        stockQty: parseInt(quantity.value),
-        lastUpdate: getCurrentDateTime(),
-        deleted: false
-    }
-    // POST it to the stockdetails table
-    stockdetailsList.push(newStock);
-    saveStock(newStock);
+async function addNewToStockTable() {
+    try{
+        productList= await fetchProducts();
+        let newStock = {
+            productId: returnProductId(productName.value),
+            machineId: returnMachineId(vendingMachine.value),
+            stockQty: parseInt(quantity.value),
+            lastUpdate: getCurrentDateTime(),
+            deleted: false
+        }
+        routeStockAdded();
+        increaseMachineQty();
 
-    // PUT (Update) the vendingMachine table:
-    let updatedMachine = machineList.find((m) => m.machineId === newStock.machineId);
-    updatedMachine.machineQty += newStock.stockQty;
-    updateMachine(updatedMachine, updatedMachine.machineId);
+    }catch(error){
+        console.log(error);
+    }
 }
+
     // function to return productId given the productName
     function returnProductId(productName) {
         let product = productList.find((p) => p.productName === productName);
@@ -232,20 +250,54 @@ function addNewToStockTable() {
         let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
         return formattedDate
     }
+    
+async function routeStockAdded() {
+    stockList = await fetchProducts();
+    // if stock already exists, only update the existed stock with PUT; else, POST it to the stockdetails table
+    existedStock = stockList.find((s) => s.productId === newStock.productId && s.machineId === newStock.productId);
+    if (existedStock) {
+        newStock.stockQty += existedStock.stockQty; //add newStock to its existed stockQty
+        await updateStock(newStock, newStock.productId, newStock.machineId);
+    } else {
+        await saveStock(newStock);
+    }
+}
+
+async function increaseMachineQty() {
+     machineList = await fetchMachines();
+    // PUT (Update) the vendingMachine table:
+     let updatedMachine = machineList.find((m) => m.machineId === newStock.machineId);
+     updatedMachine.machineQty += newStock.stockQty; // update the machineQty to keep up with quantity cap
+     await updateMachine(updatedMachine, updatedMachine.machineId);
+}
+
+
 
 // add the submitted info to the database
-function handleSubmission() {
-    // When submit button is clicked...
-    document.getElementById("add-new-stock-form").addEventListener('submit', (e) => {
-        e.preventDefault();
-        addNewToProductTable(); // in case "Other" is chosen, add the new product to the product table
-        addNewToStockTable(); // THEN, add to stock table
+async function handleSubmission() {
+    try{
+        // When submit button is clicked...
+        document.getElementById("add-new-stock-form").addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // in case "Other" is chosen, add the new product to the product table
+            // THEN, add to stock table
+            if (productName === "Other") {
+                await addNewToProductTable()
+            }
+            await addNewToStockTable();
 
-        // print out to test
-        console.log(stockdetailsList);
-        console.log(productList);
-        console.log(machineList);
-    })
+            // print out to test
+            stockList = await fetchStocks()
+            productList = await fetchProducts()
+            machineList = await fetchMachines()
+
+            console.log(stockList);
+            console.log(machineList);
+            console.log(productList);
+        })
+    }catch (error) {
+        console.log(error)
+    }
 }
 
 //disable and enable submit button
@@ -264,14 +316,24 @@ function manipulateSubmitButton() {
 // For Stocks:
 // POST:
 async function saveStock(newStock) {
-    await fetch("http://localhost:5141/api/Stock", {
-        method: "POST",
-        body: JSON.stringify(newStock),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
+    try {
+        const response = await fetch("http://localhost:5141/api/Stock", {
+            method: "POST",
+            body: JSON.stringify(newStock),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to save stock. Status: ${response.status}`);
         }
-    })
+    } catch (error) {
+        console.error(error);
+        // Handle the error as needed (e.g., show an error message to the user)
+    }
 }
+
 //GET ALL:
 async function fetchStocks() {
     try{
@@ -286,6 +348,26 @@ async function fetchStocks() {
         console.log(error);
     }
 }
+// PUT:
+async function updateStock(stock, productId, machineId) {
+    try {
+        const response = await fetch(`http://localhost:5141/api/Stock/${productId}/${machineId}`, {
+            method: "PUT",
+            body: JSON.stringify(stock),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update stock. Status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error(error);
+        // Handle the error as needed (e.g., show an error message to the user)
+    }
+}
+
 
 // For Machines:
 // GET ALL:
@@ -304,26 +386,45 @@ async function fetchMachines() {
 }
 
 // PUT:
-async function updateMachine(machine,id) {
-    await fetch(`http://localhost:5141/api/Stock/${id}`, {
-        method: "PUT",
-        body: JSON.stringify(machine),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
+async function updateMachine(machine, id) {
+    try {
+        const response = await fetch(`http://localhost:5141/api/Vending/${id}`, {
+            method: "PUT",
+            body: JSON.stringify(machine),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to update machine. Status: ${response.status}`);
         }
-    })
+    } catch (error) {
+        console.error(error);
+        // Handle the error as needed (e.g., show an error message to the user)
+    }
 }
+
 
 // For Product:
 // POST:
 async function saveProduct(newProduct) {
-    await fetch("http://localhost:5141/api/Product", {
-        method: "POST",
-        body: JSON.stringify(newProduct),
-        headers: {
-            "Content-type": "application/json; charset=UTF-8"
+    try {
+        const response = await fetch("http://localhost:5141/api/Product", {
+            method: "POST",
+            body: JSON.stringify(newProduct),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Failed to save product. Status: ${response.status}`);
         }
-    })
+    } catch (error) {
+        console.error(error);
+        // Handle the error as needed (e.g., show an error message to the user)
+    }
 }
 // GET ALL:
 async function fetchProducts() {

@@ -67,7 +67,7 @@ namespace mis321_ttv_web_app.API.Models
         public void UpdateMachine(Machine machine) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            string stm = @"UPDATE machine SET machineId = @machineId, machineLocation = @machineLocation, machineRegion = @machineRegion, categoryId = @categoryId,machineQty = @machineQty
+            string stm = @"UPDATE machine SET machineLocation = @machineLocation, machineRegion = @machineRegion, categoryId = @categoryId,machineQty = @machineQty
                                 WHERE machineId = @machineId";
             using var cmd = new MySqlCommand(stm,con);
             cmd.Parameters.AddWithValue("@machineId", machine.machineId);

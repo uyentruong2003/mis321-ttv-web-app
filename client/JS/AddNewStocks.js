@@ -1,40 +1,43 @@
-setProductList();
-setCategoryList();
-setMachineList();
-
-productName.addEventListener('change', () => {
-    checkInputInDataList('product-name')
-    displaySelectedProductInfo();
-    checkMatchingCategory();
-    takeSelfInput(); 
-    manipulateSubmitButton();
-})
-
-selfInputProduct.addEventListener('change', () => {
-    checkProductDup();
-    manipulateSubmitButton();
-})
-
-productCategory.addEventListener('change', () => {
-    checkInputInDataList('product-category')
-    checkMatchingCategory();
-    manipulateSubmitButton();
-})
-
-vendingMachine.addEventListener('change', () => {
-    if(checkInputInDataList('vending-machine')){
+RouteAddForm();
+async function RouteAddForm() {
+    await setMachineList();
+    await setProductList();
+    await setCategoryList();
+    await getStockList();
+    productName.addEventListener('change', () => {
+        checkInputInDataList('product-name')
+        displaySelectedProductInfo();
         checkMatchingCategory();
+        takeSelfInput(); 
+        manipulateSubmitButton();
+    })
+    
+    selfInputProductName.addEventListener('change', () => {
+        checkProductDup();
+        manipulateSubmitButton();
+    })
+    
+    productCategory.addEventListener('change', () => {
+        checkInputInDataList('product-category')
+        checkMatchingCategory();
+        manipulateSubmitButton();
+    })
+    
+    vendingMachine.addEventListener('change', () => {
+        if(checkInputInDataList('vending-machine')){
+            checkMatchingCategory();
+            checkQtyLimit();
+        }
+        manipulateSubmitButton();    
+    })
+    
+    quantity.addEventListener('change',() => {
         checkQtyLimit();
-    }
-    manipulateSubmitButton();    
-})
-
-quantity.addEventListener('change',() => {
-    checkQtyLimit();
-    manipulateSubmitButton();
-})
-
-handleSubmission();
+        manipulateSubmitButton();
+    })
+    
+    handleSubmission();
+}
 
 //-=================================================================================================
 // let productList = [
