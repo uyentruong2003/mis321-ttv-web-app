@@ -1,6 +1,9 @@
 // TODO FIGURE HOW DELETE IS BEING HANDELED
 
 const apiUrl = 'http://localhost:5141/api/AdminDash';
+let inventoryAvailable = '';
+let soldInventory = '';
+let salesRevenue = '';
 
 
 
@@ -12,29 +15,38 @@ function fetchData(url) {
       });
 }
 
-const inventoryData = [
+let inventoryData = [
     // {
-    //   productId: 1,
-    //   name: 'Doritos',
-    //   category: 'Snack',
-    //   machineId: 'SE12',
-    //   quantity: 10,
-    //   unitPrice: 2.99,
-    //   region: 'SE'
+    // id : 1,
+    // name : 'doritos',
+    // categoryid : 1,
+    // machineId : 7,
+    // qtyInMachine : 10,
+    // price : 2.55,
+    // region : 'East'
     // },
     // {
-    //   productId: 2,
-    //   name: 'Sun Chips',
-    //   category: 'Snack',
-    //   machineId: 'SE12',
-    //   quantity: 9,
-    //   unitPrice: 2.50,
-    //   region: 'SE'
+    // id : 2,
+    // name : 'Headphones',
+    // categoryid : 3,
+    // machineId : 4,
+    // qtyInMachine : 7,
+    // price : 2.25,
+    // region : 'West'
+    // },
+    // {
+    // id : 3,
+    // name : 'coke',
+    // categoryid : 2,
+    // machineId : 9,
+    // qtyInMachine : 19,
+    // price : 1.25,
+    // region : 'Northeast'
     // },
     // Add more items as needed
   ];
 
-  // populateTable(inventoryData);
+  populateTable(inventoryData);
   
   // Function to populate the table with data
   function populateTable(data) {
@@ -46,13 +58,13 @@ const inventoryData = [
       const row = document.createElement('tr');
 
       row.innerHTML = `
-        <th scope="row">${item.productId}</th>
-        <td>${item.name}</td>
-        <td>${item.category}</td>
-        <td>${item.machineId}</td>
-        <td>${item.quantity}</td>
-        <td>${item.unitPrice}</td>
-        <td>${item.region}</td>
+      <td>${item.id}</td>
+                   <td>${item.name}</td>
+                   <td>${item.categoryid}</td>
+                   <td>${item.machineId}</td>
+                   <td>${item.qtyInMachine}</td>
+                   <td>${item.price}</td>
+                   <td>${item.region}</td>
         <td>
           <a href="EditStocks.html">
             <button type="button" class="btn btn-primary" style="background-color: yellowgreen;">Edit</button>
@@ -67,54 +79,39 @@ const inventoryData = [
     });
   }
 
-  function populateTable(data) {
-    const tableBody = document.getElementById('tableBody');
-
-    data.forEach(item => {
-        const row = document.createElement('tr');
-
-        row.innerHTML = `
-            <td>${item.id}</td>
-            <td>${item.name}</td>
-            <td>${item.categoryid}</td>
-            <td>${item.machineId}</td>
-            <td>${item.qtyInMachine}</td>
-            <td>${item.price}</td>
-            <td>${item.region}</td>
-        `;
-
-        tableBody.appendChild(row);
-    });
-}
 
 
-// function filterData(category) {
-//   tableBody.innerHTML = '';
-//   const filteredData = inventoryData.filter(item => item.category === category);
-//   populateTable(filteredData);
-  
-// }
 
-function filterData(categoryNumber) {
-  fetchData(`${apiUrl}?filter=${categoryNumber}`)
-      .then(filteredData => {
-          populateTable(filteredData);
-          updateBannerAndInventory(filteredData);
-      });
-}
 
+
+
+// fetchData(apiUrl)
+// .then(apiResponse => {
+//   inventoryData.push(apiResponse);
+//     // Call the function to populate the table with the fetched data
+//     populateTable(apiResponse);
+//     console.log(inventoryData)
+// });
 
 fetchData(apiUrl)
-.then(apiResponse => {
-    // Call the function to populate the table with the fetched data
-    populateTable(apiResponse);
-});
+  .then(apiResponse => {
+    inventoryData = apiResponse; // Assign the response to inventoryData
+    populateTable(inventoryData);
+    console.log(inventoryData);
+  })
+  .catch(error => console.error('Error fetching data:', error));
 
-function updateBannerAndInventory(data) {
-  const totalInventory = data.reduce((acc, item) => acc + item.qtyInMachine, 0);
-  inventoryAvailableNumber.textContent = totalInventory;
+
+let filterChoice = '';
+
+function filterData(categoryid, filterChoice){
+  const filteredItems = [];
+  inventoryData.forEach(item =>{
+    // console.log(item);
+      if(item.categoryid == filterChoice){
+        filteredItems.push(item);
+      }
+})
+populateTable(filteredItems);
 }
-  
-  // Call the function to populate the table with the inventory data
-  // populateTable(inventoryData);
-  
+
