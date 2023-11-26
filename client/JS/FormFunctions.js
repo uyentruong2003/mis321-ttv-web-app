@@ -14,7 +14,7 @@ let quantity = document.getElementById('quantity');
 let submitButton = document.getElementById('submit-button');
 
 // GET LISTS FROM DATABASE:
-async function getStockList() {
+async function getFilteredStockList() {
     stockList = await fetchStocks();
     // filter & get only the ones that is not deleted
     let filteredStockList = [];
@@ -27,39 +27,14 @@ async function getStockList() {
 }
 
 // function to return category name based on a given category id
-async function returnCategoryName(categoryId) {
-    categoryList = await fetchCategories();
-    let category = categoryList.find((c) => c.categoryId === categoryId);
-    return category ? category.categoryName : '';
-}
-
-// function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
-function returnMachineCategory (machineName) {
-    // Find the index of the hyphen and colon
-    let hyphenIndex = machineName.indexOf('-');
-    let colonIndex = machineName.indexOf(':');
-    // Extract the substring between the hyphen and colon
-    return machineName.substring(hyphenIndex + 1, colonIndex).trim();
-}
-
-// function to return the machineId given the machine name
-async function returnMachineId(machineName) {
-    machineList = await fetchMachines();
-    let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
-    return machine ? machine.machineId : '';  
-}
-
-// function to return productId given the productName
-async function returnProductId(productName) {
-    productList = await fetchProducts();
-    let product = productList.find((p) => p.productName === productName);
-    return product ? product.productId : -1;
+function returnCategoryName(categoryId) {
+    let category = categoryList.find((c) => c.categoryId === categoryId)
+    return category ? category.categoryName : "";
 }
 
 // SET DATALIST FOR SEARCHABLE DROPDOWNS ==============================================================
 // set list for "product-name" searchable dropdown
-async function setProductList() {
-    productList = await fetchProducts();
+function setProductList() {
     const dropdown = document.querySelector('#product-name-list');
     productList.forEach((item) => {
         let option = document.createElement('option');
@@ -73,8 +48,7 @@ async function setProductList() {
 }
 
 // set list for "product-category" searchable dropdown
-async function setCategoryList() {
-    categoryList = await fetchCategories();
+function setCategoryList() {
     const dropdown = document.querySelector('#product-category-list');
     categoryList.forEach((item) => {
         let option = document.createElement('option');
@@ -84,9 +58,7 @@ async function setCategoryList() {
 }
 
 // set list for "vending-machine" searchable dropdown
-async function setMachineList() {
-    machineList = await fetchMachines();
-    categoryList = await fetchCategories();
+function setMachineList() {
     const dropdown = document.querySelector('#vending-machine-list');
     machineList.forEach((item) => {
         let option = document.createElement('option');
@@ -99,14 +71,13 @@ async function setMachineList() {
 // REGULATE PRODUCT NAME INPUT =================================================================================
 
 // function to populate product info when a product is selected
-function displaySelectedProductInfo() {
-    productList.forEach((p) => {
-        if (p.productName === productName.value) {
-            productCategory.value = returnCategoryName(p.categoryId);
-            productPrice.value = p.productPrice;
-            productDescription.value = p.productDescription;
-        }
-    })
+async function displaySelectedProductInfo() {
+    let selectedProduct = productList.find((p) => p.productName === productName.value);
+    if (selectedProduct) {
+        productCategory.value = await returnCategoryName(selectedProduct.categoryId);
+        productPrice.value = selectedProduct.productPrice;
+        productDescription.value = selectedProduct.productDescription;
+    }
 }
 
 // function to take self input when "Other" is selected:
@@ -122,7 +93,7 @@ function takeSelfInput () {
         productPrice.readOnly = false;
         productDescription.value = '';
         productDescription.readOnly = false;
-        // required input for the new product name
+        // required input for the new product name & immage
         selfInputProductName.required = true;
         selfInputProductImageURL.required = true;
     } else {
@@ -154,8 +125,8 @@ function checkProductDup () {
 
 // validate that product category and machine type is a match
 function checkMatchingCategory () {
-    let machineCategoryName = returnMachineCategory(vendingMachine.value);
-    if (machineCategoryName !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
+    let machineCategory = returnMachineCategory(vendingMachine.value);
+    if (machineCategory !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
         document.getElementById('unmatching-type-message').hidden = false;
         return false;
     } else {
@@ -164,15 +135,24 @@ function checkMatchingCategory () {
     }
 }
 
+// function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
+function returnMachineCategory (machineName) {
+    // Find the index of the hyphen and colon
+    let hyphenIndex = machineName.indexOf('-');
+    let colonIndex = machineName.indexOf(':');
+    // Extract the substring between the hyphen and colon
+    return machineName.substring(hyphenIndex + 1, colonIndex).trim();
+}
+
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
-async function checkQtyLimit () {
+function checkQtyLimit (stockList) {
     let stockQtyInput = parseInt(quantity.value);
-    let machineId = await returnMachineId(vendingMachine.value);
+    let machineId = returnMachineId(vendingMachine.value);
     let currentMachineQty = 0;
     //loop thru stockList to calc the current qty in the specified machine
     stockList.forEach((s) => {
         if(s.machineId === machineId) {
-            currentMachineQty += s.stockQty;
+            currentMachineQty = currentMachineQty + s.stockQty;
         }
     })
     // assume each machine holds 75 items, check if adding this quantity will exceeds the limit:
@@ -185,6 +165,12 @@ async function checkQtyLimit () {
         document.getElementById('overcap-message').hidden = true;
         return true;
     }
+}
+
+// function to return the machineId given the machine name
+function returnMachineId(machineName) {
+    let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
+    return machine ? machine.machineId : '';  
 }
 
 
@@ -254,6 +240,12 @@ async function addNewToStockTable() {
     }
 }
 
+    // function to return productId given the productName
+    function returnProductId(productName) {
+        let product = productList.find((p) => p.productName === productName);
+        return product ? product.productId : -1;
+    }
+
     // function to get current date and time
     function getCurrentDateTime () {
         let date = new Date();
@@ -316,7 +308,7 @@ function manipulateSubmitButton() {
     const isProductNameValid = checkInputInDataList('product-name') && checkProductDup();
     const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingCategory();
     const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingCategory() && checkQtyLimit();
-    const isQuantityValid = checkQtyLimit();
+    const isQuantityValid = checkQtyLimit(stockList);
 
     // Disable the submit button if any validation fails
     submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);

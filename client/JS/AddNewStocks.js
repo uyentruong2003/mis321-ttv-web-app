@@ -1,43 +1,74 @@
-RouteAddForm();
-async function RouteAddForm() {
-    await setMachineList();
-    await setProductList();
-    await setCategoryList();
-    await getStockList();
-    productName.addEventListener('change', () => {
-        checkInputInDataList('product-name')
-        displaySelectedProductInfo();
-        checkMatchingCategory();
-        takeSelfInput(); 
-        manipulateSubmitButton();
-    })
+
+async function SetUpAddForm() {
+    // fetch all the lists from DB
+    stockList = await getFilteredStockList(); //get non-deleted stocks only
+    productList = await fetchProducts();
+    machineList = await fetchMachines();
+    categoryList = await fetchCategories();
+
+    // set the datalist for searchable dropdowns
+    setMachineList();
+    setProductList();
+    setCategoryList();
     
-    selfInputProductName.addEventListener('change', () => {
-        checkProductDup();
-        manipulateSubmitButton();
-    })
-    
-    productCategory.addEventListener('change', () => {
-        checkInputInDataList('product-category')
-        checkMatchingCategory();
-        manipulateSubmitButton();
-    })
-    
-    vendingMachine.addEventListener('change', () => {
-        if(checkInputInDataList('vending-machine')){
-            checkMatchingCategory();
-            checkQtyLimit();
-        }
-        manipulateSubmitButton();    
-    })
-    
-    quantity.addEventListener('change',() => {
-        checkQtyLimit();
-        manipulateSubmitButton();
-    })
-    
-    handleSubmission();
+    console.log(stockList);
+    console.log(productList);
+    console.log(machineList);
+    console.log(categoryList);
+
+    // productName.addEventListener('change', () => {
+    //     checkInputInDataList('product-name')
+    //     displaySelectedProductInfo();
+    //     checkMatchingCategory();
+    //     takeSelfInput(); 
+    //     manipulateSubmitButton();
+    // })
+
+    // selfInputProductName.addEventListener('change', () => {
+    //     checkProductDup();
+    //     manipulateSubmitButton();
+    // })
+
+    // productCategory.addEventListener('change', () => {
+    //     checkInputInDataList('product-category')
+    //     checkMatchingCategory();
+    //     manipulateSubmitButton();
+    // })
+
+    // vendingMachine.addEventListener('change', () => {
+    //     if(checkInputInDataList('vending-machine')){
+    //         console.log(vendingMachine.value);
+    //         checkMatchingCategory();
+    //         checkQtyLimit();
+    //     }
+    //     manipulateSubmitButton();    
+    // })
+
+    // quantity.addEventListener('change',() => {
+    //     checkQtyLimit(stockList);
+    //     manipulateSubmitButton();
+    // })
+
+    // handleSubmission();
 }
+
+SetUpAddForm();
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //-=================================================================================================
 // let productList = [

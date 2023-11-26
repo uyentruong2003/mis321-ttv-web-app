@@ -188,3 +188,18 @@ async function fetchCategories() {
         console.log(error);
     }
 }
+
+// GET CATEGORY BY ID:
+async function fetchCategoryById(categoryId) {
+    try{
+        const response = await fetch(`http://localhost:5141/api/Category/${categoryId}`);
+        if (!response.ok) {
+            throw new error("Network response is not ok")
+        } else {
+            const data = await response.json();
+            return data;
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
