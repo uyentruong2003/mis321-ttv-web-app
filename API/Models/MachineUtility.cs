@@ -24,8 +24,8 @@ namespace mis321_ttv_web_app.API.Models
                     machineId = rdr.GetInt32(0),
                     machineLocation = rdr.GetString(1),
                     machineRegion = rdr.GetString(2),
-                    categoryId = rdr.GetInt32(3),
-                    machineQty = rdr.GetInt32(4) 
+                    machineQty = rdr.GetInt32(3),
+                    categoryId = rdr.GetInt32(4) 
                 };
                 machineList.Add(machine);
             }
@@ -34,14 +34,12 @@ namespace mis321_ttv_web_app.API.Models
         }
 
         // GET BY ID REQUEST
-        public Machine GetMachineById(int productId, int machineId) {
+        public Machine GetMachineById(int machineId) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            string stm = @"SELECT machineId, machineLocation, machineRegion, categoryId,machineQty FROM machine
+            string stm = @"SELECT machineId, machineLocation, machineRegion, machineQty, categoryId FROM machine
                                 WHERE machineId = @machineId";
             using var cmd = new MySqlCommand(stm,con);
-            // cmd.CommandText = @"SELECT machineId, machineLocation, machineRegion, categoryId,machineQty FROM machine
-            //                     WHERE machineId = @machineId";
             cmd.Parameters.AddWithValue("@machineId", machineId);
             using var rdr = cmd.ExecuteReader();
             // Check if there are rows in the result set
@@ -51,8 +49,8 @@ namespace mis321_ttv_web_app.API.Models
                     machineId = rdr.GetInt32(0),
                     machineLocation = rdr.GetString(1),
                     machineRegion = rdr.GetString(2),
-                    categoryId = rdr.GetInt32(3),
-                    machineQty = rdr.GetInt32(4) 
+                    machineQty = rdr.GetInt32(3),
+                    categoryId = rdr.GetInt32(4) 
                 };
                 con.Close(); // Close the connection after reading the data
                 return machine;

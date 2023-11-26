@@ -13,7 +13,7 @@ let vendingMachine = document.getElementById('vending-machine');
 let quantity = document.getElementById('quantity');
 let submitButton = document.getElementById('submit-button');
 
-// GET THE CURRENT STOCK LIST FROM DATABASE:
+// GET LISTS FROM DATABASE:
 async function getStockList() {
     stockList = await fetchStocks();
     // filter & get only the ones that is not deleted
@@ -25,6 +25,37 @@ async function getStockList() {
     })
     stockList = filteredStockList;
 }
+
+// function to return category name based on a given category id
+async function returnCategoryName(categoryId) {
+    categoryList = await fetchCategories();
+    let category = categoryList.find((c) => c.categoryId === categoryId);
+    return category ? category.categoryName : '';
+}
+
+// function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
+function returnMachineCategory (machineName) {
+    // Find the index of the hyphen and colon
+    let hyphenIndex = machineName.indexOf('-');
+    let colonIndex = machineName.indexOf(':');
+    // Extract the substring between the hyphen and colon
+    return machineName.substring(hyphenIndex + 1, colonIndex).trim();
+}
+
+// function to return the machineId given the machine name
+async function returnMachineId(machineName) {
+    machineList = await fetchMachines();
+    let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
+    return machine ? machine.machineId : '';  
+}
+
+// function to return productId given the productName
+async function returnProductId(productName) {
+    productList = await fetchProducts();
+    let product = productList.find((p) => p.productName === productName);
+    return product ? product.productId : -1;
+}
+
 // SET DATALIST FOR SEARCHABLE DROPDOWNS ==============================================================
 // set list for "product-name" searchable dropdown
 async function setProductList() {
@@ -63,11 +94,7 @@ async function setMachineList() {
         dropdown.appendChild(option);
     });
 }
-        // function to return category name based on a given category id
-        function returnCategoryName(categoryId) {
-            let category = categoryList.find((c) => c.categoryId === categoryId);
-            return category ? category.categoryName : '';
-        }
+
 
 // REGULATE PRODUCT NAME INPUT =================================================================================
 
@@ -136,18 +163,11 @@ function checkMatchingCategory () {
         return true;
     }
 }
-    // function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
-    function returnMachineCategory (machineName) {
-        // Find the index of the hyphen and colon
-        let hyphenIndex = machineName.indexOf('-');
-        let colonIndex = machineName.indexOf(':');
-        // Extract the substring between the hyphen and colon
-        return machineName.substring(hyphenIndex + 1, colonIndex).trim();
-    }
+
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
-function checkQtyLimit () {
+async function checkQtyLimit () {
     let stockQtyInput = parseInt(quantity.value);
-    let machineId = returnMachineId(vendingMachine.value);
+    let machineId = await returnMachineId(vendingMachine.value);
     let currentMachineQty = 0;
     //loop thru stockList to calc the current qty in the specified machine
     stockList.forEach((s) => {
@@ -166,11 +186,7 @@ function checkQtyLimit () {
         return true;
     }
 }
-        // function to return the machineId given the machine name
-        function returnMachineId(machineName) {
-            let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
-            return machine ? machine.machineId : '';  
-        }
+
 
 // validate that user input belongs to the predefined list
 function checkInputInDataList(inputId) {
@@ -212,7 +228,8 @@ async function addNewToProductTable() {
     }
 }
         // function to return categoryId given the categoryName
-        function returnCategoryId(categoryName) {
+        async function returnCategoryId(categoryName) {
+            categoryList = await fetchCategories();
             let category = categoryList.find((c) => c.categoryName === categoryName);
             return category ? category.categoryId : -1;
         }
@@ -229,19 +246,13 @@ async function addNewToStockTable() {
             lastUpdate: getCurrentDateTime(),
             deleted: false
         }
-        routeStockAdded();
-        increaseMachineQty();
+        routeStockAdded(newStock);
+        increaseMachineQty(newStock);
 
     }catch(error){
         console.log(error);
     }
 }
-
-    // function to return productId given the productName
-    function returnProductId(productName) {
-        let product = productList.find((p) => p.productName === productName);
-        return product ? product.productId : -1;
-    }
 
     // function to get current date and time
     function getCurrentDateTime () {
@@ -250,8 +261,8 @@ async function addNewToStockTable() {
         let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
         return formattedDate
     }
-    
-async function routeStockAdded() {
+
+async function routeStockAdded(newStock) {
     stockList = await fetchProducts();
     // if stock already exists, only update the existed stock with PUT; else, POST it to the stockdetails table
     existedStock = stockList.find((s) => s.productId === newStock.productId && s.machineId === newStock.productId);
@@ -263,7 +274,7 @@ async function routeStockAdded() {
     }
 }
 
-async function increaseMachineQty() {
+async function increaseMachineQty(newStock) {
      machineList = await fetchMachines();
     // PUT (Update) the vendingMachine table:
      let updatedMachine = machineList.find((m) => m.machineId === newStock.machineId);
@@ -311,146 +322,3 @@ function manipulateSubmitButton() {
     submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
 }
 
-// API CALLS ======================================================================================================
-
-// For Stocks:
-// POST:
-async function saveStock(newStock) {
-    try {
-        const response = await fetch("http://localhost:5141/api/Stock", {
-            method: "POST",
-            body: JSON.stringify(newStock),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to save stock. Status: ${response.status}`);
-        }
-    } catch (error) {
-        console.error(error);
-        // Handle the error as needed (e.g., show an error message to the user)
-    }
-}
-
-//GET ALL:
-async function fetchStocks() {
-    try{
-        const response = await fetch('http://localhost:5141/api/Stock');
-        if (!response.ok) {
-            throw new error("Network response is not ok");
-        }else {
-            const data = await response.json();
-            return data;
-        }
-    } catch (error){
-        console.log(error);
-    }
-}
-// PUT:
-async function updateStock(stock, productId, machineId) {
-    try {
-        const response = await fetch(`http://localhost:5141/api/Stock/${productId}/${machineId}`, {
-            method: "PUT",
-            body: JSON.stringify(stock),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to update stock. Status: ${response.status}`);
-        }
-    } catch (error) {
-        console.error(error);
-        // Handle the error as needed (e.g., show an error message to the user)
-    }
-}
-
-
-// For Machines:
-// GET ALL:
-async function fetchMachines() {
-    try{
-        const response = await fetch('http://localhost:5141/api/Vending');
-        if (!response.ok) {
-            throw new error("Network response is not ok");
-        }else {
-            const data = await response.json();
-            return data;
-        }
-    } catch (error){
-        console.log(error);
-    }
-}
-
-// PUT:
-async function updateMachine(machine, id) {
-    try {
-        const response = await fetch(`http://localhost:5141/api/Vending/${id}`, {
-            method: "PUT",
-            body: JSON.stringify(machine),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to update machine. Status: ${response.status}`);
-        }
-    } catch (error) {
-        console.error(error);
-        // Handle the error as needed (e.g., show an error message to the user)
-    }
-}
-
-
-// For Product:
-// POST:
-async function saveProduct(newProduct) {
-    try {
-        const response = await fetch("http://localhost:5141/api/Product", {
-            method: "POST",
-            body: JSON.stringify(newProduct),
-            headers: {
-                "Content-type": "application/json; charset=UTF-8"
-            }
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to save product. Status: ${response.status}`);
-        }
-    } catch (error) {
-        console.error(error);
-        // Handle the error as needed (e.g., show an error message to the user)
-    }
-}
-// GET ALL:
-async function fetchProducts() {
-    try{
-        const response = await fetch('http://localhost:5141/api/Product');
-        if (!response.ok) {
-            throw new error("Network response is not ok");
-        }else {
-            const data = await response.json();
-            return data;
-        }
-    } catch (error){
-        console.log(error);
-    }
-}
-
-async function fetchCategories() {
-    try{
-        const response = await fetch('http://localhost:5141/api/Category');
-        if (!response.ok) {
-            throw new error("Network response is not ok");
-        }else {
-            const data = await response.json();
-            return data;
-        }
-    } catch (error){
-        console.log(error);
-    }
-}

@@ -52,40 +52,45 @@ namespace MyApp.Namespace
         }
 
         // GET api/<vending>/5
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
-        {
-            using (MySqlConnection connection = new MySqlConnection(cs))
-            {
-                connection.Open();
-
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM machine WHERE machineId = @id", connection))
-                {
-                    command.Parameters.AddWithValue("@id", id);
-
-                    using (MySqlDataReader reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            Machine machine = new Machine
-                            {
-                                machineId = Convert.ToInt32(reader["machineId"]),
-                                machineLocation = reader["machineLocation"].ToString(),
-                                machineRegion = reader["machineRegion"].ToString(),
-                                categoryId = Convert.ToInt32(reader["categoryId"]),
-                            };
-                            connection.Close();
-                            return Ok(machine);
-                        }
-                        else
-                        {
-                            connection.Close();
-                            return NotFound();
-                        }
-                    }
-                }
-            }
+        [HttpGet("{machineId}")]
+        public Machine Get(int machineId){
+            MachineUtility utility = new MachineUtility();
+            Machine machine = utility.GetMachineById(machineId);
+            return machine;
         }
+        // public IActionResult Get(int id)
+        // {
+        //     using (MySqlConnection connection = new MySqlConnection(cs))
+        //     {
+        //         connection.Open();
+
+        //         using (MySqlCommand command = new MySqlCommand("SELECT * FROM machine WHERE machineId = @id", connection))
+        //         {
+        //             command.Parameters.AddWithValue("@id", id);
+
+        //             using (MySqlDataReader reader = command.ExecuteReader())
+        //             {
+        //                 if (reader.Read())
+        //                 {
+        //                     Machine machine = new Machine
+        //                     {
+        //                         machineId = Convert.ToInt32(reader["machineId"]),
+        //                         machineLocation = reader["machineLocation"].ToString(),
+        //                         machineRegion = reader["machineRegion"].ToString(),
+        //                         categoryId = Convert.ToInt32(reader["categoryId"]),
+        //                     };
+        //                     connection.Close();
+        //                     return Ok(machine);
+        //                 }
+        //                 else
+        //                 {
+        //                     connection.Close();
+        //                     return NotFound();
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         // PUT api/<vending>/5
         [HttpPut("{machineId}")]
