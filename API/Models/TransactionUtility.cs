@@ -15,37 +15,76 @@ namespace API.Models
             cs = new ConnectionString().cs;
         }
 
-public string PostTransaction(Transaction transaction)
-{
-    try
-    {
-        using (MySqlConnection connection = new MySqlConnection(cs))
+        public string PostTransaction(Transaction transaction)
         {
-            connection.Open();
-            using (MySqlCommand command = new MySqlCommand(
-                "INSERT INTO transaction (orderId, orderDate) " +
-                "VALUES (@orderId, @orderDate)", connection))
+            try
             {
-                command.Parameters.AddWithValue("@orderId", transaction.orderID);
-                command.Parameters.AddWithValue("@orderDate", transaction.date);
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(
+                        "INSERT INTO transaction (orderDate, orderID) " +
+                        "VALUES (@orderDate, @orderID)", connection))
+                    {
+                        command.Parameters.AddWithValue("@orderDate", DateTime.Now);
+                        command.Parameters.AddWithValue("@orderID", transaction.orderID);
 
-                command.Prepare();
-                command.ExecuteNonQuery();
+                        command.Prepare();
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+
+                return "Transaction added successfully";
             }
-            connection.Close();
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in PostTransaction: {ex.Message}");
+
+                // Return a more informative error message
+                return $"Error adding transaction: {ex.Message}";
+            }
         }
+    
+        public List<Transaction> GetAllTransactions()
+        {
+            List<Transaction> transactions = new List<Transaction>();
 
-        return "Transaction added successfully";
-    }
-    catch (Exception ex)
-    {
-        // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
-        Console.WriteLine($"Error in PostTransaction: {ex.Message}");
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction", connection))
+                    {
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                transactions.Add(new Transaction
+                                {
+                                    date = Convert.ToDateTime(reader["orderDate"]),
+                                    orderID = Convert.ToInt32(reader["orderID"])
+                                    // Add other properties as needed
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
 
-        // Return a more informative error message
-        return $"Error adding transaction: {ex.Message}";
-    }
-}
+                return transactions;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in GetAllTransactions: {ex.Message}");
+
+                // Return an empty list or handle the error appropriately
+                return new List<Transaction>();
+            }
+        }
 
 
     }

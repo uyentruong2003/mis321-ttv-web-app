@@ -11,11 +11,11 @@ namespace mis321_ttv_web_app.API.Models
         public int orderID {get; set;}
 
         public Transaction(int id){
-            date = DateTime.Today;
+            date = DateTime.Now;
             orderID = id;
         }
         public Transaction(){
-            date = DateTime.Today;
+            date = DateTime.Now;
         }
 
     }

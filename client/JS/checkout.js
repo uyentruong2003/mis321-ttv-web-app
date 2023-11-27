@@ -100,10 +100,9 @@ function populateCheckoutForm(){
 
 // Call this function when handling the checkout
 function handleCheckout() {
-    const orderNumber = parseInt(localStorage.getItem('orderNumber'));
-    const transactionDateTime = new Date().toISOString(); // Use current DateTime
 
-    updateDatabase(orderNumber, transactionDateTime);
+
+    updateDatabase();
 
     // Rest of your checkout logic
     let cardNum = document.getElementById('card-num').value;
@@ -138,35 +137,35 @@ function populateArray(){
       console.log('current machine: ', currentMachineInfo)
       return data;
   } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error; // You might want to handle the error appropriately in your application
-  }
-  }
-
-  async function updateDatabase(orderNumber, transactionDateTime) {
+}
+}
+ 
+ async function updateDatabase() {
     const url = 'http://localhost:5141/api/Transaction';
-
+    myTransaction = new Transaction();
 
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
-                "accept" : 'application/json',
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(transactionData),
+            body: JSON.stringify({
+                transactionDateTime: new Date(),
+                // Add any other data you want to send to the server
+            }),
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            throw new Error('Error updating database');
         }
 
-        const responseData = await response.json();
-        console.log('Database updated successfully:', responseData);
-    } catch (error) {
+        const data = await response.json();
+        console.log('Transaction recorded:', data);
+        
+        } catch (error) {
         console.error('Error updating database:', error);
-
-    }
-}
-
+        // Handle the error appropriately in your application
+        }
+    }   
 
