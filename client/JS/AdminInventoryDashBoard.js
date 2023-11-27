@@ -5,17 +5,10 @@ let inventoryAvailable = '';
 let soldInventory = '';
 let salesRevenue = '';
 
-let transactions = [
 
-{
-  categoryid : 1,
-  productid : 1
-},
-{
-  categoryid : 2,
-  productid : 2
-}
-]
+
+
+//1. API FUNCTIONALITY
 
 function fetchData(url) {
   return fetch(url)
@@ -25,108 +18,50 @@ function fetchData(url) {
       });
 }
 
-let inventoryData = [
-    {
-    id : 1,
-    name : 'doritos',
-    categoryid : 1,
-    machineId : 7,
-    qtyInMachine : 10,
-    price : 2.55,
-    region : 'East'
-    },
-    {
-    id : 2,
-    name : 'Headphones',
-    categoryid : 3,
-    machineId : 4,
-    qtyInMachine : 7,
-    price : 2.25,
-    region : 'West'
-    },
-    {
-    id : 3,
-    name : 'coke',
-    categoryid : 2,
-    machineId : 9,
-    qtyInMachine : 19,
-    price : 1.25,
-    region : 'Northeast'
-    },
-    // Add more items as needed
-  ];
+// end 1.
 
-  populateTable(inventoryData);
+
+// 2. POPULATE TABLE
+
+function populateTable(data) {
+  const tableBody = document.getElementById('tableBody');
+
+  tableBody.innerHTML = '';
+
+  data.forEach(item => {
+    const row = document.createElement('tr');
+
+    row.innerHTML = `
+    <td>${item.id}</td>
+                 <td>${item.name}</td>
+                 <td>${item.categoryid}</td>
+                 <td>${item.machineId}</td>
+                 <td>${item.qtyInMachine}</td>
+                 <td>${item.price}</td>
+                 <td>${item.region}</td>
+      <td>
+        <a href="EditStocks.html">
+          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;">Edit</button>
+        </a>
+        <a href="https://www.google.com/">
+          <button type="button" class="btn btn-primary" style="background-color: red;">Delete</button>
+        </a>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+populateTable(inventoryData);
+
+// END 2.
+
   
-  // Function to populate the table with data
-  function populateTable(data) {
-    const tableBody = document.getElementById('tableBody');
-  
-    tableBody.innerHTML = '';
-
-    data.forEach(item => {
-      const row = document.createElement('tr');
-
-      row.innerHTML = `
-      <td>${item.id}</td>
-                   <td>${item.name}</td>
-                   <td>${item.categoryid}</td>
-                   <td>${item.machineId}</td>
-                   <td>${item.qtyInMachine}</td>
-                   <td>${item.price}</td>
-                   <td>${item.region}</td>
-        <td>
-          <a href="EditStocks.html">
-            <button type="button" class="btn btn-primary" style="background-color: yellowgreen;">Edit</button>
-          </a>
-          <a href="https://www.google.com/">
-            <button type="button" class="btn btn-primary" style="background-color: red;">Delete</button>
-          </a>
-        </td>
-      `;
-  
-      tableBody.appendChild(row);
-    });
-  }
-
-
-
-
-
-
-
-// fetchData(apiUrl)
-// .then(apiResponse => {
-//   inventoryData.push(apiResponse);
-//     // Call the function to populate the table with the fetched data
-//     populateTable(apiResponse);
-//     console.log(inventoryData)
-// });
-
-// fetchData(apiUrl)
-//   .then(apiResponse => {
-//     inventoryData = apiResponse; // Assign the response to inventoryData
-//     populateTable(inventoryData);
-//     console.log(inventoryData);
-//   })
-//   .catch(error => console.error('Error fetching data:', error));
+// 3. FILTERING LOGIC
 
 
 let filterChoice = '';
-
-// function filterData(categoryid, filterChoice){
-//   const filteredItems = [];
-//   inventoryData.forEach(item =>{
-//     // console.log(item);
-//       if(item.categoryid == filterChoice){
-//         filteredItems.push(item);
-//       }
-// })
-// populateTable(filteredItems);
-// let totalSalesRevenue = calculateSalesRevenue(transactions, filteredItems, filterChoice);
-//   console.log('Total Sales Revenue for Category', filterChoice, ':', totalSalesRevenue);
-//   document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${totalSalesRevenue.toFixed(2)}`;
-// }
 
 function filterData(categoryid, filterChoice) {
   const filteredItems = inventoryData.filter(item => item.categoryid == filterChoice);
@@ -150,6 +85,17 @@ function filterData(categoryid, filterChoice) {
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${totalSoldInventory}`;
 }
 
+function ClearFilters(){
+  populateTable(inventoryData);
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: `;
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: `;
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory:`;
+}
+
+// END 3.
+
+
+// 4. BANNER LOGIC
 
 function calculateAvailableInventory(filteredItems) {
   let totalInventory = 0;
@@ -190,13 +136,52 @@ function calculateSoldInventory(transactions, filterCategory) {
   return soldInventory;
 }
 
+// END 4.
 
-function ClearFilters(){
-  populateTable(inventoryData);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: `;
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: `;
-  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory:`;
-}
 
-// let totalSalesRevenue = calculateSalesRevenue(transactions, inventoryData);
-// console.log('Total Sales Revenue:', totalSalesRevenue);
+// DUMMY DATA
+
+let inventoryData = [
+  {
+  id : 1,
+  name : 'doritos',
+  categoryid : 1,
+  machineId : 7,
+  qtyInMachine : 10,
+  price : 2.55,
+  region : 'East'
+  },
+  {
+  id : 2,
+  name : 'Headphones',
+  categoryid : 3,
+  machineId : 4,
+  qtyInMachine : 7,
+  price : 2.25,
+  region : 'West'
+  },
+  {
+  id : 3,
+  name : 'coke',
+  categoryid : 2,
+  machineId : 9,
+  qtyInMachine : 19,
+  price : 1.25,
+  region : 'Northeast'
+  },
+  // Add more items as needed
+];
+
+let transactions = [
+
+  {
+    categoryid : 1,
+    productid : 1
+  },
+  {
+    categoryid : 2,
+    productid : 2
+  }
+  ]
+
+  // END DUMMY DATA
