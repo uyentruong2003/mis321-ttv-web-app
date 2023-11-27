@@ -41,6 +41,7 @@ namespace MyApp.Namespace
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 machineLocation = reader["machineLocation"].ToString(),
                                 machineRegion = reader["machineRegion"].ToString(),
+                                machineQty = Convert.ToInt32(reader["machineQty"]),
                                 categoryId = Convert.ToInt32(reader["categoryId"]),
                             });
                         }

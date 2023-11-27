@@ -6,38 +6,49 @@ productName.addEventListener('change',() => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('product-name');
     // display info of the product selected
-    DisplaySelectedProductInfo();
-    // if "Other" is chosen, pop out self-input section
-    RouteIfOtherProduct();
-    // check if the product category is matched with the vending machine category:
-    CheckIfCategoryMatched();
+    DisplaySelectedProductInfo().then( async () => {
+        // if "Other" is chosen, pop out self-input section
+        RouteIfOtherProduct();
+        // check if the product category is matched with the vending machine category:
+        CheckIfCategoryMatched();
+        // disable the submit button when error(s) occur
+        await SetSubmitButtonStatus();
+    })
 })
 
-selfInputProductName.addEventListener('change',() => {
+selfInputProductName.addEventListener('change', async() => {
     // check if the self input existed already:
     CheckIfInputProductExisted();
+    // disable the submit button when error(s) occur
+    await SetSubmitButtonStatus();
 })
 
-
-productCategory.addEventListener('change',() => {
+productCategory.addEventListener('change', async() => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('product-category');
     // check if the product category is matched with the vending machine category:
     CheckIfCategoryMatched();
+    // disable the submit button when error(s) occur
+    await SetSubmitButtonStatus();
 })
 
-vendingMachine.addEventListener('change',() => {
+vendingMachine.addEventListener('change',async () => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('vending-machine');
     // check if the added qty makes the qty of the selected machine exceeds the 75 cap
     CheckIfQtyOverCap();
     // check if the product category is matched with the vending machine category:
     CheckIfCategoryMatched();
+    // disable the submit button when error(s) occur
+    await SetSubmitButtonStatus();
 })
 
 quantity.addEventListener('change', () => {
     // check if the added qty makes the qty of the selected machine exceeds the 75 cap
-    CheckIfQtyOverCap();
+    CheckIfQtyOverCap().then(() => {
+        // disable the submit button when error(s) occur
+        SetSubmitButtonStatus();
+    })
 })
 
 // Functions:------------------------------------------
@@ -91,9 +102,9 @@ async function DisplaySelectedProductInfo() {
         productPrice.value = selectedProduct.productPrice;
         productDescription.value = selectedProduct.productDescription;
         
-        console.log("product-category",productCategory.value);
-        console.log("product-price",productPrice.value);
-        console.log("product-description",productDescription.value);
+        // console.log("product-category",productCategory.value);
+        // console.log("product-price",productPrice.value);
+        // console.log("product-description",productDescription.value);
     }
 }
 function CheckIfInputProductExisted() {
@@ -101,10 +112,8 @@ function CheckIfInputProductExisted() {
     let errorMessage = document.getElementById('product-existed-message');
     if(existed) {
         errorMessage.hidden = false;
-        submitButton.disabled = true;
     } else {
         errorMessage.hidden = true;
-        submitButton.disabled = false;
     }
 }
 function CheckIfInputFromList (inputId) {
@@ -114,19 +123,15 @@ function CheckIfInputFromList (inputId) {
     for (i=0; i<optionList.length; i++) {
         if(input === optionList[i].value) {
             inList = true;
-            submitButton.disabled = false;
             i = optionList.length; // stop loop once input is found in list
         } else if (input === "") { // if there's no input yet, don't pop out the error
             inList = true;
-            submitButton.disabled = false;
         } else {
             inList = false;
-            submitButton.disabled = true;
         }
     }
     document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
 }
-
 async function CheckIfQtyOverCap() {
     let errorMessage = document.getElementById('overcap-message');
     let stockQtyInput = parseInt(quantity.value);
@@ -139,31 +144,36 @@ async function CheckIfQtyOverCap() {
     if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
         errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
         errorMessage.hidden = false;
-        submitButton.disabled = true;
     } else {
         errorMessage.hidden = true;
-        submitButton.disabled = false;
     }
 }
-
 function CheckIfCategoryMatched() {
     let errorMessage = document.getElementById('unmatching-type-message');
-    let pCategory = productCategory.value;
     let mCategory = returnMachineCategory(vendingMachine.value);
-
-    console.log("pCategory",pCategory);
-    console.log("vendingMachine", vendingMachine.value);
-    console.log("mCategory",mCategory);
-
-    if(pCategory !== mCategory && pCategory !== '' && vendingMachine.value !== ''){
+    if(productCategory.value !== mCategory && productCategory.value !== '' && vendingMachine.value !== ''){
         errorMessage.hidden = false;
-        submitButton.disabled = true;
     } else {
         errorMessage.hidden = true;
-        submitButton.disabled = false;
     }
 }
+async function SetSubmitButtonStatus() {
+    // get all the errorMessages:
+    let errorMessages = [
+        document.getElementById('product-existed-message'),
+        document.getElementById('not-predefined-product-name-message'),
+        document.getElementById('not-predefined-product-category-message'),
+        document.getElementById('not-predefined-vending-machine-message'),
+        document.getElementById('overcap-message'),
+        document.getElementById('unmatching-type-message')
+    ];
 
+    // Check if any error message is visible
+    let isErrorVisible = errorMessages.some((errorMessage) => !errorMessage.hidden);
+
+    // Disable or enable the submit button based on the error status
+    submitButton.disabled = isErrorVisible;
+}
 
 
 
