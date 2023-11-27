@@ -7294,19 +7294,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\uyenk\\.nuget\\packages\\": {}
+    "C:\\Users\\epicn\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
+      "projectUniqueName": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
-      "packagesPath": "C:\\Users\\uyenk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\obj\\",
+      "projectPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
+      "packagesPath": "C:\\Users\\epicn\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\uyenk\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\epicn\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -7369,13 +7369,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }
