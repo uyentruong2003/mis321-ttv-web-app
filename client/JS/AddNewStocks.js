@@ -176,7 +176,7 @@ function saveToProductTable() {
             productPrice: productPrice.value,
             categoryId: returnCategoryId(productCategory.value),
             productDescription: productDescription.value,
-            imgURL: selfInputProductImageURL.value;
+            imgURL: selfInputProductImageURL.value,
         }
         //save new product to DB
         saveProduct(newProduct);
