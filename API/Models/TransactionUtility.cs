@@ -15,33 +15,37 @@ namespace API.Models
             cs = new ConnectionString().cs;
         }
 
-        public string PostTransaction(Transaction transaction)
+public string PostTransaction(Transaction transaction)
+{
+    try
     {
-        try
+        using (MySqlConnection connection = new MySqlConnection(cs))
         {
-            using (MySqlConnection connection = new MySqlConnection(cs))
+            connection.Open();
+            using (MySqlCommand command = new MySqlCommand(
+                "INSERT INTO transaction (orderId, orderDate) " +
+                "VALUES (@orderID, @date)", connection))
             {
-                connection.Open();
-                using (MySqlCommand command = new MySqlCommand(
-                    "INSERT INTO transaction (orderId, orderDate) " +
-                    "VALUES (@id, @date)", connection))
-                {
-                    command.Parameters.AddWithValue("@id", transaction.orderID);
-                    command.Parameters.AddWithValue("@date", transaction.date);
+                command.Parameters.AddWithValue("@id", transaction.orderID);
+                command.Parameters.AddWithValue("@date", transaction.date);
 
-                    command.ExecuteNonQuery();
-                }
-                connection.Close();
+                command.ExecuteNonQuery();
             }
+            connection.Close();
+        }
 
-            return "Transaction added successfully";
-        }
-        catch (Exception ex)
-        {
-            // Log the exception or handle it as needed
-            return $"Error: {ex.Message}";
-        }
+        return "Transaction added successfully";
     }
+    catch (Exception ex)
+    {
+        // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+        Console.WriteLine($"Error in PostTransaction: {ex.Message}");
+
+        // Return a more informative error message
+        return $"Error adding transaction: {ex.Message}";
+    }
+}
+
 
     }
 }
