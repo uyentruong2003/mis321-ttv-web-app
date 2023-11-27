@@ -1,3 +1,4 @@
+//individualmachine.js
 let products = []
 let machineId = 0
 let currentCart = []
@@ -26,7 +27,7 @@ function populateProductTable(){
     console.log("populating table")
     
     const filteredProducts = products.filter(item => item.machineId === machineId);
-    console.log(filteredProducts)
+    console.log("filtered products: ", filteredProducts)
     
     let html=`
     <table class="product-table">
@@ -42,6 +43,7 @@ function populateProductTable(){
     for (let i = 0; i < filteredProducts.length; i += 3) {
         html += '<tr>';
         for (let j = i; j < i + 3 && j < filteredProducts.length; j++) {
+            
             const item = filteredProducts[j];
             html += `
         <td>
@@ -57,6 +59,7 @@ function populateProductTable(){
             </div>
         </td>
     `;
+    //console.log("populating item row ", i, "slot ", j)
         }
         html += '</tr>';
     }
@@ -103,21 +106,37 @@ function handleAddItem(id) {
     }
 }
 
+// async function populateArray() {
+//     try {
+//         let response = await fetch('http://localhost:5141/api/product');
+//         let data = await response.json();
+//         console.log('Data fetched:', data);
+
+//         // Assuming that the fetched data is an array of products
+//         products = data;
+
+//         return data;
+//     } catch (error) {
+//         console.error('Error fetching data:', error);
+//         throw error; // You might want to handle the error appropriately in your application
+//     }
+// }
+
 async function populateArray() {
     try {
-        let response = await fetch('http://localhost:5141/api/product');
+        let response = await fetch('http://localhost:5141/api/order');
         let data = await response.json();
         console.log('Data fetched:', data);
 
         // Assuming that the fetched data is an array of products
-        products = data;
+        products = data
 
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
-        throw error; // You might want to handle the error appropriately in your application
     }
 }
+
 async function setCurrentMachineInfo(){
     let url = 'http://localhost:5141/api/vending/'
     let targetURL = url.concat(localStorage.getItem("selectedMachineId"))
@@ -134,4 +153,3 @@ async function setCurrentMachineInfo(){
       throw error; // You might want to handle the error appropriately in your application
   }
   }
-
