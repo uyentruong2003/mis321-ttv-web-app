@@ -1,0 +1,54 @@
+
+async function SetUpAddForm() {
+    // fetch all the lists from DB
+    stockList = await getFilteredStockList(); //get non-deleted stocks only
+    productList = await fetchProducts();
+    machineList = await fetchMachines();
+    categoryList = await fetchCategories();
+
+    // set the datalist for searchable dropdowns
+    setMachineList();
+    setProductList();
+    setCategoryList();
+    
+    console.log(stockList);
+    console.log(productList);
+    console.log(machineList);
+    console.log(categoryList);
+
+    // when input product name:
+    productName.addEventListener('change', () => {
+        checkInputInDataList('product-name')
+        displaySelectedProductInfo();
+        checkMatchingCategory();
+        takeSelfInput(); 
+        manipulateSubmitButton();
+    })
+
+    // selfInputProductName.addEventListener('change', () => {
+    //     checkProductDup();
+    //     manipulateSubmitButton();
+    // })
+
+    productCategory.addEventListener('change', () => {
+        checkInputInDataList('product-category')
+        checkMatchingCategory();
+        manipulateSubmitButton();
+    })
+
+    vendingMachine.addEventListener('change', () => {
+            checkInputInDataList('vending-machine')
+            checkMatchingCategory();
+            checkQtyLimit();
+            manipulateSubmitButton();    
+    })
+
+    // quantity.addEventListener('change',() => {
+    //     checkQtyLimit(stockList);
+    //     manipulateSubmitButton();
+    // })
+
+    // handleSubmission();
+}
+
+SetUpAddForm();

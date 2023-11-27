@@ -1,7 +1,5 @@
-
-async function SetUpAddForm() {
-    // fetch all the lists from DB
-    stockList = await getFilteredStockList(); //get non-deleted stocks only
+async function SetUpAddForm () {
+    stockList = await getFilteredStockList();
     productList = await fetchProducts();
     machineList = await fetchMachines();
     categoryList = await fetchCategories();
@@ -15,46 +13,30 @@ async function SetUpAddForm() {
     console.log(productList);
     console.log(machineList);
     console.log(categoryList);
-
-    // productName.addEventListener('change', () => {
-    //     checkInputInDataList('product-name')
-    //     displaySelectedProductInfo();
-    //     checkMatchingCategory();
-    //     takeSelfInput(); 
-    //     manipulateSubmitButton();
-    // })
-
-    // selfInputProductName.addEventListener('change', () => {
-    //     checkProductDup();
-    //     manipulateSubmitButton();
-    // })
-
-    // productCategory.addEventListener('change', () => {
-    //     checkInputInDataList('product-category')
-    //     checkMatchingCategory();
-    //     manipulateSubmitButton();
-    // })
-
-    // vendingMachine.addEventListener('change', () => {
-    //     if(checkInputInDataList('vending-machine')){
-    //         console.log(vendingMachine.value);
-    //         checkMatchingCategory();
-    //         checkQtyLimit();
-    //     }
-    //     manipulateSubmitButton();    
-    // })
-
-    // quantity.addEventListener('change',() => {
-    //     checkQtyLimit(stockList);
-    //     manipulateSubmitButton();
-    // })
-
-    // handleSubmission();
+    
 }
 
-SetUpAddForm();
+async function TakeUserInput() {
+    await SetUpAddForm();
+    //when product name is input:
+    productName.addEventListener('change',() => {
+        checkInputInDataList('product-name');
+        displaySelectedProductInfo();
+        checkMatchingCategory();
+    })
 
+    productCategory.addEventListener('change',() => {
+        checkInputInDataList('product-category');
+        checkMatchingCategory();
+    })
 
+    vendingMachine.addEventListener('change',() => {
+        checkInputInDataList('vending-machine');
+        checkMatchingCategory();
+    })
+}
+
+TakeUserInput();
 
 
 

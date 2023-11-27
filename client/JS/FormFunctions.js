@@ -145,7 +145,7 @@ function returnMachineCategory (machineName) {
 }
 
 // validate that the qty added doesn't make the machine qty exceed its capacity of 75
-function checkQtyLimit (stockList) {
+function checkQtyLimit () {
     let stockQtyInput = parseInt(quantity.value);
     let machineId = returnMachineId(vendingMachine.value);
     let currentMachineQty = 0;
@@ -308,7 +308,7 @@ function manipulateSubmitButton() {
     const isProductNameValid = checkInputInDataList('product-name') && checkProductDup();
     const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingCategory();
     const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingCategory() && checkQtyLimit();
-    const isQuantityValid = checkQtyLimit(stockList);
+    const isQuantityValid = checkQtyLimit();
 
     // Disable the submit button if any validation fails
     submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
