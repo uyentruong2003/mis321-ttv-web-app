@@ -101,10 +101,6 @@ async function DisplaySelectedProductInfo() {
         productCategory.value = await returnCategoryName(selectedProduct.categoryId);
         productPrice.value = selectedProduct.productPrice;
         productDescription.value = selectedProduct.productDescription;
-        
-        // console.log("product-category",productCategory.value);
-        // console.log("product-price",productPrice.value);
-        // console.log("product-description",productDescription.value);
     }
 }
 function CheckIfInputProductExisted() {
@@ -167,14 +163,25 @@ async function SetSubmitButtonStatus() {
         document.getElementById('overcap-message'),
         document.getElementById('unmatching-type-message')
     ];
-
     // Check if any error message is visible
     let isErrorVisible = errorMessages.some((errorMessage) => !errorMessage.hidden);
 
     // Disable or enable the submit button based on the error status
     submitButton.disabled = isErrorVisible;
 }
-
+function saveToProductTable() {
+    if (productName === "Other"){
+        let newProduct = {
+            productName: selfInputProductName.value,
+            productPrice: productPrice.value,
+            categoryId: returnCategoryId(productCategory.value),
+            productDescription: productDescription.value,
+            imgURL: selfInputProductImageURL.value;
+        }
+        //save new product to DB
+        saveProduct(newProduct);
+    }
+}
 
 
 

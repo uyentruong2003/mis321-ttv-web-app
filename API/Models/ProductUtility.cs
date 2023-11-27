@@ -15,11 +15,10 @@ namespace mis321_ttv_web_app.API.Models
         public void SaveToProductTable(Product newProduct) {
             using var con = new MySqlConnection(cs);
             con.Open();
-            string stm = @"INSERT INTO product(productId,productName, productPrice, categoryId, productDescription, imgURL) 
-                                VALUES(@productId,@productName, @productPrice, @categoryId, @productDescription, @imgURL)";
+            string stm = @"INSERT INTO product(productName, productPrice, categoryId, productDescription, imgURL) 
+                                VALUES(@productName, @productPrice, @categoryId, @productDescription, @imgURL)";
             using var cmd = new MySqlCommand(stm, con);
         
-            cmd.Parameters.AddWithValue("@productId", newProduct.productId);
             cmd.Parameters.AddWithValue("@productName", newProduct.productName);
             cmd.Parameters.AddWithValue("@productPrice", newProduct.productPrice);
             cmd.Parameters.AddWithValue("@categoryId", newProduct.categoryId);

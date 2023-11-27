@@ -25,11 +25,29 @@ async function getFilteredStockList() {
     })
     stockList = filteredStockList;
 }
-
 // function to return category name based on a given category id
 function returnCategoryName(categoryId) {
     let category = categoryList.find((c) => c.categoryId === categoryId)
     return category ? category.categoryName : "";
+}
+// function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
+function returnMachineCategory (machineName) {
+    // Find the index of the hyphen and colon
+    let hyphenIndex = machineName.indexOf('-');
+    let colonIndex = machineName.indexOf(':');
+    // Extract the substring between the hyphen and colon
+    return machineName.substring(hyphenIndex + 1, colonIndex).trim();
+}
+// function to return the machineId given the machine name
+function returnMachineId(machineName) {
+    let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
+    return machine ? machine.machineId : '';  
+}
+
+// function to return categoryId given the categoryName
+async function returnCategoryId(categoryName) {
+    let category = categoryList.find((c) => c.categoryName === categoryName);
+    return category ? category.categoryId : -1;
 }
 
 // SET DATALIST FOR SEARCHABLE DROPDOWNS ==============================================================
@@ -67,122 +85,6 @@ function setMachineList() {
     });
 }
 
-
-// REGULATE PRODUCT NAME INPUT =================================================================================
-
-// function to take self input when "Other" is selected:
-function takeSelfInput () {
-    let selfInputSection = document.getElementById(`other-product-name`); //the div for self input section
-    if (productName.value === "Other") {
-        // unhide the self input section
-        selfInputSection.hidden = false;
-        // allow input for product category, price, and description
-        productCategory.value = '';
-        productCategory.readOnly = false;
-        productPrice.value = '';
-        productPrice.readOnly = false;
-        productDescription.value = '';
-        productDescription.readOnly = false;
-        // required input for the new product name & immage
-        selfInputProductName.required = true;
-        selfInputProductImageURL.required = true;
-    } else {
-        // hide the self input section
-        selfInputSection.hidden = true;
-        // disable input
-        productCategory.readOnly = true;
-        productPrice.readOnly = true;
-        productDescription.readOnly = true;
-        // unrequire self-input product name
-        selfInputProductName.required = false;
-        selfInputProductImageURL.required = false;
-    }
-}
-
-// INPUT VALIDATION ===================================================================================================
-
-// validate that self-input product hasn't appear in the dropdown list
-function checkProductDup () {
-    let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProductName.value.toLowerCase());
-    if (existed) {
-        document.getElementById('product-existed-message').hidden = false;
-        return false;
-    } else {
-        document.getElementById('product-existed-message').hidden = true;
-        return true;
-    }
-}
-
-// validate that product category and machine type is a match
-function checkMatchingCategory () {
-    let machineCategory = returnMachineCategory(vendingMachine.value);
-    if (machineCategory !== productCategory.value && vendingMachine.value !== "" && productCategory.value !== "") {
-        document.getElementById('unmatching-type-message').hidden = false;
-        return false;
-    } else {
-        document.getElementById('unmatching-type-message').hidden = true;
-        return true;
-    }
-}
-
-// function to return the machine type given the machine name in this format: VM{machineId}-{categoryName}: {machineLocation}
-function returnMachineCategory (machineName) {
-    // Find the index of the hyphen and colon
-    let hyphenIndex = machineName.indexOf('-');
-    let colonIndex = machineName.indexOf(':');
-    // Extract the substring between the hyphen and colon
-    return machineName.substring(hyphenIndex + 1, colonIndex).trim();
-}
-
-// validate that the qty added doesn't make the machine qty exceed its capacity of 75
-function checkQtyLimit () {
-    let stockQtyInput = parseInt(quantity.value);
-    let machineId = returnMachineId(vendingMachine.value);
-    let currentMachineQty = 0;
-    //loop thru stockList to calc the current qty in the specified machine
-    stockList.forEach((s) => {
-        if(s.machineId === machineId) {
-            currentMachineQty = currentMachineQty + s.stockQty;
-        }
-    })
-    // assume each machine holds 75 items, check if adding this quantity will exceeds the limit:
-    if (currentMachineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== 0) {
-        document.getElementById('overcap-message').textContent = `You can only add ${75 - currentMachineQty} more items to this machine`;
-        document.getElementById('overcap-message').hidden = false;
-        return false;
-    }
-    else {
-        document.getElementById('overcap-message').hidden = true;
-        return true;
-    }
-}
-
-// function to return the machineId given the machine name
-function returnMachineId(machineName) {
-    let machine = machineList.find ((m) => `VM${m.machineId}-${returnCategoryName(m.categoryId)}: ${m.machineLocation}` === machineName);
-    return machine ? machine.machineId : '';  
-}
-
-
-// validate that user input belongs to the predefined list
-function checkInputInDataList(inputId) {
-    let input = document.getElementById(inputId).value;
-    let optionList = document.getElementById(`${inputId}-list`).options;
-    let inList = false;
-    for (i=0; i<optionList.length; i++) {
-        if(input === optionList[i].value) {
-            inList = true;
-            i = optionList.length; // stop loop once input is found in list
-        } else if (input === "") { // if there's no input yet, don't pop out the error
-            inList = true;
-        } else {
-            inList = false;
-        }
-    }
-    document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
-    return inList;
-}
-
 // HANDLE SUBMISSION ==========================================================================================
 
 // add the new product (if there's any) into the product table
@@ -203,12 +105,7 @@ async function addNewToProductTable() {
         console.log(error)
     }
 }
-        // function to return categoryId given the categoryName
-        async function returnCategoryId(categoryName) {
-            categoryList = await fetchCategories();
-            let category = categoryList.find((c) => c.categoryName === categoryName);
-            return category ? category.categoryId : -1;
-        }
+
 
 
 // add the stock into the stockdetails table
