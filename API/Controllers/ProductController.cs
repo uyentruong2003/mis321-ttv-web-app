@@ -21,38 +21,39 @@ namespace MyApp.Namespace
         [HttpGet]
         public List<Product> Get()
         {
-            ProductUtility productutil = new ProductUtility();
+            ProductUtility utility = new ProductUtility();
             List<Product> products = new List<Product>();
-            products = productutil.GetAllProducts();
+            products = utility.GetAllProducts();
             return products;
         }
 
         // GET api/<ProductController>/5
-        [HttpGet("{id}")]
-        public Product Get(int id)
+        [HttpGet("{productId}")]
+        public Product Get(int productId)
         {
-            ProductUtility produtil = new ProductUtility();
-            Product myProduct = produtil.GetProductByID(id);
-            return myProduct;
-            
+            ProductUtility utility = new ProductUtility();
+            Product product = new Product();
+            product = utility.GetProductById(productId);
+            return product;
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Product newProduct)
         {
+            ProductUtility utility = new ProductUtility();
+            utility.SaveToProductTable(newProduct);
         }
 
         // PUT api/<ProductController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("{productId}")]
+        public void Put(int productId,[FromBody] Product product)
         {
+            ProductUtility utility = new ProductUtility();
+            utility.UpdateProduct(product);
         }
 
-        // DELETE api/<ProductController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+    //     // DELETE api/<ProductController>/5
+    //     [HttpDelete("{productId}/{machineId}")]
     }
 }

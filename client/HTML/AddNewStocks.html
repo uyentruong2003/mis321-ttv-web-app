@@ -50,6 +50,10 @@
                     <input type="text" class="form-control" id="product-name-self-input" />
                   </div>
                   <p id="product-existed-message" class="message-display" hidden>This product already exists</p>  
+                  <label for="product-imageURL-self-input" class="col-form-label">***Paste the image URL of the new product:</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="product-imgURL-self-input" />
+                  </div>
                 </div>
               </div>
               <!-- PRODUCT CATEGORY -->
@@ -106,7 +110,7 @@
               </div>
               <!-- SUBMIT BUTTON -->
               <div style="margin-top: 30px">
-                <button type="submit" class="btn btn-danger" id="submit-button" disabled>Add Products</button>
+                <button type="submit" class="btn btn-danger" id="submit-button" disabled>Add Stock</button>
                 <a class="cancelBtn" href="./AdminInventoryDashboard.html">
                   <button type="button" class="btn btn-outline-secondary">Cancel</button>
                 </a>
@@ -121,6 +125,8 @@
     <!-- Boostrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <!-- My JS -->
+    <script src="../JS/FormFetchCalls.js"></script>
+    <script src="../JS/FormFunctions.js"></script>
     <script src="../JS/AddNewStocks.js"></script>
         
 </body>

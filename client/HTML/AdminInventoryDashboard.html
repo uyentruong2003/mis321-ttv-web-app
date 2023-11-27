@@ -32,15 +32,15 @@
         <div class="card-body">
           <div class="row">
             <div class="col">
-              <p id="availableInventoryDisplay">Available Inventory: 0</p>
+              <p id="availableInventoryDisplay" class="text-white fs-4">Available Inventory: </p>
               <!-- <span id="inventoryAvailableNumber"></span> -->
             </div>
             <div class="col">
-              <p id="soldInventoryNumber">Sold Inventory: 0</p>
+              <p id="soldInventoryNumber" class="text-white fs-4">Sold Inventory: </p>
               <!-- <span id="soldInventoryNumber"></span> -->
             </div>
             <div class="col">
-              <p id="salesRevenueDisplay">Sales Revenue: $0.00</p>
+              <p id="salesRevenueDisplay" class="text-white fs-4">Sales Revenue: </p>
               <!-- <span id="salesRevenueNumber"></span> -->
             </div>
           </div>
@@ -48,40 +48,37 @@
       </div>
       
       
-
-      <!-- <div class="form-outline mb-4" style="width: 500px; margin: auto; outline: black; outline-width: thick;">
-        <input type="text" id="form2Example1" class="form-control" placeholder="Search for a product" />
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Dropdown
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-              <button class="dropdown-item" type="button">Action</button>
-              <button class="dropdown-item" type="button">Another action</button>
-              <button class="dropdown-item" type="button">Something else here</button>
-            </div>
-          </div>
-      </div> -->
-
       <div class="container mt-4" id="MachineChoices">
-        <div class="dropdown">
-          <button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: blue" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+    <div class="dropdown">
+        <button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: blue" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
             Filter By Category
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
             <li><a class="dropdown-item" href="#" onclick="filterData(1,1)">Drink</a></li>
             <li><a class="dropdown-item" href="#" onclick="filterData(2,2)">Snack</a></li>
             <li><a class="dropdown-item" href="#" onclick="filterData(3,3)">Electronic</a></li>
-            <!-- <div class="dropdown-divider"></div>
-            <li><a class="dropdown-item" href="#" onclick="null">Northeast</a></li>
-            <li><a class="dropdown-item" href="#" onclick="null">Southeast</a></li>
-            <li><a class="dropdown-item" href="#" onclick="filterData('Midwestast')">Midwest</a></li>
-            <li><a class="dropdown-item" href="#" onclick="filterData('Northeast')">Southwest</a></li>
-            <li><a class="dropdown-item" href="#" onclick="filterData('Northeast')">Northwest</a></li> -->
-            
-          </ul>
-        </div>
-      </div>
+        </ul>
+    </div>
+
+    <!-- Separate dropdown for additional options -->
+    <div class="dropdown">
+        <button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: blue" type="button" id="additionalDropdownButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Filter by Region
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="additionalDropdownButton">
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northeast')">Northeast</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Southeast')">Southeast</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Midwest')">Midwest</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Southwest')">Southwest</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northwest')">Northwest</a></li>
+        </ul>
+    </div>
+
+    <button class="btn btn-secondary btn-lg" style="background-color: red" onclick="ClearFilters()">Clear Filters</button>
+</div>
+
+
+      
       
 
       <div class="AddNewBtn">
@@ -90,6 +87,11 @@
         </a>
     </div>
     
+
+    <div class="currentfilters">
+      <p id="categoryfilter">category none</p>
+      <p id="regionfilter">region none</p>
+    </div>
 
       <div class="inventoryTable">
         <table class="table table-striped" id="inventoryTable">
