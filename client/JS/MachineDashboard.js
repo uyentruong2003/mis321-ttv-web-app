@@ -24,10 +24,10 @@ async function populateArrays() {
 
         data.forEach(item => {
             switch (item.machineRegion) {
-                case 'East':
+                case 'Northeast':
                     East.push(item);
                     break;
-                case 'West':
+                case 'Northwest':
                     West.push(item);
                     break;
                 case 'SouthWest':
@@ -146,9 +146,28 @@ function createRedDropdown(array, containerId, region) {
 }
 
 function displayRedDropdowns() {
-    createRedDropdown(East, 'eastDropdownContainer', 'East');
-    createRedDropdown(West, 'westDropdownContainer', 'West');
-    createRedDropdown(SouthWest, 'southWestDropdownContainer', 'SouthWest');
-    createRedDropdown(SouthEast, 'southEastDropdownContainer', 'SouthEast');
-    createRedDropdown(MidWest, 'midWestDropdownContainer', 'MidWest');
+    createRedDropdown(East, 'eastDropdownContainer', 'Northeast');
+    createRedDropdown(West, 'westDropdownContainer', 'Northwest');
+    createRedDropdown(SouthWest, 'southWestDropdownContainer', 'SouthWest'); //good
+    createRedDropdown(SouthEast, 'southEastDropdownContainer', 'SouthEast'); //good
+    createRedDropdown(MidWest, 'midWestDropdownContainer', 'MidWest'); //good
+}
+
+//Dont know what region
+function toggleText() {
+    var dontKnowDiv = document.getElementById('dont-know-js');
+    var imgSrc = "../sources/usamap.jpg";
+
+    // Check if there is an image already
+    var existingImage = dontKnowDiv.querySelector('img');
+
+    if (existingImage) {
+        // If an image is present, remove it
+        existingImage.remove();
+    } else {
+        // If no image is present, add a new image
+        var imgElement = document.createElement('img');
+        imgElement.src = imgSrc;
+        dontKnowDiv.appendChild(imgElement);
+    }
 }

@@ -13,7 +13,7 @@
      <!-- Navbar -->
      <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">TTV</a>
+          <a class="navbar-brand" href="../HTML/LandingPage.html">TTV</a>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
@@ -27,6 +27,13 @@
         </div>
       </nav>
       
+            <style>
+                .dont-know {
+                    cursor: pointer;
+                    color: crimson;
+                    text-decoration: underline;
+                }
+            </style>
       <!-- Banner -->
        <img src="../sources/vending-banner.jpg" alt="vendingbanner" style="width: 100%; height: 50%;">
 
@@ -48,8 +55,14 @@
           </tr>
           <tr>
             <td><div id="midWestDropdownContainer" class="btn-group"></div></td>
-            <td><h6 class="dont-know">Don't know what region you're in?</h6></td>
-          </tr>
+        
+            <td>
+                <h6 class="dont-know" onclick="toggleText()">Don't know what region you're in?</h6>
+                <div id="dont-know-js"></div>
+            </td>
+        
+        
+        </tr>
         </tbody>
       </table>
     </div>
