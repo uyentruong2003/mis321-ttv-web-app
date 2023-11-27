@@ -5,7 +5,17 @@ let inventoryAvailable = '';
 let soldInventory = '';
 let salesRevenue = '';
 
+let transactions = [
 
+{
+  categoryid : 1,
+  productid : 1
+},
+{
+  categoryid : 2,
+  productid : 2
+}
+]
 
 function fetchData(url) {
   return fetch(url)
@@ -104,14 +114,81 @@ fetchData(apiUrl)
 
 let filterChoice = '';
 
-function filterData(categoryid, filterChoice){
-  const filteredItems = [];
-  inventoryData.forEach(item =>{
-    // console.log(item);
-      if(item.categoryid == filterChoice){
-        filteredItems.push(item);
-      }
-})
-populateTable(filteredItems);
+// function filterData(categoryid, filterChoice){
+//   const filteredItems = [];
+//   inventoryData.forEach(item =>{
+//     // console.log(item);
+//       if(item.categoryid == filterChoice){
+//         filteredItems.push(item);
+//       }
+// })
+// populateTable(filteredItems);
+// let totalSalesRevenue = calculateSalesRevenue(transactions, filteredItems, filterChoice);
+//   console.log('Total Sales Revenue for Category', filterChoice, ':', totalSalesRevenue);
+//   document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${totalSalesRevenue.toFixed(2)}`;
+// }
+
+function filterData(categoryid, filterChoice) {
+  const filteredItems = inventoryData.filter(item => item.categoryid == filterChoice);
+  populateTable(filteredItems);
+
+  // Calculate sales revenue based on filtered items
+  let totalSalesRevenue = calculateSalesRevenue(transactions, filteredItems, filterChoice);
+  console.log('Total Sales Revenue for Category', filterChoice, ':', totalSalesRevenue);
+
+  // Calculate total available inventory
+  let totalAvailableInventory = calculateAvailableInventory(filteredItems);
+  console.log('Total Available Inventory for Category', filterChoice, ':', totalAvailableInventory);
+
+  // Calculate and display sold inventory
+  let totalSoldInventory = calculateSoldInventory(transactions, filterChoice);
+  console.log('Total Sold Inventory for Category', filterChoice, ':', totalSoldInventory);
+
+  // Display the calculated values in the HTML
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${totalSalesRevenue.toFixed(2)}`;
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${totalSoldInventory}`;
 }
 
+
+function calculateAvailableInventory(filteredItems) {
+  let totalInventory = 0;
+
+  filteredItems.forEach(item => {
+    totalInventory += item.qtyInMachine;
+  });
+
+  return totalInventory;
+}
+
+
+function calculateSalesRevenue(transactions, inventoryData, filterCategory) {
+  let salesRevenue = 0;
+
+  transactions.forEach(transaction => {
+    const { categoryid } = transaction;
+    const matchingInventory = inventoryData.find(item => item.categoryid === categoryid && item.categoryid === filterCategory);
+
+    if (matchingInventory) {
+      salesRevenue += matchingInventory.price;
+    }
+  });
+
+  return salesRevenue;
+}
+
+
+function calculateSoldInventory(transactions, filterCategory) {
+  let soldInventory = 0;
+
+  transactions.forEach(transaction => {
+    if (transaction.categoryid === filterCategory) {
+      soldInventory++;
+    }
+  });
+
+  return soldInventory;
+}
+
+// let totalSalesRevenue = calculateSalesRevenue(transactions, inventoryData);
+// console.log('Total Sales Revenue:', totalSalesRevenue);
