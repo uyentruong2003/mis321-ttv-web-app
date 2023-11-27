@@ -50,6 +50,17 @@ quantity.addEventListener('change', () => {
         SetSubmitButtonStatus();
     })
 })
+document.getElementById("add-new-stock-form").addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+        saveToProductTable().then(() => {
+            saveToStockTable();
+        })
+    } catch (error) {
+        // Handle or log the error as needed
+        console.error('Error in form submission:', error);
+    }
+});
 
 // Functions:------------------------------------------
 async function SetUpAddForm () {
@@ -63,6 +74,7 @@ async function SetUpAddForm () {
     setProductList();
     setCategoryList();
     
+    //testing
     console.log(stockList);
     console.log(productList);
     console.log(machineList);
@@ -169,20 +181,56 @@ async function SetSubmitButtonStatus() {
     // Disable or enable the submit button based on the error status
     submitButton.disabled = isErrorVisible;
 }
-function saveToProductTable() {
-    if (productName === "Other"){
-        let newProduct = {
-            productName: selfInputProductName.value,
-            productPrice: productPrice.value,
-            categoryId: returnCategoryId(productCategory.value),
-            productDescription: productDescription.value,
-            imgURL: selfInputProductImageURL.value,
+async function saveToProductTable() {
+    try {
+        if (productName.value === "Other") {
+            let newProduct = {
+                productName: selfInputProductName.value,
+                productPrice: parseFloat(productPrice.value),
+                categoryId: returnCategoryId(productCategory.value),
+                productDescription: productDescription.value,
+                imgURL: selfInputProductImageURL.value,
+            };
+            console.log(newProduct);
+            // save new product to DB
+            await saveProduct(newProduct);
+            // re-fetch product just in case the user chose to self-input product
+            productList = await fetchProducts();
         }
-        //save new product to DB
-        saveProduct(newProduct);
+    } catch (error) {
+        console.error('Error saving product:', error);
+        throw error;
     }
 }
+async function saveToStockTable() {
+    try {
+        let finalProductName = productName.value === "Other" ? selfInputProductName.value : productName.value;
+        let newStock = {
+            productId: returnProductId(finalProductName),
+            machineId: returnMachineId(vendingMachine.value),
+            stockQty: parseInt(quantity.value),
+            lastUpdate: getCurrentDateTime(),
+            deleted: false,
+        };
 
+        console.log(newStock);
+        // save new stock to DB
+        await saveStock(newStock);
+        // increase the machineQty of the selected machine
+        await increaseMachineQty(newStock);
+    } catch (error) {
+        console.error('Error saving stock:', error);
+        throw error;
+    }
+}
+async function increaseMachineQty(newStock) {
+    // PUT (Update) the vendingMachine table:
+    let updatedMachine = machineList.find((m) => m.machineId === newStock.machineId);
+    console.log(updatedMachine);
+    updatedMachine.machineQty = updatedMachine.machineQty + newStock.stockQty; // update the machineQty to keep up with quantity cap
+    console.log("after", updatedMachine.machineQty);
+    await updateMachine(updatedMachine, updatedMachine.machineId);
+}
 
 
 

@@ -136,7 +136,7 @@ async function saveProduct(newProduct) {
         });
 
         if (!response.ok) {
-            throw new Error(`Failed to save product. Status: ${response.status}`);
+            throw new Error(`Failed to save product. Status: ${response.status}.`);
         }
     } catch (error) {
         console.error(error);
