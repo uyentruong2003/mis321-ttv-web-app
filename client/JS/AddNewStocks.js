@@ -9,6 +9,8 @@ productName.addEventListener('change',() => {
     DisplaySelectedProductInfo();
     // if "Other" is chosen, pop out self-input section
     RouteIfOtherProduct();
+    // check if the product category is matched with the vending machine category:
+    CheckIfCategoryMatched();
 })
 
 selfInputProductName.addEventListener('change',() => {
@@ -20,18 +22,25 @@ selfInputProductName.addEventListener('change',() => {
 productCategory.addEventListener('change',() => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('product-category');
+    // check if the product category is matched with the vending machine category:
+    CheckIfCategoryMatched();
 })
 
 vendingMachine.addEventListener('change',() => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('vending-machine');
+    // check if the added qty makes the qty of the selected machine exceeds the 75 cap
+    CheckIfQtyOverCap();
+    // check if the product category is matched with the vending machine category:
+    CheckIfCategoryMatched();
 })
 
 quantity.addEventListener('change', () => {
-    
+    // check if the added qty makes the qty of the selected machine exceeds the 75 cap
+    CheckIfQtyOverCap();
 })
 
-// Functions:
+// Functions:------------------------------------------
 async function SetUpAddForm () {
     stockList = await getFilteredStockList();
     productList = await fetchProducts();
@@ -81,6 +90,10 @@ async function DisplaySelectedProductInfo() {
         productCategory.value = await returnCategoryName(selectedProduct.categoryId);
         productPrice.value = selectedProduct.productPrice;
         productDescription.value = selectedProduct.productDescription;
+        
+        console.log("product-category",productCategory.value);
+        console.log("product-price",productPrice.value);
+        console.log("product-description",productDescription.value);
     }
 }
 function CheckIfInputProductExisted() {
@@ -101,24 +114,55 @@ function CheckIfInputFromList (inputId) {
     for (i=0; i<optionList.length; i++) {
         if(input === optionList[i].value) {
             inList = true;
+            submitButton.disabled = false;
             i = optionList.length; // stop loop once input is found in list
         } else if (input === "") { // if there's no input yet, don't pop out the error
             inList = true;
+            submitButton.disabled = false;
         } else {
             inList = false;
+            submitButton.disabled = true;
         }
     }
     document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
-    return inList;
 }
-function CheckIfQtyOverCap() {
+
+async function CheckIfQtyOverCap() {
+    let errorMessage = document.getElementById('overcap-message');
     let stockQtyInput = parseInt(quantity.value);
-    let currentMachineQty = 0;
     let machineId = returnMachineId(vendingMachine.value);
-    console.log(machineId);
+    // get the current inv quantity of the machine this stock is added to:
+    let machine = await fetchMachineById(machineId);
+
+    let avalaibleCap = 75 - machine.machineQty;
+
+    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
+        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
+        errorMessage.hidden = false;
+        submitButton.disabled = true;
+    } else {
+        errorMessage.hidden = true;
+        submitButton.disabled = false;
+    }
 }
 
+function CheckIfCategoryMatched() {
+    let errorMessage = document.getElementById('unmatching-type-message');
+    let pCategory = productCategory.value;
+    let mCategory = returnMachineCategory(vendingMachine.value);
 
+    console.log("pCategory",pCategory);
+    console.log("vendingMachine", vendingMachine.value);
+    console.log("mCategory",mCategory);
+
+    if(pCategory !== mCategory && pCategory !== '' && vendingMachine.value !== ''){
+        errorMessage.hidden = false;
+        submitButton.disabled = true;
+    } else {
+        errorMessage.hidden = true;
+        submitButton.disabled = false;
+    }
+}
 
 
 
