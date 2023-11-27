@@ -104,3 +104,5 @@ async function setCurrentMachineInfo(){
     throw error; // You might want to handle the error appropriately in your application
 }
 }
+
+

@@ -24,11 +24,12 @@ public string PostTransaction(Transaction transaction)
             connection.Open();
             using (MySqlCommand command = new MySqlCommand(
                 "INSERT INTO transaction (orderId, orderDate) " +
-                "VALUES (@orderID, @date)", connection))
+                "VALUES (@orderId, @orderDate)", connection))
             {
-                command.Parameters.AddWithValue("@id", transaction.orderID);
-                command.Parameters.AddWithValue("@date", transaction.date);
+                command.Parameters.AddWithValue("@orderId", transaction.orderID);
+                command.Parameters.AddWithValue("@orderDate", transaction.date);
 
+                command.Prepare();
                 command.ExecuteNonQuery();
             }
             connection.Close();

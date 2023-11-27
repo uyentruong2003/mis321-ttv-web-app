@@ -24,10 +24,10 @@ async function populateArrays() {
 
         data.forEach(item => {
             switch (item.machineRegion) {
-                case 'Northeast':
+                case 'East':
                     East.push(item);
                     break;
-                case 'Northwest':
+                case 'West':
                     West.push(item);
                     break;
                 case 'SouthWest':
@@ -115,7 +115,10 @@ function createRedDropdown(array, containerId, region) {
     button.setAttribute('data-bs-toggle', 'dropdown');
     button.setAttribute('aria-haspopup', 'true');
     button.setAttribute('aria-expanded', 'false');
-    button.textContent = region;
+
+    // Replace "North West" with "West" in the dropdown button
+    const displayRegion = region === 'North West' ? 'West' : region;
+    button.textContent = displayRegion;
 
     const dropdownMenu = document.createElement('div');
     dropdownMenu.classList.add('dropdown-menu');
@@ -144,6 +147,7 @@ function createRedDropdown(array, containerId, region) {
     // Initialize Bootstrap dropdown
     new bootstrap.Dropdown(button);
 }
+
 
 function displayRedDropdowns() {
     createRedDropdown(East, 'eastDropdownContainer', 'Northeast');

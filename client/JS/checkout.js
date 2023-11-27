@@ -89,7 +89,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -98,18 +98,23 @@ function populateCheckoutForm(){
     document.getElementById('app').innerHTML+=html
 }
 
-//Handling
-function handleCheckout(){
-    let cardNum = document.getElementById('card-num').value
-    let cardName = document.getElementById('card-name').value
-    let cardCVV = document.getElementById('cvv-num').value
-    let cardExp = document.getElementById('exp-date').value
-    let zipCode = document.getElementById('zip-code').value
-    let myCard = {Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode}
-    
-    //do whatever with the card object
-    localStorage.setItem("cardInfo", JSON.stringify(myCard))
-    console.log('Card information received: ', JSON.stringify(myCard))
+// Call this function when handling the checkout
+function handleCheckout() {
+    const orderNumber = parseInt(localStorage.getItem('orderNumber'));
+    const transactionDateTime = new Date().toISOString(); // Use current DateTime
+
+    updateDatabase(orderNumber, transactionDateTime);
+
+    // Rest of your checkout logic
+    let cardNum = document.getElementById('card-num').value;
+    let cardName = document.getElementById('card-name').value;
+    let cardCVV = document.getElementById('cvv-num').value;
+    let cardExp = document.getElementById('exp-date').value;
+    let zipCode = document.getElementById('zip-code').value;
+    let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
+
+    localStorage.setItem('cardInfo', JSON.stringify(myCard));
+    console.log('Card information received: ', JSON.stringify(myCard));
     document.getElementById('checkout-form').reset();
 }
 
@@ -137,5 +142,31 @@ function populateArray(){
       throw error; // You might want to handle the error appropriately in your application
   }
   }
+
+  async function updateDatabase(orderNumber, transactionDateTime) {
+    const url = 'http://localhost:5141/api/Transaction';
+
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                "accept" : 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(transactionData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        const responseData = await response.json();
+        console.log('Database updated successfully:', responseData);
+    } catch (error) {
+        console.error('Error updating database:', error);
+
+    }
+}
 
 
