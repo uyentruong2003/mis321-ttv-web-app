@@ -1,3 +1,56 @@
+// DUMMY DATA
+
+let inventoryData = [
+  {
+  id : 1,
+  name : 'doritos',
+  categoryid : 1,
+  machineId : 7,
+  qtyInMachine : 10,
+  price : 2.55,
+  region : 'East'
+  },
+  {
+  id : 2,
+  name : 'Headphones',
+  categoryid : 3,
+  machineId : 4,
+  qtyInMachine : 7,
+  price : 2.25,
+  region : 'West'
+  },
+  {
+  id : 3,
+  name : 'coke',
+  categoryid : 2,
+  machineId : 9,
+  qtyInMachine : 19,
+  price : 1.25,
+  region : 'Northeast'
+  },
+  // Add more items as needed
+];
+
+let transactions = [
+
+  {
+    categoryid : 1,
+    productid : 1
+  },
+  {
+    categoryid : 2,
+    productid : 2
+  }
+  ]
+
+  // END DUMMY DATA
+
+
+
+
+
+
+
 // TODO FIGURE HOW DELETE IS BEING HANDELED
 
 const apiUrl = 'http://localhost:5141/api/AdminDash';
@@ -41,7 +94,7 @@ function populateTable(data) {
                  <td>${item.region}</td>
       <td>
         <a href="EditStocks.html">
-          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;">Edit</button>
+          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit</button>
         </a>
         <a href="https://www.google.com/">
           <button type="button" class="btn btn-primary" style="background-color: red;">Delete</button>
@@ -139,49 +192,16 @@ function calculateSoldInventory(transactions, filterCategory) {
 // END 4.
 
 
-// DUMMY DATA
+// 5. EDIT STOCKS LOGIC
 
-let inventoryData = [
-  {
-  id : 1,
-  name : 'doritos',
-  categoryid : 1,
-  machineId : 7,
-  qtyInMachine : 10,
-  price : 2.55,
-  region : 'East'
-  },
-  {
-  id : 2,
-  name : 'Headphones',
-  categoryid : 3,
-  machineId : 4,
-  qtyInMachine : 7,
-  price : 2.25,
-  region : 'West'
-  },
-  {
-  id : 3,
-  name : 'coke',
-  categoryid : 2,
-  machineId : 9,
-  qtyInMachine : 19,
-  price : 1.25,
-  region : 'Northeast'
-  },
-  // Add more items as needed
-];
+function editItem(productId, machineId) {
+  selectedItem = { productId, machineId };
+  // Do whatever you need with the product ID and machine ID
+  console.log('Edit clicked for Product ID:', productId, 'Machine ID:', machineId);
+  console.log('Selected Item:', selectedItem);
+}
 
-let transactions = [
+// END 5.
 
-  {
-    categoryid : 1,
-    productid : 1
-  },
-  {
-    categoryid : 2,
-    productid : 2
-  }
-  ]
 
-  // END DUMMY DATA
+
