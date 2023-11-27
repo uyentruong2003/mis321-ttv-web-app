@@ -32,15 +32,15 @@
         <div class="card-body">
           <div class="row">
             <div class="col">
-              <p id="availableInventoryDisplay">Available Inventory: 0</p>
+              <p id="availableInventoryDisplay" class="text-white fs-4">Available Inventory: </p>
               <!-- <span id="inventoryAvailableNumber"></span> -->
             </div>
             <div class="col">
-              <p id="soldInventoryNumber">Sold Inventory: 0</p>
+              <p id="soldInventoryNumber" class="text-white fs-4">Sold Inventory: </p>
               <!-- <span id="soldInventoryNumber"></span> -->
             </div>
             <div class="col">
-              <p id="salesRevenueDisplay">Sales Revenue: $0.00</p>
+              <p id="salesRevenueDisplay" class="text-white fs-4">Sales Revenue: </p>
               <!-- <span id="salesRevenueNumber"></span> -->
             </div>
           </div>
@@ -81,7 +81,10 @@
             
           </ul>
         </div>
+        <button class="btn btn-secondary btn-lg" style="background-color: red" onclick="ClearFilters()">Clear Filters</button>
       </div>
+
+      
       
 
       <div class="AddNewBtn">

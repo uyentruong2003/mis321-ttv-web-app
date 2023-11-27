@@ -26,33 +26,33 @@ function fetchData(url) {
 }
 
 let inventoryData = [
-    // {
-    // id : 1,
-    // name : 'doritos',
-    // categoryid : 1,
-    // machineId : 7,
-    // qtyInMachine : 10,
-    // price : 2.55,
-    // region : 'East'
-    // },
-    // {
-    // id : 2,
-    // name : 'Headphones',
-    // categoryid : 3,
-    // machineId : 4,
-    // qtyInMachine : 7,
-    // price : 2.25,
-    // region : 'West'
-    // },
-    // {
-    // id : 3,
-    // name : 'coke',
-    // categoryid : 2,
-    // machineId : 9,
-    // qtyInMachine : 19,
-    // price : 1.25,
-    // region : 'Northeast'
-    // },
+    {
+    id : 1,
+    name : 'doritos',
+    categoryid : 1,
+    machineId : 7,
+    qtyInMachine : 10,
+    price : 2.55,
+    region : 'East'
+    },
+    {
+    id : 2,
+    name : 'Headphones',
+    categoryid : 3,
+    machineId : 4,
+    qtyInMachine : 7,
+    price : 2.25,
+    region : 'West'
+    },
+    {
+    id : 3,
+    name : 'coke',
+    categoryid : 2,
+    machineId : 9,
+    qtyInMachine : 19,
+    price : 1.25,
+    region : 'Northeast'
+    },
     // Add more items as needed
   ];
 
@@ -103,13 +103,13 @@ let inventoryData = [
 //     console.log(inventoryData)
 // });
 
-fetchData(apiUrl)
-  .then(apiResponse => {
-    inventoryData = apiResponse; // Assign the response to inventoryData
-    populateTable(inventoryData);
-    console.log(inventoryData);
-  })
-  .catch(error => console.error('Error fetching data:', error));
+// fetchData(apiUrl)
+//   .then(apiResponse => {
+//     inventoryData = apiResponse; // Assign the response to inventoryData
+//     populateTable(inventoryData);
+//     console.log(inventoryData);
+//   })
+//   .catch(error => console.error('Error fetching data:', error));
 
 
 let filterChoice = '';
@@ -188,6 +188,14 @@ function calculateSoldInventory(transactions, filterCategory) {
   });
 
   return soldInventory;
+}
+
+
+function ClearFilters(){
+  populateTable(inventoryData);
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: `;
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: `;
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory:`;
 }
 
 // let totalSalesRevenue = calculateSalesRevenue(transactions, inventoryData);
