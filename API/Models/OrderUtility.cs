@@ -1,9 +1,12 @@
+//OrderUtility
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using MySql.Data.MySqlClient;  
+using Microsoft.AspNetCore.Mvc; 
 using System.Collections.Generic;  
 using System;  
 using Microsoft.AspNetCore.Http;
+using System.Data;
+using MySql.Data;
+using MySql.Data.MySqlClient;
 using mis321_ttv_web_app;
 using mis321_ttv_web_app.API.Models;
 using API;
@@ -13,17 +16,20 @@ namespace API
     public class OrderUtility
     {
         private readonly string cs;
-        public OrderUtility(){
+        public OrderUtility()
+        {
             cs = new ConnectionString().cs;
         }
-        public List<OrderProduct> GetAllProducts(){
+
+        public List<OrderProduct> GetAllProducts()
+        {
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
 
                 var products = new List<OrderProduct>();
 
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM product JOIN stockdetails", connection))
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM product JOIN stockdetails ON product.productId = stockdetails.productId", connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
@@ -46,12 +52,14 @@ namespace API
                 return products;
             }
         }
-        public OrderProduct GetProductByID(int id){
+
+        public OrderProduct GetProductByID(int id)
+        {
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
 
-                using (MySqlCommand command = new MySqlCommand("SELECT * FROM product JOIN stockdetails WHERE productId = @id", connection))
+                using (MySqlCommand command = new MySqlCommand("SELECT * FROM product JOIN stockdetails ON product.productId = stockdetails.productId WHERE product.productId = @id", connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
 
@@ -67,6 +75,8 @@ namespace API
                                 desciption = reader["productDescription"].ToString(),
                                 categoryid = Convert.ToInt32(reader["categoryId"]),
                                 imgURL = reader["imgURL"].ToString(),
+                                machineId = Convert.ToInt32(reader["machineId"]),
+                                qtyInMachine = Convert.ToInt32(reader["stockQty"])
                             };
                             connection.Close();
                             return product;
@@ -78,7 +88,6 @@ namespace API
                         }
                     }
                 }
-                
             }
         }
     }
