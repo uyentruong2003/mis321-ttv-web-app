@@ -1,3 +1,37 @@
+
+
+SetUpAddForm();
+//when product name is input:
+productName.addEventListener('change',() => {
+    // check if the user input is from dropdown list provided
+    CheckIfInputFromList('product-name');
+    // display info of the product selected
+    DisplaySelectedProductInfo();
+    // if "Other" is chosen, pop out self-input section
+    RouteIfOtherProduct();
+})
+
+selfInputProductName.addEventListener('change',() => {
+    // check if the self input existed already:
+    CheckIfInputProductExisted();
+})
+
+
+productCategory.addEventListener('change',() => {
+    // check if the user input is from dropdown list provided
+    CheckIfInputFromList('product-category');
+})
+
+vendingMachine.addEventListener('change',() => {
+    // check if the user input is from dropdown list provided
+    CheckIfInputFromList('vending-machine');
+})
+
+quantity.addEventListener('change', () => {
+    
+})
+
+// Functions:
 async function SetUpAddForm () {
     stockList = await getFilteredStockList();
     productList = await fetchProducts();
@@ -13,35 +47,76 @@ async function SetUpAddForm () {
     console.log(productList);
     console.log(machineList);
     console.log(categoryList);
-    
 }
-
-async function TakeUserInput() {
-    await SetUpAddForm();
-    //when product name is input:
-    productName.addEventListener('change',() => {
-        checkInputInDataList('product-name');
-        displaySelectedProductInfo();
-        checkMatchingCategory();
-    })
-
-    productCategory.addEventListener('change',() => {
-        checkInputInDataList('product-category');
-        checkMatchingCategory();
-    })
-
-    vendingMachine.addEventListener('change',() => {
-        checkInputInDataList('vending-machine');
-        checkMatchingCategory();
-    })
+function RouteIfOtherProduct() {
+        let selfInputSection = document.getElementById(`other-product-name`); //the div for self input section
+    if (productName.value === "Other") {
+        // unhide the self input section
+        selfInputSection.hidden = false;
+        // allow input for product category, price, and description
+        productCategory.value = '';
+        productCategory.readOnly = false;
+        productPrice.value = '';
+        productPrice.readOnly = false;
+        productDescription.value = '';
+        productDescription.readOnly = false;
+        // required input for the new product name & immage
+        selfInputProductName.required = true;
+        selfInputProductImageURL.required = true;
+    } else {
+        // hide the self input section
+        selfInputSection.hidden = true;
+        // disable input
+        productCategory.readOnly = true;
+        productPrice.readOnly = true;
+        productDescription.readOnly = true;
+        // unrequire self-input product name
+        selfInputProductName.required = false;
+        selfInputProductImageURL.required = false;
+    }
 }
-
-TakeUserInput();
-
-
-
-
-
+async function DisplaySelectedProductInfo() {
+    let selectedProduct = productList.find((p) => p.productName === productName.value);
+    if (selectedProduct) {
+        productCategory.value = await returnCategoryName(selectedProduct.categoryId);
+        productPrice.value = selectedProduct.productPrice;
+        productDescription.value = selectedProduct.productDescription;
+    }
+}
+function CheckIfInputProductExisted() {
+    let existed = productList.find((p) => p.productName.toLowerCase() === selfInputProductName.value.toLowerCase());
+    let errorMessage = document.getElementById('product-existed-message');
+    if(existed) {
+        errorMessage.hidden = false;
+        submitButton.disabled = true;
+    } else {
+        errorMessage.hidden = true;
+        submitButton.disabled = false;
+    }
+}
+function CheckIfInputFromList (inputId) {
+    let input = document.getElementById(inputId).value;
+    let optionList = document.getElementById(`${inputId}-list`).options;
+    let inList = false;
+    for (i=0; i<optionList.length; i++) {
+        if(input === optionList[i].value) {
+            inList = true;
+            i = optionList.length; // stop loop once input is found in list
+        } else if (input === "") { // if there's no input yet, don't pop out the error
+            inList = true;
+        } else {
+            inList = false;
+        }
+    }
+    document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
+    return inList;
+}
+function CheckIfQtyOverCap() {
+    let stockQtyInput = parseInt(quantity.value);
+    let currentMachineQty = 0;
+    let machineId = returnMachineId(vendingMachine.value);
+    console.log(machineId);
+}
 
 
 

@@ -70,16 +70,6 @@ function setMachineList() {
 
 // REGULATE PRODUCT NAME INPUT =================================================================================
 
-// function to populate product info when a product is selected
-async function displaySelectedProductInfo() {
-    let selectedProduct = productList.find((p) => p.productName === productName.value);
-    if (selectedProduct) {
-        productCategory.value = await returnCategoryName(selectedProduct.categoryId);
-        productPrice.value = selectedProduct.productPrice;
-        productDescription.value = selectedProduct.productDescription;
-    }
-}
-
 // function to take self input when "Other" is selected:
 function takeSelfInput () {
     let selfInputSection = document.getElementById(`other-product-name`); //the div for self input section
