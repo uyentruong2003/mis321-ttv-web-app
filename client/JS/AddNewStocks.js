@@ -165,6 +165,16 @@ function CheckIfCategoryMatched() {
         errorMessage.hidden = true;
     }
 }
+function CheckIfStockExisted() {
+    let selectedProductId = returnProductId(productName.value);
+    let selectedMachineId = returnMachineId(vendingMachine.value);
+    let errorMessage = document.getElementById('existed-stock-message');
+    existed = stockList.find((s) => s.productId === selectedProductId && s.machineId === selectedMachineId);
+    if(existed){
+        errorMessage.hidden = false;
+        errorMessage.innerText = `Stock of product ${productName.value} has already existed in vending machine ${vendingMachine.value}`
+    }
+}
 async function SetSubmitButtonStatus() {
     // get all the errorMessages:
     let errorMessages = [
@@ -204,6 +214,7 @@ async function saveToProductTable() {
 }
 async function saveToStockTable() {
     try {
+        // in case the user input a new product:
         let finalProductName = productName.value === "Other" ? selfInputProductName.value : productName.value;
         let newStock = {
             productId: returnProductId(finalProductName),
