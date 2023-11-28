@@ -9,6 +9,8 @@ productName.addEventListener('change',() => {
     DisplaySelectedProductInfo().then( async () => {
         // if "Other" is chosen, pop out self-input section
         RouteIfOtherProduct();
+        // check if the stock of this product in the select machine already existed
+        CheckIfStockExisted();
         // check if the product category is matched with the vending machine category:
         CheckIfCategoryMatched();
         // disable the submit button when error(s) occur
@@ -35,6 +37,8 @@ productCategory.addEventListener('change', async() => {
 vendingMachine.addEventListener('change',async () => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('vending-machine');
+    // check if the stock of this product in the select machine already existed
+    CheckIfStockExisted();
     // check if the added qty makes the qty of the selected machine exceeds the 75 cap
     CheckIfQtyOverCap();
     // check if the product category is matched with the vending machine category:
@@ -172,7 +176,9 @@ function CheckIfStockExisted() {
     existed = stockList.find((s) => s.productId === selectedProductId && s.machineId === selectedMachineId);
     if(existed){
         errorMessage.hidden = false;
-        errorMessage.innerText = `Stock of product ${productName.value} has already existed in vending machine ${vendingMachine.value}`
+        errorMessage.innerText = `Stock of product "${productName.value}" has already existed in vending machine "${vendingMachine.value}". Please edit instead of adding new.`
+    } else{
+        errorMessage.hidden = true;
     }
 }
 async function SetSubmitButtonStatus() {
@@ -183,7 +189,8 @@ async function SetSubmitButtonStatus() {
         document.getElementById('not-predefined-product-category-message'),
         document.getElementById('not-predefined-vending-machine-message'),
         document.getElementById('overcap-message'),
-        document.getElementById('unmatching-type-message')
+        document.getElementById('unmatching-type-message'),
+        document.getElementById('existed-stock-message')
     ];
     // Check if any error message is visible
     let isErrorVisible = errorMessages.some((errorMessage) => !errorMessage.hidden);
@@ -235,11 +242,13 @@ async function saveToStockTable() {
     }
 }
 async function increaseMachineQty(newStock) {
-    // PUT (Update) the vendingMachine table:
+    // find the machine that needs to be updated
     let updatedMachine = machineList.find((m) => m.machineId === newStock.machineId);
-    console.log(updatedMachine);
-    updatedMachine.machineQty = updatedMachine.machineQty + newStock.stockQty; // update the machineQty to keep up with quantity cap
-    console.log("after", updatedMachine.machineQty);
+    console.log(updatedMachine); //testing
+    // update the machineQty to keep up with quantity cap
+    updatedMachine.machineQty = updatedMachine.machineQty + newStock.stockQty;
+    console.log("after", updatedMachine.machineQty); //testing
+    // PUT (Update) the vendingMachine table
     await updateMachine(updatedMachine, updatedMachine.machineId);
 }
 
