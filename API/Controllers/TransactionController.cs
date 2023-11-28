@@ -17,10 +17,15 @@ namespace MyApp.Namespace
     {
         // GET: api/<TransactionController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Transaction Get()
         {
-            return new string[] { "value1", "value2" };
+        
+            TransactionUtility transactionUtil = new TransactionUtility();
+            Transaction transaction = new Transaction();
+            transaction = transactionUtil.GetMostRecentTransaction();
+            return transaction;
         }
+        
 
         // GET api/<TransactionController>/5
         [HttpGet("{id}")]
@@ -31,12 +36,15 @@ namespace MyApp.Namespace
 
         // POST api/<TransactionController>
         [HttpPost]
-        public void Post([FromBody] int id)
+        public IActionResult Post([FromBody] Transaction transaction) 
         {
-        Transaction myTransaction = new Transaction(id);
         TransactionUtility transutil = new TransactionUtility();
-        transutil.PostTransaction(myTransaction);
+        string result = transutil.PostTransaction(transaction);
+
+        // You can return an appropriate status code and result message
+         return Ok(result);
         }
+
 
         // PUT api/<TransactionController>/5
         [HttpPut("{id}")]

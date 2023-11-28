@@ -115,7 +115,10 @@ function createRedDropdown(array, containerId, region) {
     button.setAttribute('data-bs-toggle', 'dropdown');
     button.setAttribute('aria-haspopup', 'true');
     button.setAttribute('aria-expanded', 'false');
-    button.textContent = region;
+
+    // Replace "North West" with "West" in the dropdown button
+    const displayRegion = region === 'North West' ? 'West' : region;
+    button.textContent = displayRegion;
 
     const dropdownMenu = document.createElement('div');
     dropdownMenu.classList.add('dropdown-menu');
@@ -145,10 +148,30 @@ function createRedDropdown(array, containerId, region) {
     new bootstrap.Dropdown(button);
 }
 
+
 function displayRedDropdowns() {
-    createRedDropdown(East, 'eastDropdownContainer', 'East');
-    createRedDropdown(West, 'westDropdownContainer', 'West');
-    createRedDropdown(SouthWest, 'southWestDropdownContainer', 'SouthWest');
-    createRedDropdown(SouthEast, 'southEastDropdownContainer', 'SouthEast');
-    createRedDropdown(MidWest, 'midWestDropdownContainer', 'MidWest');
+    createRedDropdown(East, 'eastDropdownContainer', 'Northeast');
+    createRedDropdown(West, 'westDropdownContainer', 'Northwest');
+    createRedDropdown(SouthWest, 'southWestDropdownContainer', 'SouthWest'); //good
+    createRedDropdown(SouthEast, 'southEastDropdownContainer', 'SouthEast'); //good
+    createRedDropdown(MidWest, 'midWestDropdownContainer', 'MidWest'); //good
+}
+
+//Dont know what region
+function toggleText() {
+    var dontKnowDiv = document.getElementById('dont-know-js');
+    var imgSrc = "../sources/usamap.jpg";
+
+    // Check if there is an image already
+    var existingImage = dontKnowDiv.querySelector('img');
+
+    if (existingImage) {
+        // If an image is present, remove it
+        existingImage.remove();
+    } else {
+        // If no image is present, add a new image
+        var imgElement = document.createElement('img');
+        imgElement.src = imgSrc;
+        dontKnowDiv.appendChild(imgElement);
+    }
 }

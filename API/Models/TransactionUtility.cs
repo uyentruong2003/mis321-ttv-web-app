@@ -16,32 +16,115 @@ namespace API.Models
         }
 
         public string PostTransaction(Transaction transaction)
-    {
-        try
         {
-            using (MySqlConnection connection = new MySqlConnection(cs))
+            try
             {
-                connection.Open();
-                using (MySqlCommand command = new MySqlCommand(
-                    "INSERT INTO transaction (orderId, orderDate) " +
-                    "VALUES (@id, @date)", connection))
+                using (MySqlConnection connection = new MySqlConnection(cs))
                 {
-                    command.Parameters.AddWithValue("@id", transaction.orderID);
-                    command.Parameters.AddWithValue("@date", transaction.date);
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand(
+                        "INSERT INTO transaction (orderDate, orderID) " +
+                        "VALUES (@orderDate, @orderID)", connection))
+                    {
+                        command.Parameters.AddWithValue("@orderDate", transaction.date);
+                        command.Parameters.AddWithValue("@orderID", transaction.orderID);
 
-                    command.ExecuteNonQuery();
+                        command.Prepare();
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
                 }
-                connection.Close();
-            }
 
-            return "Transaction added successfully";
+                return "Transaction added successfully";
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in PostTransaction: {ex.Message}");
+
+                // Return a more informative error message
+                return $"Error adding transaction: {ex.Message}";
+            }
         }
-        catch (Exception ex)
+    
+        public List<Transaction> GetAllTransactions()
         {
-            // Log the exception or handle it as needed
-            return $"Error: {ex.Message}";
+            List<Transaction> transactions = new List<Transaction>();
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction", connection))
+                    {
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                transactions.Add(new Transaction
+                                {
+                                    date = Convert.ToString(reader["orderDate"]),
+                                    orderID = Convert.ToInt32(reader["orderID"])
+                                    // Add other properties as needed
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                return transactions;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in GetAllTransactions: {ex.Message}");
+
+                // Return an empty list or handle the error appropriately
+                return new List<Transaction>();
+            }
         }
-    }
+        public Transaction GetMostRecentTransaction()
+        {
+            Transaction transaction = new Transaction();
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction ORDER BY orderDate DESC LIMIT 1", connection))
+                    {
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                transaction = new Transaction
+                                {
+                                    date = Convert.ToString(reader["orderDate"]),
+                                    orderID = Convert.ToInt32(reader["orderID"]),
+                                    // Add other properties as needed
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                return transaction;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in GetMostRecentTransaction: {ex.Message}");
+
+                // Return null or handle the error appropriately
+                return null;
+            }
+        }
+
+
 
     }
 }

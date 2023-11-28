@@ -98,19 +98,30 @@ function populateCheckoutForm(){
     document.getElementById('app').innerHTML+=html
 }
 
-//Handling
-function handleCheckout(){
-    let cardNum = document.getElementById('card-num').value
-    let cardName = document.getElementById('card-name').value
-    let cardCVV = document.getElementById('cvv-num').value
-    let cardExp = document.getElementById('exp-date').value
-    let zipCode = document.getElementById('zip-code').value
-    let myCard = {Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode}
-    
-    //do whatever with the card object
-    localStorage.setItem("cardInfo", JSON.stringify(myCard))
-    console.log('Card information received: ', JSON.stringify(myCard))
+// Call this function when handling the checkout
+function handleCheckout() {
+
+
+   AddTransaction()
+
+   transactionStockUpdate()
+
+
+    // Rest of your checkout logic
+    let cardNum = document.getElementById('card-num').value;
+    let cardName = document.getElementById('card-name').value;
+    let cardCVV = document.getElementById('cvv-num').value;
+    let cardExp = document.getElementById('exp-date').value;
+    let zipCode = document.getElementById('zip-code').value;
+    let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
+
+    localStorage.setItem('cardInfo', JSON.stringify(myCard));
+    console.log('Card information received: ', JSON.stringify(myCard));
     document.getElementById('checkout-form').reset();
+
+    //clear the cart after checkout
+    let currentCartArray = []
+    localStorage.setItem('currentCartArray', currentCartArray)
 }
 
 //Data Manipulation
@@ -133,7 +144,87 @@ function populateArray(){
       console.log('current machine: ', currentMachineInfo)
       return data;
   } catch (error) {
-      console.error('Error fetching data:', error);
-      throw error; // You might want to handle the error appropriately in your application
-  }
-  }
+}
+}
+ 
+ async function AddTransaction() {
+    const url = 'http://localhost:5141/api/Transaction';
+
+    let myTransaction = {
+        date: getCurrentDateTime()}
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(myTransaction),
+        });
+
+        if (!response.ok) {
+            throw new Error('Error updating database');
+        }
+
+        const data = await response.json();
+        console.log('Transaction recorded:', data);
+        
+        } catch (error) {
+        console.error('Error updating database:', error);
+        // Handle the error appropriately in your application
+        }
+    }   
+    
+    function getCurrentDateTime() {
+        let date = new Date();
+        // Format the date to 'YYYY-MM-DD HH:MM:SS' format
+        let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+        return formattedDate;
+    }
+/* 
+     function createTransaction(){
+
+        let myTransaction = {
+        transactionDateTime: getCurrentDateTime()
+        }
+
+      updateDatabase(myTransaction)
+    } */
+
+   //J chillin
+
+   async function transactionStockUpdate(){
+        let UpdatedCart = formatCart(itemsInCart)
+        
+        //foreach item in cart 
+        UpdatedCart.forEach(item => {
+            updateStock(item, item.productId, item.machineId)
+            let myMachine = updateMachineStock(currentMachineInfo)
+            updateMachine(myMachine, myMachine.machineId)
+        }) 
+
+    }
+
+
+    function formatCart(cart){
+
+        let UpdatedCart = []
+        for(let i = 0; i < cart.length; i++){
+            console.log("cart", cart[i])
+            UpdatedCart[i] = {}; 
+            UpdatedCart[i].productId = cart[i].id
+            UpdatedCart[i].machineId = cart[i].machineId
+            UpdatedCart[i].stockQty = cart[i].qtyInMachine - 1
+            UpdatedCart[i].lastUpdate = getCurrentDateTime()
+            UpdatedCart[i].deleted = false
+            console.log("Updated Cart", UpdatedCart[i])
+        }
+        return UpdatedCart
+
+    }
+
+    function updateMachineStock(machine){
+        machine.machineQty = machine.machineQty - 1
+        console.log("machine Updated Stock:",machine)
+        return machine 
+        }
