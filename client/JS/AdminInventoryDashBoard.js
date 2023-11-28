@@ -10,7 +10,7 @@ let inventoryData = [
     machineId: 7,
     qtyInMachine: 10,
     price: 2.55,
-    region: 'East'
+    region: 'Northwest'
   },
   {
     id: 2,
@@ -28,7 +28,7 @@ let inventoryData = [
     machineId: 4,
     qtyInMachine: 7,
     price: 2.25,
-    region: 'West'
+    region: 'Southeast'
   },
   {
     id: 4,
@@ -73,7 +73,7 @@ let inventoryData = [
     machineId: 11,
     qtyInMachine: 8,
     price: 12.99,
-    region: 'East'
+    region: 'Northeast'
   },
   {
     id: 9,
@@ -223,6 +223,18 @@ function filterData(categoryid, filterChoice) {
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${totalSoldInventory}`;
  
   console.log(tempProductList);
+}
+
+
+
+
+function filterByRegion(region) {
+  const filteredItems = inventoryData.filter(item => item.region === region);
+  tempProductList = [];
+  tempProductList.push(...filteredItems);
+  populateTable(filteredItems);
+
+
 }
  
 function ClearFilters(){

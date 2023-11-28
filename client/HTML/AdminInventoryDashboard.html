@@ -80,6 +80,21 @@
 </div>
 <button class="btn btn-secondary btn-lg" style="background-color: red" onclick="ClearFilters()">Clear Filters</button>
 </div>
+
+<div class="container mt-4" id="RegionChoices">
+  <div class="dropdown">
+    <button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: green" type="button" id="regionDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+      Filter By Region
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="regionDropdownMenuButton">
+      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northwest')">Northwest</a></li>
+      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Southwest')">Southwest</a></li>
+      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Midwest')">Midwest</a></li>
+      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Southeast')">Southeast</a></li>
+      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northeast')">Northeast</a></li>
+    </ul>
+  </div>
+</div>
  
       
 
