@@ -124,8 +124,6 @@ let transactions = [
  
  
  
- 
- 
 // TODO FIGURE HOW DELETE IS BEING HANDELED
  
 const apiUrl = 'http://localhost:5141/api/AdminDash';
@@ -178,12 +176,12 @@ function populateTable(data) {
 <a href="EditStocks.html">
 <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit</button>
 </a>
-<a href="https://www.google.com/">
+<a href="#">
 <button type="button" class="btn btn-primary" style="background-color: red;">Delete</button>
 </a>
 </td>
     `;
- 
+ // ../HTML/EditStocks.html
     tableBody.appendChild(row);
   });
 }
@@ -293,12 +291,14 @@ function calculateSoldInventory(transactions, filterCategory) {
  
 // 5. EDIT STOCKS LOGIC
  
+// get corresponding fetchById url:
 function editItem(productId, machineId) {
-  selectedItem = { productId, machineId };
-  // Do whatever you need with the product ID and machine ID
-  console.log('Edit clicked for Product ID:', productId, 'Machine ID:', machineId);
-  console.log('Selected Item:', selectedItem);
+  localStorage.setItem("product-id",productId);
+  localStorage.setItem("machine-id",machineId);
+  console.log(idList); //testing
 }
+
+
  
 // END 5.
  

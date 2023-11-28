@@ -1,5 +1,6 @@
-let chosenProductId = 1;
-let chosenMachineId = 1;
+let chosenProductId = parseInt(localStorage.getItem("product-id"));
+let chosenMachineId = parseInt(localStorage.getItem("machine-id"));
+console.log(chosenProductId, chosenMachineId); //testing
 let chosenStock = {};
 let chosenMachine = {};
 let chosenProduct = {};
@@ -15,10 +16,7 @@ document.getElementById('edit-stock-form').addEventListener('submit',(e) => {
     SubmitEdits();
 })
 
-
-
 async function SetUpEditForm() {
-
     // fetch all the lists from DB
     stockList = await getFilteredStockList(); //get non-deleted stocks
     productList = await fetchProducts();
@@ -40,6 +38,7 @@ async function SetUpEditForm() {
 
     // fetch the stock using the given productId and machineId
     chosenStock = await fetchStockById(chosenProductId, chosenMachineId);
+    console.log(chosenStock);
     // fill out the stockQty input box with current value:
     quantity.value = chosenStock.stockQty;
 
@@ -47,9 +46,7 @@ async function SetUpEditForm() {
     console.log(chosenStock);
     console.log(chosenProduct);
     console.log(chosenMachine);
-}
-
-    
+}    
 async function SubmitEdits() {
     //calculate the difference between the newly input stockQty and the current value
     let machineQtyDiff = parseInt(quantity.value) - chosenStock.stockQty;
