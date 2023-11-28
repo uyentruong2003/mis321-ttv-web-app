@@ -1,7 +1,8 @@
 
 
 SetUpAddForm();
-//when product name is input:
+
+//WHEN PRODUCT NAME IS CHANGED:
 productName.addEventListener('change',() => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('product-name');
@@ -18,6 +19,7 @@ productName.addEventListener('change',() => {
     })
 })
 
+//WHEN SELF-INPUT PRODUCT NAME IS CHANGED:
 selfInputProductName.addEventListener('change', async() => {
     // check if the self input existed already:
     CheckIfInputProductExisted();
@@ -25,6 +27,7 @@ selfInputProductName.addEventListener('change', async() => {
     await SetSubmitButtonStatus();
 })
 
+//WHEN PRODUCT CATEGORY IS CHANGED:
 productCategory.addEventListener('change', async() => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('product-category');
@@ -34,6 +37,7 @@ productCategory.addEventListener('change', async() => {
     await SetSubmitButtonStatus();
 })
 
+//WHEN VENDING MACHINE IS CHANGED:
 vendingMachine.addEventListener('change',async () => {
     // check if the user input is from dropdown list provided
     CheckIfInputFromList('vending-machine');
@@ -47,6 +51,7 @@ vendingMachine.addEventListener('change',async () => {
     await SetSubmitButtonStatus();
 })
 
+// WHEN QUANTITY IS CHANGED:
 quantity.addEventListener('change', () => {
     // check if the added qty makes the qty of the selected machine exceeds the 75 cap
     CheckIfQtyOverCap().then(() => {
@@ -54,6 +59,8 @@ quantity.addEventListener('change', () => {
         SetSubmitButtonStatus();
     })
 })
+
+// WHEN FORM IS SUBMITTED:
 document.getElementById("add-new-stock-form").addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
