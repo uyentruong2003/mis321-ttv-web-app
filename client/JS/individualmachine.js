@@ -52,7 +52,7 @@ function populateProductTable(){
                     <h5 class="card-title">${item.name}</h5>
                     <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
                     <p class="card-text">$${(item.price).toFixed(2)}</p>
-                    <p class="card-text">Stock: ${item.qtyInMachine}</p>
+                    <p class="card-text"id="stock-amt">Stock: ${item.qtyInMachine}</p>
                     <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
                     <span id="temporary-message-${item.id}" class="temporary-message"></span>
                 </div>
@@ -77,13 +77,17 @@ function populateMachineInfo(){
 }
 
 //Handling
-function handleAddItem(id) {
+    async function handleAddItem(id) {
     // Retrieve existing items from localStorage
     var existingCartString = localStorage.getItem("currentCartArray");
     var existingCart = JSON.parse(existingCartString) || []; // If no items, initialize as an empty array
 
     // Fetch the selected product based on the given id
     const filteredProducts = products.filter(item => item.machineId === machineId);
+
+    let check = checkStockQuanity(id, filteredProducts)
+    if(check == 1){
+    
     const addProduct = filteredProducts.find(item => item.id == id);
 
     // Add the selected product to the existing array
@@ -104,6 +108,61 @@ function handleAddItem(id) {
             temporaryMessage.textContent = ""; // Clear the message after a short duration
         }, 2000); // Adjust the duration (in milliseconds) as needed
     }
+    }
+
+    else{
+        const temporaryMessage = document.getElementById(`temporary-message-${id}`);
+        if (temporaryMessage) {
+        
+        temporaryMessage.textContent = "Not Enough Stock";
+        setTimeout(() => {
+            temporaryMessage.textContent = ""; // Clear the message after a short duration
+        }, 2000); // Adjust the duration (in milliseconds) as needed
+    }}
+}
+
+
+
+//checking
+
+
+function checkStockQuanity(id, filteredProducts){
+
+    var existingCartString = localStorage.getItem("currentCartArray");
+    var existingCart = JSON.parse(existingCartString) || [];
+    console.log("existingCart:", existingCart);
+
+    let maxCount = 0
+    
+
+        filteredProducts.forEach(item => {
+            if(item.id == id){
+                maxCount = item.qtyInMachine
+            }
+        });
+
+
+        if(maxCount == 0){
+            return -1
+        }
+        
+    else{
+        console.log("max Count", maxCount);
+        let appearances = 0;
+
+        existingCart.forEach(item => {
+            if(item.id == id){
+                appearances++
+            }
+        });
+
+        if( appearances==maxCount){
+            return -1 
+        }
+        else{return 1}
+    }
+
+
 }
 
 // async function populateArray() {
