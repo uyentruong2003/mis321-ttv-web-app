@@ -61,49 +61,57 @@
 </div>
 </div> -->
  
-      <div class="container mt-4" id="MachineChoices">
-<div class="dropdown">
-<button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: blue" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Filter By Category
-</button>
-<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-<li><a class="dropdown-item" href="#" onclick="filterData(1,1)">Drink</a></li>
-<li><a class="dropdown-item" href="#" onclick="filterData(2,2)">Snack</a></li>
-<li><a class="dropdown-item" href="#" onclick="filterData(3,3)">Electronic</a></li>
-<!-- <div class="dropdown-divider"></div>
-<li><a class="dropdown-item" href="#" onclick="null">Northeast</a></li>
-<li><a class="dropdown-item" href="#" onclick="null">Southeast</a></li>
-<li><a class="dropdown-item" href="#" onclick="filterData('Midwestast')">Midwest</a></li>
-<li><a class="dropdown-item" href="#" onclick="filterData('Northeast')">Southwest</a></li>
-<li><a class="dropdown-item" href="#" onclick="filterData('Northeast')">Northwest</a></li> -->
-</ul>
-</div>
-<button class="btn btn-secondary btn-lg" style="background-color: red" onclick="ClearFilters()">Clear Filters</button>
-</div>
-
-<div class="container mt-4" id="RegionChoices">
-  <div class="dropdown">
-    <button class="btn btn-secondary btn-lg dropdown-toggle" style="background-color: green" type="button" id="regionDropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-      Filter By Region
-    </button>
-    <ul class="dropdown-menu" aria-labelledby="regionDropdownMenuButton">
-      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northwest')">Northwest</a></li>
-      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Southwest')">Southwest</a></li>
-      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Midwest')">Midwest</a></li>
-      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Southeast')">Southeast</a></li>
-      <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northeast')">Northeast</a></li>
-    </ul>
-  </div>
-</div>
  
       
 
- 
-      <div class="AddNewBtn">
-<a class="AddNewBtn" href="./AddStocks.html">
-<button type="button" class="btn btn-primary">+Add New</button>
-</a>
-</div>
+
+
+<div class="container mt-4">
+  <!-- Filter Buttons Row -->
+  <div class="row">
+    <div class="col-md-12 text-end">
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-lg" style="background-color: blue" data-bs-toggle="dropdown" aria-expanded="false">
+          Filter By Category
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li><a class="dropdown-item" href="#" onclick="filterData(1,1)">Drink</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData(2,2)">Snack</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData(3,3)">Electronic</a></li>
+            <!-- <div class="dropdown-divider"></div>
+            <li><a class="dropdown-item" href="#" onclick="null">Northeast</a></li>
+            <li><a class="dropdown-item" href="#" onclick="null">Southeast</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData('Midwestast')">Midwest</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData('Northeast')">Southwest</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterData('Northeast')">Northwest</a></li> -->
+            </ul>
+        </ul>
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-secondary btn-lg" style="background-color: green" data-bs-toggle="dropdown" aria-expanded="false">
+          Filter By Region
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="regionDropdownMenuButton">
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('West')">West</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('MidWest')">MidWest</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Midwest')">SouthWest</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('East')">East</a></li>
+            <li><a class="dropdown-item" href="#" onclick="filterByRegion('Northeast')">Northeast</a></li>
+          </ul>
+        </ul>
+      </div>
+      <button class="btn btn-secondary btn-lg" style="background-color: red" onclick="ClearFilters()">Clear Filters</button>
+    </div>
+  </div>
+  <!-- End Filter Buttons Row -->
+
+  <!-- Add New Button Row -->
+  <div class="row mt-2">
+    <div class="col-md-12 text-end">
+      <a href="./AddNewStocks.html" class="btn btn-primary">+ Add New</a>
+    </div>
+  </div>
+  <!-- End Add New Button Row -->
 
  
       <div class="inventoryTable">
