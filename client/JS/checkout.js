@@ -89,7 +89,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -102,7 +102,10 @@ function populateCheckoutForm(){
 function handleCheckout() {
 
 
-   updateDatabase()
+   AddTransaction()
+
+   transactionStockUpdate()
+
 
     // Rest of your checkout logic
     let cardNum = document.getElementById('card-num').value;
@@ -115,6 +118,10 @@ function handleCheckout() {
     localStorage.setItem('cardInfo', JSON.stringify(myCard));
     console.log('Card information received: ', JSON.stringify(myCard));
     document.getElementById('checkout-form').reset();
+
+    //clear the cart after checkout
+    let currentCartArray = []
+    localStorage.setItem('currentCartArray', currentCartArray)
 }
 
 //Data Manipulation
@@ -140,7 +147,7 @@ function populateArray(){
 }
 }
  
- async function updateDatabase() {
+ async function AddTransaction() {
     const url = 'http://localhost:5141/api/Transaction';
 
     let myTransaction = {
@@ -184,4 +191,41 @@ function populateArray(){
       updateDatabase(myTransaction)
     } */
 
+   //J chillin
+
+   async function transactionStockUpdate(){
+        let UpdatedCart = formatCart(itemsInCart)
+        
+        //foreach item in cart 
+        UpdatedCart.forEach(item => {
+            updateStock(item, item.productId, item.machineId)
+            let myMachine = updateMachineStock(currentMachineInfo)
+            updateMachine(myMachine, myMachine.machineId)
+        }) 
+
+    }
+
+
+    function formatCart(cart){
+
+        let UpdatedCart = []
+        for(let i = 0; i < cart.length; i++){
+            console.log("cart", cart[i])
+            UpdatedCart[i] = {}; 
+            UpdatedCart[i].productId = cart[i].id
+            UpdatedCart[i].machineId = cart[i].machineId
+            UpdatedCart[i].stockQty = cart[i].qtyInMachine - 1
+            UpdatedCart[i].lastUpdate = getCurrentDateTime()
+            UpdatedCart[i].deleted = false
+            console.log("Updated Cart", UpdatedCart[i])
+        }
+        return UpdatedCart
+
+    }
+
+    function updateMachineStock(machine){
+        machine.machineQty = machine.machineQty - 1
+        console.log("machine Updated Stock:",machine)
+        return machine 
+        }
 
