@@ -102,7 +102,7 @@ function populateCheckoutForm(){
 function handleCheckout() {
 
 
-    updateDatabase();
+   updateDatabase()
 
     // Rest of your checkout logic
     let cardNum = document.getElementById('card-num').value;
@@ -142,7 +142,9 @@ function populateArray(){
  
  async function updateDatabase() {
     const url = 'http://localhost:5141/api/Transaction';
-    myTransaction = new Transaction();
+
+    let myTransaction = {
+        date: getCurrentDateTime()}
 
     try {
         const response = await fetch(url, {
@@ -150,10 +152,7 @@ function populateArray(){
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({
-                transactionDateTime: new Date(),
-                // Add any other data you want to send to the server
-            }),
+            body: JSON.stringify(myTransaction),
         });
 
         if (!response.ok) {
@@ -168,4 +167,21 @@ function populateArray(){
         // Handle the error appropriately in your application
         }
     }   
+    
+    function getCurrentDateTime() {
+        let date = new Date();
+        // Format the date to 'YYYY-MM-DD HH:MM:SS' format
+        let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
+        return formattedDate;
+    }
+/* 
+     function createTransaction(){
+
+        let myTransaction = {
+        transactionDateTime: getCurrentDateTime()
+        }
+
+      updateDatabase(myTransaction)
+    } */
+
 
