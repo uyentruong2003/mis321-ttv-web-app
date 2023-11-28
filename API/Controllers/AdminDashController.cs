@@ -52,7 +52,8 @@ namespace MyApp.Namespace
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 qtyInMachine = Convert.ToInt32(reader["stockQty"]),
                                 price = Convert.ToDouble(reader["productPrice"]),
-                                region = reader["machineRegion"].ToString()
+                                region = reader["machineRegion"].ToString(),
+                                deleted = Convert.ToByte(reader["deleted"])
                             };
                             connection.Close();
                             return Ok(AdminDashProduct);

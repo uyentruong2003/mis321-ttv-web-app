@@ -14,6 +14,7 @@ namespace mis321_ttv_web_app.API.Models
         public int qtyInMachine {get; set;}
         public double price {get; set;}
         public string region {get; set;}
+        public byte deleted {get; set;}
         
     }
 }

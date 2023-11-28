@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {}
+    "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {}
   },
   "projects": {
-    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {
+    "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
+        "projectUniqueName": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
         "projectName": "mis321-ttv-web-app",
-        "projectPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
-        "packagesPath": "C:\\Users\\epicn\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\obj\\",
+        "projectPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
+        "packagesPath": "C:\\Users\\Ryan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\epicn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Ryan\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -42,17 +42,13 @@
               "target": "Package",
               "version": "[8.0.0, )"
             },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[8.2.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.4.0, )"
-            },
-            "mysql.data": {
-              "target": "Package",
-<<<<<<< HEAD
-              "version": "[8.2.0, )"
-=======
-              "version": "[8.0.0, )"
->>>>>>> adam
             }
           },
           "imports": [

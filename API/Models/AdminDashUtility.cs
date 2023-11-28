@@ -17,7 +17,7 @@ namespace API
 
                 var AdminDashProducts = new List<AdminDashProduct>();
 
-                using (MySqlCommand command = new MySqlCommand("SELECT product.productId, product.productName, product.categoryId, stockdetails.machineId, stockdetails.stockQty, product.productPrice, machine.machineRegion FROM product JOIN stockdetails ON product.productid = stockdetails.productid JOIN machine ON stockdetails.machineid = machine.machineid;", connection))
+                using (MySqlCommand command = new MySqlCommand("SELECT product.productId, product.productName, product.categoryId, stockdetails.machineId, stockdetails.stockQty, product.productPrice, machine.machineRegion, stockdetails.deleted FROM product JOIN stockdetails ON product.productid = stockdetails.productid JOIN machine ON stockdetails.machineid = machine.machineid;", connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
@@ -31,7 +31,8 @@ namespace API
                                 machineId = Convert.ToInt32(reader["machineId"]),
                                 qtyInMachine = Convert.ToInt32(reader["stockQty"]),
                                 price = Convert.ToDouble(reader["productPrice"]),
-                                region = reader["machineRegion"].ToString()
+                                region = reader["machineRegion"].ToString(),
+                                deleted = Convert.ToByte(reader["deleted"])
                             });
                         }
                     }
