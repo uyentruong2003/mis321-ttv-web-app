@@ -7,7 +7,7 @@ let chosenProduct = {};
 SetUpEditForm();
 
 quantity.addEventListener('change',() => {
-    checkQtyLimit();
+    CheckIfQtyOverCap(); // make sure the newly added stock qty doesn't make the machine exceeds its qty limit of 75
 })
 
 document.getElementById('edit-stock-form').addEventListener('submit',(e) => {
@@ -29,7 +29,7 @@ async function SetUpEditForm() {
     chosenProduct = await fetchProductById(chosenProductId);
     // fill out the productName, productCategory, productPrice, and productDescription input boxes
     productName.value = chosenProduct.productName;
-    productCategory.value = await returnCategoryName(chosenProduct.categoryId);
+    productCategory.value = returnCategoryName(chosenProduct.categoryId);
     productPrice.value = chosenProduct.productPrice;
     productDescription.value = chosenProduct.productDescription;
 
@@ -51,21 +51,18 @@ async function SetUpEditForm() {
 
     
 async function SubmitEdits() {
-    //calculate the difference between the newly input stockQty and the current value in the DB
+    //calculate the difference between the newly input stockQty and the current value
     let machineQtyDiff = parseInt(quantity.value) - chosenStock.stockQty;
     
     // Update the total inv quantity (machineQty) of this stock's corresponding machine
-    if (machineQtyDiff >= 0) { //if the new stockQty > the current one, add the increased amount to the machineQty
-        chosenMachine.machineQty = chosenMachine.machineQty + machineQtyDiff;
-    } else { // if the new stockQty < the current one, subtract the difference from the machine Qty
-        chosenMachine.machineQty = chosenMachine.machineQty - machineQtyDiff;
-    }
-    // updateMachine(chosenMachine, chosenMachine.machineId); // PUT call to the DB
+    chosenMachine.machineQty = chosenMachine.machineQty + machineQtyDiff;
+
+    await updateMachine(chosenMachine, chosenMachine.machineId); // PUT call to the DB
     console.log(chosenMachine)// testing
 
     //update the new stockQty to the stock table:
     chosenStock.stockQty = parseInt(quantity.value); //assign the new stockQty to the current stockQty & update
-    // updateStock(chosenStock);
+    updateStock(chosenStock, chosenStock.productId,chosenStock.machineId); // PUT call to the DB
     console.log(chosenStock) //testing
 }
     

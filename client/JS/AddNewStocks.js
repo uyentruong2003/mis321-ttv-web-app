@@ -75,7 +75,7 @@ document.getElementById("add-new-stock-form").addEventListener('submit', async (
 
 // Functions:------------------------------------------
 async function SetUpAddForm () {
-    stockList = await getFilteredStockList();
+    stockList = await getFilteredStockList(); //get non-deleted stocks
     productList = await fetchProducts();
     machineList = await fetchMachines();
     categoryList = await fetchCategories();
@@ -151,22 +151,6 @@ function CheckIfInputFromList (inputId) {
     }
     document.getElementById(`not-predefined-${inputId}-message`).hidden = inList;
 }
-async function CheckIfQtyOverCap() {
-    let errorMessage = document.getElementById('overcap-message');
-    let stockQtyInput = parseInt(quantity.value);
-    let machineId = returnMachineId(vendingMachine.value);
-    // get the current inv quantity of the machine this stock is added to:
-    let machine = await fetchMachineById(machineId);
-
-    let avalaibleCap = 75 - machine.machineQty;
-
-    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
-        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
-        errorMessage.hidden = false;
-    } else {
-        errorMessage.hidden = true;
-    }
-}
 function CheckIfCategoryMatched() {
     let errorMessage = document.getElementById('unmatching-type-message');
     let mCategory = returnMachineCategory(vendingMachine.value);
@@ -183,7 +167,7 @@ function CheckIfStockExisted() {
     existed = stockList.find((s) => s.productId === selectedProductId && s.machineId === selectedMachineId);
     if(existed){
         errorMessage.hidden = false;
-        errorMessage.innerText = `Stock of product "${productName.value}" has already existed in vending machine "${vendingMachine.value}". Please edit instead of adding new.`
+        errorMessage.innerText = `Stock of product "${productName.value}" has already existed in vending machine "${vendingMachine.value}". Please edit existed stock's qty instead of adding new.`
     } else{
         errorMessage.hidden = true;
     }
