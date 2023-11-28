@@ -26,7 +26,7 @@ namespace API.Models
                         "INSERT INTO transaction (orderDate, orderID) " +
                         "VALUES (@orderDate, @orderID)", connection))
                     {
-                        command.Parameters.AddWithValue("@orderDate", DateTime.Now);
+                        command.Parameters.AddWithValue("@orderDate", transaction.date);
                         command.Parameters.AddWithValue("@orderID", transaction.orderID);
 
                         command.Prepare();
@@ -47,44 +47,44 @@ namespace API.Models
             }
         }
     
-        public List<Transaction> GetAllTransactions()
-        {
-            List<Transaction> transactions = new List<Transaction>();
+        // public List<Transaction> GetAllTransactions()
+        // {
+        //     List<Transaction> transactions = new List<Transaction>();
 
-            try
-            {
-                using (MySqlConnection connection = new MySqlConnection(cs))
-                {
-                    connection.Open();
-                    using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction", connection))
-                    {
-                        using (MySqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                transactions.Add(new Transaction
-                                {
-                                    date = Convert.ToDateTime(reader["orderDate"]),
-                                    orderID = Convert.ToInt32(reader["orderID"])
-                                    // Add other properties as needed
-                                });
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
+        //     try
+        //     {
+        //         using (MySqlConnection connection = new MySqlConnection(cs))
+        //         {
+        //             connection.Open();
+        //             using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction", connection))
+        //             {
+        //                 using (MySqlDataReader reader = command.ExecuteReader())
+        //                 {
+        //                     while (reader.Read())
+        //                     {
+        //                         transactions.Add(new Transaction
+        //                         {
+        //                             date = Convert.ToDateTime(reader["orderDate"]),
+        //                             orderID = Convert.ToInt32(reader["orderID"])
+        //                             // Add other properties as needed
+        //                         });
+        //                     }
+        //                 }
+        //             }
+        //             connection.Close();
+        //         }
 
-                return transactions;
-            }
-            catch (Exception ex)
-            {
-                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
-                Console.WriteLine($"Error in GetAllTransactions: {ex.Message}");
+        //         return transactions;
+        //     }
+        //     catch (Exception ex)
+        //     {
+        //         // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+        //         Console.WriteLine($"Error in GetAllTransactions: {ex.Message}");
 
-                // Return an empty list or handle the error appropriately
-                return new List<Transaction>();
-            }
-        }
+        //         // Return an empty list or handle the error appropriately
+        //         return new List<Transaction>();
+        //     }
+        // }
 
 
     }

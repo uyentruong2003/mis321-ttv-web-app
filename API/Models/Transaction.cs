@@ -7,16 +7,8 @@ namespace mis321_ttv_web_app.API.Models
 {
     public class Transaction
     {
-        public DateTime date {get; set;}
+        public string date {get; set;}
         public int orderID {get; set;}
-
-        public Transaction(int id){
-            date = DateTime.Now;
-            orderID = id;
-        }
-        public Transaction(){
-            date = DateTime.Now;
-        }
 
     }
 }
