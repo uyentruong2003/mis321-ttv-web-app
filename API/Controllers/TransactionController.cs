@@ -17,10 +17,15 @@ namespace MyApp.Namespace
     {
         // GET: api/<TransactionController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public Transaction Get()
         {
-            return new string[] { "value1", "value2" };
+        
+            TransactionUtility transactionUtil = new TransactionUtility();
+            Transaction transaction = new Transaction();
+            transaction = transactionUtil.GetMostRecentTransaction();
+            return transaction;
         }
+        
 
         // GET api/<TransactionController>/5
         [HttpGet("{id}")]

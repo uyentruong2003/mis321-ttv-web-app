@@ -47,44 +47,83 @@ namespace API.Models
             }
         }
     
-        // public List<Transaction> GetAllTransactions()
-        // {
-        //     List<Transaction> transactions = new List<Transaction>();
+        public List<Transaction> GetAllTransactions()
+        {
+            List<Transaction> transactions = new List<Transaction>();
 
-        //     try
-        //     {
-        //         using (MySqlConnection connection = new MySqlConnection(cs))
-        //         {
-        //             connection.Open();
-        //             using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction", connection))
-        //             {
-        //                 using (MySqlDataReader reader = command.ExecuteReader())
-        //                 {
-        //                     while (reader.Read())
-        //                     {
-        //                         transactions.Add(new Transaction
-        //                         {
-        //                             date = Convert.ToDateTime(reader["orderDate"]),
-        //                             orderID = Convert.ToInt32(reader["orderID"])
-        //                             // Add other properties as needed
-        //                         });
-        //                     }
-        //                 }
-        //             }
-        //             connection.Close();
-        //         }
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction", connection))
+                    {
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                transactions.Add(new Transaction
+                                {
+                                    date = Convert.ToString(reader["orderDate"]),
+                                    orderID = Convert.ToInt32(reader["orderID"])
+                                    // Add other properties as needed
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
 
-        //         return transactions;
-        //     }
-        //     catch (Exception ex)
-        //     {
-        //         // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
-        //         Console.WriteLine($"Error in GetAllTransactions: {ex.Message}");
+                return transactions;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in GetAllTransactions: {ex.Message}");
 
-        //         // Return an empty list or handle the error appropriately
-        //         return new List<Transaction>();
-        //     }
-        // }
+                // Return an empty list or handle the error appropriately
+                return new List<Transaction>();
+            }
+        }
+        public Transaction GetMostRecentTransaction()
+        {
+            Transaction transaction = new Transaction();
+
+            try
+            {
+                using (MySqlConnection connection = new MySqlConnection(cs))
+                {
+                    connection.Open();
+                    using (MySqlCommand command = new MySqlCommand("SELECT * FROM transaction ORDER BY orderDate DESC LIMIT 1", connection))
+                    {
+                        using (MySqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                transaction = new Transaction
+                                {
+                                    date = Convert.ToString(reader["orderDate"]),
+                                    orderID = Convert.ToInt32(reader["orderID"]),
+                                    // Add other properties as needed
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+
+                return transaction;
+            }
+            catch (Exception ex)
+            {
+                // Log the exception details (you can replace Console.WriteLine with your logging mechanism)
+                Console.WriteLine($"Error in GetMostRecentTransaction: {ex.Message}");
+
+                // Return null or handle the error appropriately
+                return null;
+            }
+        }
+
 
 
     }
