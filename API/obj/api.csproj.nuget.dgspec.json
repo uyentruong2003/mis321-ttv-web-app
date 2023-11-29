@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\API\\api.csproj": {}
+    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\API\\api.csproj": {
+    "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\API\\api.csproj",
+        "projectUniqueName": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
         "projectName": "api",
-        "projectPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\API\\api.csproj",
-        "packagesPath": "C:\\Users\\Ryan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\API\\obj\\",
+        "projectPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
+        "packagesPath": "C:\\Users\\epicn\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Ryan\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\epicn\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
