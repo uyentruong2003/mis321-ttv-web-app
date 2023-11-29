@@ -15,6 +15,7 @@ namespace mis321_ttv_web_app.API.Models
         public string imgURL {get; set;}
         public int qtyInMachine {get; set;}
         public int machineId {get; set;}
+        public bool deleted {get; set;}
         
     }
 }

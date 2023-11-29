@@ -56,7 +56,7 @@ function populateReciptTable(){
     
     html+=`
     <div class="extra-info-box">
-        <h5>Order Number: ${orderNumber}</h5>
+        
         <h5>${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} ID#${currentMachineInfo.machineId}</h5>
     </div>
     </div>

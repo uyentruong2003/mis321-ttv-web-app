@@ -2,10 +2,15 @@ let itemsInCart = []
 let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
 //onload
 async function handleOnLoad() {
-  await setCurrentMachineInfo();
-  populateArray();
-  populateCart();
-  populateContinue();
+  try {
+    await setCurrentMachineInfo();
+    await populateArray();
+    populateCart();
+    populateContinue();
+  } catch (error) {
+    console.error('Error in handleOnLoad:', error);
+    // Handle the error appropriately, e.g., display an error message to the user
+  }
 }
 
 //DOM Manipulation
@@ -56,16 +61,41 @@ function populateCart(){
     `
     document.getElementById('app').innerHTML=html
 }
-function populateContinue(){
-    let html=`
-    <div class="center-container">
-        <h4 id="display-info-cart">(ID#${currentMachineInfo.machineId}) ${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation}</h4>
-      </div>
+// function populateContinue(){
+//     let html=`
+//     <div class="center-container">
+//         <h4 id="display-info-cart">(ID#${currentMachineInfo.machineId}) ${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation}</h4>
+//       </div>
+//       <div class="center-container">
+//         <a href="./Checkout.html"><button type="button" class="btn btn-success" style="width: 200px;">Checkout</button></a>
+//       </div>
+//     `
+//     document.getElementById('app').innerHTML+=html
+// }
+
+function populateContinue() {
+  let html = `
       <div class="center-container">
-        <a href="./Checkout.html"><button type="button" class="btn btn-success" style="width: 200px;">Checkout</button></a>
+          <h4 id="display-info-cart">(ID#${currentMachineInfo.machineId}) ${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation}</h4>
       </div>
-    `
-    document.getElementById('app').innerHTML+=html
+  `;
+
+  if (itemsInCart.length > 0) {
+      html += `
+          <div class="center-container">
+              <a href="./Checkout.html"><button type="button" class="btn btn-success" style="width: 200px;">Checkout</button></a>
+          </div>
+      `;
+  } else {
+    console.log('empty cart message')
+      html += `
+          <div class="center-container">
+              <p id="empty-cart-message">Your cart is empty. Please add items to continue.</p>
+          </div>
+      `;
+  }
+
+  document.getElementById('app').innerHTML += html;
 }
 
 //Handling
@@ -81,13 +111,28 @@ function handleRemove(id) {
 }
 
 //Data Manipulation
-function populateArray(){
-  var storedCartString = localStorage.getItem("currentCartArray");
-  itemsInCart = JSON.parse(storedCartString)
-  let i = 0
-  console.log('parsed cart string: ', itemsInCart)
+// function populateArray(){
+//   var storedCartString = localStorage.getItem("currentCartArray");
+//   itemsInCart = JSON.parse(storedCartString)
+//   let i = 0
+//   console.log('parsed cart string: ', itemsInCart)
   
+// }
+
+function populateArray() {
+  var storedCartString = localStorage.getItem("currentCartArray");
+
+  try {
+    // Check if storedCartString is truthy and parseable
+    itemsInCart = storedCartString ? JSON.parse(storedCartString) : [];
+    console.log('parsed cart string: ', itemsInCart);
+  } catch (error) {
+    console.error('Error parsing cart data:', error);
+    // Handle the error appropriately, e.g., set itemsInCart to an empty array
+    itemsInCart = [];
+  }
 }
+
 async function setCurrentMachineInfo(){
   let url = 'http://localhost:5141/api/vending/'
   let targetURL = url.concat(localStorage.getItem("selectedMachineId"))

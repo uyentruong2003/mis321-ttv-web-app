@@ -44,7 +44,9 @@ namespace API
                                 categoryid = Convert.ToInt32(reader["categoryId"]),
                                 imgURL = reader["imgURL"].ToString(),
                                 machineId = Convert.ToInt32(reader["machineId"]),
-                                qtyInMachine = Convert.ToInt32(reader["stockQty"])
+                                qtyInMachine = Convert.ToInt32(reader["stockQty"]),
+                                deleted = Convert.ToBoolean(reader["deleted"])
+
                             });
                         }
                     }

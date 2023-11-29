@@ -23,13 +23,13 @@ async function handleOnLoad() {
 
 
 //DOM Manipulation
-function populateProductTable(){
+function populateProductTable() {
     console.log("populating table")
-    
+
     const filteredProducts = products.filter(item => item.machineId === machineId);
     console.log("filtered products: ", filteredProducts)
-    
-    let html=`
+
+    let html = `
     <table class="product-table">
             <thead>
                 <tr>
@@ -39,37 +39,35 @@ function populateProductTable(){
                 </tr>
             </thead>
             <tbody>
-            `
+            `;
     for (let i = 0; i < filteredProducts.length; i += 3) {
         html += '<tr>';
         for (let j = i; j < i + 3 && j < filteredProducts.length; j++) {
-            
-            const item = filteredProducts[j];
-            html += `
-        <td>
-            <div class="card indiv-card" style="width: 18rem;">
-                <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
-                    <h5 class="card-title">${item.name}</h5>
-                    <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
-                    <p class="card-text">$${(item.price).toFixed(2)}</p>
-                    <p class="card-text"id="stock-amt">Stock: ${item.qtyInMachine}</p>
-                    <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
-                    <span id="temporary-message-${item.id}" class="temporary-message"></span>
-                </div>
-            </div>
-        </td>
-    `;
-    //console.log("populating item row ", i, "slot ", j)
+            if (filteredProducts[j].deleted == false) {
+                const item = filteredProducts[j];
+                html += `
+                            <td>
+                                <div class="card indiv-card" style="width: 18rem;">
+                                    <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+                                        <h5 class="card-title">${item.name}</h5>
+                                        <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
+                                        <p class="card-text">$${(item.price).toFixed(2)}</p>
+                                        <p class="card-text" id="stock-amt">Stock: ${item.qtyInMachine}</p>
+                                        <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
+                                        <span id="temporary-message-${item.id}" class="temporary-message"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        `;
+            }
         }
-        html += '</tr>';
+        html += '</tr>'; // Move this line here
     }
-    
-                
-    html+=`
+    html += `
             </tbody>
         </table>
-    `
-    document.getElementById('app').innerHTML+=html
+    `;
+    document.getElementById('app').innerHTML += html;
 }
 function populateMachineInfo(){
     let html = `<h4 class="display-machine">${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} #${currentMachineInfo.machineId}</h4>`
@@ -80,7 +78,7 @@ function populateMachineInfo(){
     async function handleAddItem(id) {
     // Retrieve existing items from localStorage
     var existingCartString = localStorage.getItem("currentCartArray");
-    var existingCart = JSON.parse(existingCartString) || []; // If no items, initialize as an empty array
+    var existingCart = existingCartString ? JSON.parse(existingCartString) : [];
 
     // Fetch the selected product based on the given id
     const filteredProducts = products.filter(item => item.machineId === machineId);
@@ -165,34 +163,39 @@ function checkStockQuanity(id, filteredProducts){
 
 }
 
+
 // async function populateArray() {
 //     try {
-//         let response = await fetch('http://localhost:5141/api/product');
+//         let response = await fetch('http://localhost:5141/api/order');
 //         let data = await response.json();
 //         console.log('Data fetched:', data);
 
 //         // Assuming that the fetched data is an array of products
-//         products = data;
+//         products = data
 
 //         return data;
 //     } catch (error) {
 //         console.error('Error fetching data:', error);
-//         throw error; // You might want to handle the error appropriately in your application
 //     }
 // }
 
 async function populateArray() {
     try {
         let response = await fetch('http://localhost:5141/api/order');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
         let data = await response.json();
         console.log('Data fetched:', data);
 
         // Assuming that the fetched data is an array of products
-        products = data
+        products = data;
 
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
+        throw error; // You might want to handle the error appropriately in your application
     }
 }
 
