@@ -13,7 +13,7 @@ let vendingMachine = document.getElementById('vending-machine');
 let quantity = document.getElementById('quantity');
 let submitButton = document.getElementById('submit-button');
 
-// INITIAL FORM SETUP ==============================================================
+// GET LISTS FROM DATABASE:
 async function getFilteredStockList() {
     try {
         // fetch all stocks
@@ -27,44 +27,6 @@ async function getFilteredStockList() {
         // Handle the error or propagate it further
         throw error;
     }
-}
-// set list for "product-name" searchable dropdown
-function setProductList() {
-    const dropdown = document.querySelector('#product-name-list');
-    productList.forEach((item) => {
-        let option = document.createElement('option');
-        option.value = item.productName;
-        dropdown.appendChild(option);
-    });
-    // add an option for Other
-    let option = document.createElement('option');
-    option.value = 'Other';
-    dropdown.appendChild(option);
-}
-// set list for "product-category" searchable dropdown
-function setCategoryList() {
-    const dropdown = document.querySelector('#product-category-list');
-    categoryList.forEach((item) => {
-        let option = document.createElement('option');
-        option.value = item.categoryName;
-        dropdown.appendChild(option);
-    });
-}
-// set list for "vending-machine" searchable dropdown
-function setMachineList() {
-    const dropdown = document.querySelector('#vending-machine-list');
-    machineList.forEach((item) => {
-        let option = document.createElement('option');
-        option.value = `VM${item.machineId}-${returnCategoryName(item.categoryId)}: ${item.machineLocation}`;
-        dropdown.appendChild(option);
-    });
-}
-
-// RETURN A PIECE OF DATA PER REQUEST ================================================
-// function to return productId given the productName
-function returnProductId(productName) {
-    let product = productList.find((p) => p.productName === productName);
-    return product ? product.productId : -1;
 }
 // function to return category name based on a given category id
 function returnCategoryName(categoryId) {
@@ -97,22 +59,134 @@ function getCurrentDateTime() {
     return formattedDate;
 }
 
-// INPUT VALIDATION FOR BOTH FORMS ==============================================
-// check if qty entered makes the machine exceeds its 75 qty limit
-async function CheckIfQtyOverCap() {
-    let errorMessage = document.getElementById('overcap-message');
-    let stockQtyInput = parseInt(quantity.value);
-    let machineId = returnMachineId(vendingMachine.value);
-    // get the current inv quantity of the machine this stock is added to:
-    let machine = await fetchMachineById(machineId);
+// SET DATALIST FOR SEARCHABLE DROPDOWNS ==============================================================
+// set list for "product-name" searchable dropdown
+function setProductList() {
+    const dropdown = document.querySelector('#product-name-list');
+    productList.forEach((item) => {
+        let option = document.createElement('option');
+        option.value = item.productName;
+        dropdown.appendChild(option);
+    });
+    // add an option for Other
+    let option = document.createElement('option');
+    option.value = 'Other';
+    dropdown.appendChild(option);
+}
+// set list for "product-category" searchable dropdown
+function setCategoryList() {
+    const dropdown = document.querySelector('#product-category-list');
+    categoryList.forEach((item) => {
+        let option = document.createElement('option');
+        option.value = item.categoryName;
+        dropdown.appendChild(option);
+    });
+}
+// set list for "vending-machine" searchable dropdown
+function setMachineList() {
+    const dropdown = document.querySelector('#vending-machine-list');
+    machineList.forEach((item) => {
+        let option = document.createElement('option');
+        option.value = `VM${item.machineId}-${returnCategoryName(item.categoryId)}: ${item.machineLocation}`;
+        dropdown.appendChild(option);
+    });
+}
+// function to return productId given the productName
+function returnProductId(productName) {
+    let product = productList.find((p) => p.productName === productName);
+    return product ? product.productId : -1;
+}
 
-    let avalaibleCap = 75 - machine.machineQty;
+// HANDLE SUBMISSION ==========================================================================================
 
-    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
-        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
-        errorMessage.hidden = false;
-    } else {
-        errorMessage.hidden = true;
+// add the new product (if there's any) into the product table
+async function addNewToProductTable() {
+    try{
+        if (productName.value === "Other") {
+            let newProduct = {
+                productName: selfInputProductName.value, 
+                categoryId: returnCategoryId(productCategory.value), 
+                productPrice: productPrice.value, 
+                productDescription:productDescription.value,
+                imgURL: selfInputProductImageURL.value,
+            }
+            // POST the object to the product table
+            await saveProduct(newProduct)
+        }
+    } catch(error) {
+        console.log(error)
     }
 }
 
+
+
+// add the stock into the stockdetails table
+async function addNewToStockTable() {
+    try{
+
+        let newStock = {
+            productId: returnProductId(productName.value),
+            machineId: returnMachineId(vendingMachine.value),
+            stockQty: parseInt(quantity.value),
+            lastUpdate: getCurrentDateTime(),
+            deleted: false
+        }
+        routeStockAdded(newStock);
+        increaseMachineQty(newStock);
+
+    }catch(error){
+        console.log(error);
+    }
+}
+
+async function routeStockAdded(newStock) {
+    stockList = await fetchProducts();
+    // if stock already exists, only update the existed stock with PUT; else, POST it to the stockdetails table
+    existedStock = stockList.find((s) => s.productId === newStock.productId && s.machineId === newStock.productId);
+    if (existedStock) {
+        newStock.stockQty += existedStock.stockQty; //add newStock to its existed stockQty
+        await updateStock(newStock, newStock.productId, newStock.machineId);
+    } else {
+        await saveStock(newStock);
+    }
+}
+
+
+
+// add the submitted info to the database
+async function handleSubmission() {
+    try{
+        // When submit button is clicked...
+        document.getElementById("add-new-stock-form").addEventListener('submit', async (e) => {
+            e.preventDefault();
+            // in case "Other" is chosen, add the new product to the product table
+            // THEN, add to stock table
+            if (productName === "Other") {
+                await addNewToProductTable()
+            }
+            await addNewToStockTable();
+
+            // print out to test
+            stockList = await fetchStocks()
+            productList = await fetchProducts()
+            machineList = await fetchMachines()
+
+            console.log(stockList);
+            console.log(machineList);
+            console.log(productList);
+        })
+    }catch (error) {
+        console.log(error)
+    }
+}
+
+//disable and enable submit button
+function manipulateSubmitButton() {
+    const isProductNameValid = checkInputInDataList('product-name') && checkProductDup();
+    const isProductCategoryValid = checkInputInDataList('product-category') && checkMatchingCategory();
+    const isMachineValid = checkInputInDataList('vending-machine') && checkMatchingCategory() && checkQtyLimit();
+    const isQuantityValid = checkQtyLimit();
+
+    // Disable the submit button if any validation fails
+    submitButton.disabled = !(isProductNameValid && isProductCategoryValid && isMachineValid && isQuantityValid);
+}

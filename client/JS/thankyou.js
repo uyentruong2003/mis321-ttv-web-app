@@ -1,13 +1,11 @@
-let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
+let currentMachineInfo = {machineId: 0, machineLocation: 'null', machineRegion: 'null', machineType: 0, machineStock: 0}
 
-let orderInfo = {date: null,orderId: null}
-
+let orderInfo = []
 //onload
-function handleOnLoad() {
-    setCurrentMachineInfo().then(() => {
-        console.log(currentMachineInfo)
-        populateThankYou();
-    });x    
+async function handleOnLoad() {
+    await getTransactionIds()
+    await setCurrentMachineInfo()
+    populateThankYou()   
 }
 
 //DOM Manipulation
@@ -26,13 +24,13 @@ function populateThankYou() {
 
     let firstName = cardInfo.Name ? cardInfo.Name.split(' ')[0] : 'Valued Customer';
     firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
-
+    console.log('all orders: ', orderInfo)
     let html = `
     <div class="thank-you-box">
         <h1>Thank You for Your Purchase, ${firstName}!</h1>
         <p>We appreciate your business. If you have any questions, feel free to contact us.</p>
-        <p>Order ID: ${orderInfo.orderId}</p>
-        <p>(#${currentMachineInfo.id})${currentMachineInfo.region} Region > ${currentMachineInfo.location}</p>
+        <p>Order ID: ${orderInfo.orderID}</p>
+        <p>(#${currentMachineInfo.machineId})${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation}</p>
     </div>
     `;
 
@@ -62,7 +60,7 @@ async function setCurrentMachineInfo(){
   { 
     let url = 'http://localhost:5141/api/Transaction/'
     try {
-      let response = await fetch(targetURL);
+      let response = await fetch(url);
       let data = await response.json();
       console.log('Data fetched:', data);
   
