@@ -239,7 +239,7 @@ function filterData(categoryid, filterChoice) {
 
   // Display the calculated values in the HTML
   // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${calculateSalesRevenue(transactions, filteredItems, filterChoice).toFixed(2)}`;
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${inventoryAvailable}`;
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
   // document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${calculateSoldInventory(transactions, filterChoice)}`;
 
   console.log(tempProductList);
@@ -253,6 +253,9 @@ function filterByRegion(region) {
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
+  totalAvailableInventory = calculateAvailableInventory(filteredItems);
+  console.log('Total Available Inventory for Category', region, ':', totalAvailableInventory);
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
 
 
 }
