@@ -24,51 +24,65 @@ async function handleOnLoad() {
 
 //DOM Manipulation
 function populateProductTable() {
-    console.log("populating table")
+    console.log("populating table");
 
     const filteredProducts = products.filter(item => item.machineId === machineId);
-    console.log("filtered products: ", filteredProducts)
+    console.log("filtered products: ", filteredProducts);
 
     let html = `
     <table class="product-table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-            `;
+        <thead>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
     for (let i = 0; i < filteredProducts.length; i += 3) {
         html += '<tr>';
         for (let j = i; j < i + 3 && j < filteredProducts.length; j++) {
             if (filteredProducts[j].deleted == false) {
                 const item = filteredProducts[j];
                 html += `
-                            <td>
-                                <div class="card indiv-card" style="width: 18rem;">
-                                    <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
-                                        <h5 class="card-title">${item.name}</h5>
-                                        <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
-                                        <p class="card-text">$${(item.price).toFixed(2)}</p>
-                                        <p class="card-text" id="stock-amt">Stock: ${item.qtyInMachine}</p>
-                                        <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
-                                        <span id="temporary-message-${item.id}" class="temporary-message"></span>
+                    <td>
+                        <div class="card indiv-card" style="width: 18rem;">
+                            <div class="card-body" style="display: flex; flex-direction: column; justify-content: space-between;">
+                                <h5 class="card-title">${item.name}</h5>
+                                <img src="${item.imgURL}" class="card-img" alt="${item.name} Image">
+                                <p class="card-text">$${(item.price).toFixed(2)}</p>
+                                <p class="card-text" id="stock-amt">Stock: ${item.qtyInMachine}</p>
+                                <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
+                                <span id="temporary-message-${item.id}" class="temporary-message"></span>
+                                
+                                <!-- Add dropdown button and content -->
+                                <div class="dropdown">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        More Info
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <p>Additional information: ${item.description}</p>
+                                        <!-- Add more information as needed -->
                                     </div>
                                 </div>
-                            </td>
-                        `;
+                            </div>
+                        </div>
+                    </td>
+                `;
             }
         }
-        html += '</tr>'; // Move this line here
+        html += '</tr>';
     }
     html += `
-            </tbody>
-        </table>
+        </tbody>
+    </table>
     `;
     document.getElementById('app').innerHTML += html;
+
+    
 }
+
 function populateMachineInfo(){
     let html = `<h4 class="display-machine">${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} #${currentMachineInfo.machineId}</h4>`
     document.getElementById('app').innerHTML+=html

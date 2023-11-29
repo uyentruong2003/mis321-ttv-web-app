@@ -56,7 +56,7 @@ function populateReciptTable(){
     
     html+=`
     <div class="extra-info-box">
-        
+        <h5>Order Number: ${orderNumber}</h5>
         <h5>${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} ID#${currentMachineInfo.machineId}</h5>
     </div>
     </div>
@@ -89,7 +89,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -99,11 +99,14 @@ function populateCheckoutForm(){
 }
 
 // Call this function when handling the checkout
-async function handleCheckout() {
+function handleCheckout() {
 
 
-    
-    
+   AddTransaction()
+
+   transactionStockUpdate()
+
+
     // Rest of your checkout logic
     let cardNum = document.getElementById('card-num').value;
     let cardName = document.getElementById('card-name').value;
@@ -111,18 +114,13 @@ async function handleCheckout() {
     let cardExp = document.getElementById('exp-date').value;
     let zipCode = document.getElementById('zip-code').value;
     let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
-    
+
     localStorage.setItem('cardInfo', JSON.stringify(myCard));
     console.log('Card information received: ', JSON.stringify(myCard));
     document.getElementById('checkout-form').reset();
-    
+
     //clear the cart after checkout
-    let currentCartArray = []
-    localStorage.setItem('currentCartArray', currentCartArray)
-    await AddTransaction()
- 
-    await transactionStockUpdate()
-    window.location.href = "../HTML/ThankYou.html";
+    localStorage.removeItem('currentCartArray');
 }
 
 //Data Manipulation
@@ -228,4 +226,4 @@ function populateArray(){
         machine.machineQty = machine.machineQty - 1
         console.log("machine Updated Stock:",machine)
         return machine 
-        }
+    }
