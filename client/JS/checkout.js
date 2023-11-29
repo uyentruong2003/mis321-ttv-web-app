@@ -89,7 +89,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -99,14 +99,11 @@ function populateCheckoutForm(){
 }
 
 // Call this function when handling the checkout
-function handleCheckout() {
+async function handleCheckout() {
 
 
-   AddTransaction()
-
-   transactionStockUpdate()
-
-
+    
+    
     // Rest of your checkout logic
     let cardNum = document.getElementById('card-num').value;
     let cardName = document.getElementById('card-name').value;
@@ -114,14 +111,18 @@ function handleCheckout() {
     let cardExp = document.getElementById('exp-date').value;
     let zipCode = document.getElementById('zip-code').value;
     let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
-
+    
     localStorage.setItem('cardInfo', JSON.stringify(myCard));
     console.log('Card information received: ', JSON.stringify(myCard));
     document.getElementById('checkout-form').reset();
-
+    
     //clear the cart after checkout
     let currentCartArray = []
     localStorage.setItem('currentCartArray', currentCartArray)
+    await AddTransaction()
+ 
+    await transactionStockUpdate()
+    window.location.href = "../HTML/ThankYou.html";
 }
 
 //Data Manipulation
