@@ -34,25 +34,25 @@ namespace MyApp.Namespace
 
         // POST api/<OrderDetailsController>
         [HttpPost]
-        public void Post([FromBody] OrderDetailsRequest product)
+        public void Post([FromBody] OrderDetailsRequest[] myDetails)
         {
-            if(product != null){
+            for(int i=0; i<myDetails.Length; i++){
                 using var con = new MySqlConnection(cs);
                 con.Open();
-                string stm = @"INSERT INTO orderdetails(productId, machineId, order_id) 
+                string stm = @"INSERT INTO orderdetails(productId, machineId, orderId) 
                                     VALUES(@productId, @machineId, @orderId)";
                 using var cmd = new MySqlCommand(stm, con);
             
-                cmd.Parameters.AddWithValue("@productId", product.productId);
-                cmd.Parameters.AddWithValue("@machineId", product.machineId);
-                cmd.Parameters.AddWithValue("@orderId", product.order_id);
+                cmd.Parameters.AddWithValue("@productId", myDetails[i].productId);
+                cmd.Parameters.AddWithValue("@machineId", myDetails[i].machineId);
+                cmd.Parameters.AddWithValue("@orderId", myDetails[i].order_id);
                 
 
                 cmd.Prepare();
                 cmd.ExecuteNonQuery();
                 con.Close();
+            
             }
-
         }
 
         // PUT api/<OrderDetailsController>/5

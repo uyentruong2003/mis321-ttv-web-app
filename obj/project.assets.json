@@ -7262,19 +7262,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Ryan\\.nuget\\packages\\": {}
+    "C:\\Users\\dylan\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
+      "projectUniqueName": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
       "projectName": "mis321-ttv-web-app",
-      "projectPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
-      "packagesPath": "C:\\Users\\Ryan\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\obj\\",
+      "projectPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
+      "packagesPath": "C:\\Users\\dylan\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Ryan\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\dylan\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
@@ -7333,13 +7333,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.100/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "Undefined",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Problem reading the cache file C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\obj\\project.nuget.cache : Invalid property identifier character: <. Path 'version', line 3, position 0."
-    }
-  ]
+  }
 }

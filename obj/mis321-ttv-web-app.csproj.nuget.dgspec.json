@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {}
+    "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {
+    "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
+        "projectUniqueName": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
         "projectName": "mis321-ttv-web-app",
-        "projectPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
-        "packagesPath": "C:\\Users\\Ryan\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Ryan\\Desktop\\MIS321\\GroupProject\\mis321-ttv-web-app\\obj\\",
+        "projectPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\mis321-ttv-web-app.csproj",
+        "packagesPath": "C:\\Users\\dylan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Ryan\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\dylan\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"

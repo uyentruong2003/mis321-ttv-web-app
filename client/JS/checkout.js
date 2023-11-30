@@ -225,18 +225,15 @@ async function AddTransaction() {
     async function updateOrderDetails() {
         await getTransactionIds();
         
-        for (const item of itemsInCart) {
-            console.log(item)
+        let orderDetails = []
+        orderDetails = OrderDetails()
+        
             try {
-                const data = {
-                    productId: item.id,
-                    machineId: item.machineId,
-                    order_id: orderInfo.orderID
-                };
-    
+                
+                console.log('passing this: ', orderDetails)
                 const response = await fetch("http://localhost:5141/api/OrderDetails", {
                     method: "POST",
-                    body: JSON.stringify(data),
+                    body: JSON.stringify(orderDetails),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8"
                     }
@@ -251,7 +248,7 @@ async function AddTransaction() {
                 throw error; // Propagate the error to the higher level
             }
         }
-    }
+    
 
 
     function formatCart(cart){
@@ -275,4 +272,15 @@ async function AddTransaction() {
         machine.machineQty = machine.machineQty - 1
         console.log("machine Updated Stock:",machine)
         return machine 
+    }
+
+    function OrderDetails(){
+        const orderDetails = itemsInCart.map(item => ({
+            productId: item.id,
+            machineId: item.machineId,
+            orderID: orderInfo.orderID
+        }));
+        
+        return orderDetails;
+ 
     }
