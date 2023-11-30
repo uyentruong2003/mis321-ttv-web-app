@@ -1,5 +1,6 @@
 let itemsInCart = []
 let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
+let orderInfo = []
 
 //Onload
 async function handleOnLoad() {
@@ -7,6 +8,7 @@ async function handleOnLoad() {
     await populateArray();
     populateReciptTable();
     populateCheckoutForm();
+    console.log("Items in cart after handleOnLoad:", itemsInCart);
 }
 
 //Manipulate DOM
@@ -104,7 +106,8 @@ async function handleCheckout() {
         // Wait for AddTransaction to complete before moving to the next step
         await AddTransaction();
 
-        // Wait for transactionStockUpdate to complete before moving to the next step
+        // Wait for updateOrderDetails to complete before moving to the next step
+        await updateOrderDetails();
 
         let cardNum = document.getElementById('card-num').value;
         let cardName = document.getElementById('card-name').value;
@@ -119,7 +122,9 @@ async function handleCheckout() {
 
         // Clear the cart after checkout
         localStorage.removeItem('currentCartArray');
+        console.log('cleared array')
         window.location.href = '../HTML/ThankYou.html';
+        console.log('Navigating to ThankYou.html');
     } catch (error) {
         console.error('Error during checkout:', error);
         // Handle the error appropriately in your application
@@ -149,7 +154,7 @@ function populateArray(){
   } catch (error) {
 }
 }
- 
+
 async function AddTransaction() {
     await transactionStockUpdate()
     const url = 'http://localhost:5141/api/Transaction';
@@ -172,6 +177,7 @@ async function AddTransaction() {
 
         const data = await response.json();
         console.log('Transaction recorded:', data);
+        updateOrderDetails()
         
         } catch (error) {
         console.error('Error updating database:', error);
@@ -185,17 +191,22 @@ async function AddTransaction() {
         let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
         return formattedDate;
     }
-/* 
-     function createTransaction(){
-
-        let myTransaction = {
-        transactionDateTime: getCurrentDateTime()
-        }
-
-      updateDatabase(myTransaction)
-    } */
-
-   //J chillin
+    async function getTransactionIds()
+    { 
+      let url = 'http://localhost:5141/api/Transaction/'
+      try {
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log('Data fetched:', data);
+    
+        orderInfo = data
+        console.log('current machine: ', orderInfo)
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // You might want to handle the error appropriately in your application
+    }
+    }
 
    async function transactionStockUpdate(){
         let UpdatedCart = formatCart(itemsInCart)
@@ -209,6 +220,37 @@ async function AddTransaction() {
             updateMachine(myMachine, myMachine.machineId)
         }) 
 
+    }
+
+    async function updateOrderDetails() {
+        await getTransactionIds();
+        
+        for (const item of itemsInCart) {
+            console.log(item)
+            try {
+                const data = {
+                    productId: item.id,
+                    machineId: item.machineId,
+                    order_id: orderInfo.orderID
+                };
+    
+                const response = await fetch("http://localhost:5141/api/OrderDetails", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to save stock. Status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error(error);
+                // Handle the error as needed (e.g., show an error message to the user)
+                throw error; // Propagate the error to the higher level
+            }
+        }
     }
 
 
