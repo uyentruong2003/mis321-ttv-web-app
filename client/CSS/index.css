@@ -164,3 +164,30 @@
 .btn-checkout {
     margin-top: 20px; /* Adjust the margin as needed */
 }
+
+#more-info-img{
+    padding-top: 15px;
+    height: 75px;
+    object-fit: contain;
+}
+#more-info-card{
+    height: 400px;
+    width: 100px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    border: #000;
+    
+}
+
+.close-btn {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background-color: #fff;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+  }

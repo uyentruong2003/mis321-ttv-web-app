@@ -56,17 +56,8 @@ function populateProductTable() {
                                 <button class="add-to-cart" onclick="handleAddItem(${item.id})">Add to Cart</button>
                                 <span id="temporary-message-${item.id}" class="temporary-message"></span>
                                 
-                                <!-- Add dropdown button and content -->
-                                <div class="dropdown">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        More Info
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <p>Additional information: ${item.description}</p>
-                                        <!-- Add more information as needed -->
-                                    </div>
-                                </div>
-                            </div>
+                                <!-- Add button to display content here -->
+                                <button type="button" class="btn btn-info" onclick="handleMoreInfo(${item.id})">More Info</button>
                         </div>
                     </td>
                 `;
@@ -132,6 +123,35 @@ function populateMachineInfo(){
         }, 2000); // Adjust the duration (in milliseconds) as needed
     }}
 }
+
+function handleMoreInfo(id) {
+    console.log('here');
+    let myItem = products.filter((item) => item.id === id);
+    console.log(myItem);
+    let html = `
+    <div class="moreinfodiv">    
+        <div class="card" style="width: 18rem;" id="more-info-card">
+            <button class="close-btn" onclick="closeMoreInfo()">Close</button>
+            <img class="card-img-top" src="${myItem[0].imgURL}" alt="Card image cap" id="more-info-img">
+            <div class="card-body">
+                <p class="card-text">${myItem[0].desciption}</p>
+            </div>
+        </div>
+        </div>
+    `;
+    document.getElementById('app').innerHTML += html;
+
+    // Add the centering style to the more-info-card
+    document.getElementById('more-info-card').classList.add('centered');
+}
+
+function closeMoreInfo() {
+    const moreInfoCard = document.getElementById('more-info-card');
+    if (moreInfoCard) {
+        moreInfoCard.remove();
+    }
+}
+
 
 
 
