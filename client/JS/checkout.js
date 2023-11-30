@@ -89,7 +89,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -99,29 +99,33 @@ function populateCheckoutForm(){
 }
 
 // Call this function when handling the checkout
-function handleCheckout() {
+async function handleCheckout() {
+    try {
+        // Wait for AddTransaction to complete before moving to the next step
+        await AddTransaction();
 
+        // Wait for transactionStockUpdate to complete before moving to the next step
 
-   AddTransaction()
+        let cardNum = document.getElementById('card-num').value;
+        let cardName = document.getElementById('card-name').value;
+        let cardCVV = document.getElementById('cvv-num').value;
+        let cardExp = document.getElementById('exp-date').value;
+        let zipCode = document.getElementById('zip-code').value;
+        let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
 
-   transactionStockUpdate()
+        localStorage.setItem('cardInfo', JSON.stringify(myCard));
+        console.log('Card information received: ', JSON.stringify(myCard));
+        document.getElementById('checkout-form').reset();
 
-
-    // Rest of your checkout logic
-    let cardNum = document.getElementById('card-num').value;
-    let cardName = document.getElementById('card-name').value;
-    let cardCVV = document.getElementById('cvv-num').value;
-    let cardExp = document.getElementById('exp-date').value;
-    let zipCode = document.getElementById('zip-code').value;
-    let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
-
-    localStorage.setItem('cardInfo', JSON.stringify(myCard));
-    console.log('Card information received: ', JSON.stringify(myCard));
-    document.getElementById('checkout-form').reset();
-
-    //clear the cart after checkout
-    localStorage.removeItem('currentCartArray');
+        // Clear the cart after checkout
+        localStorage.removeItem('currentCartArray');
+        window.location.href = '../HTML/ThankYou.html';
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        // Handle the error appropriately in your application
+    }
 }
+
 
 //Data Manipulation
 function populateArray(){
@@ -146,7 +150,8 @@ function populateArray(){
 }
 }
  
- async function AddTransaction() {
+async function AddTransaction() {
+    await transactionStockUpdate()
     const url = 'http://localhost:5141/api/Transaction';
 
     let myTransaction = {
@@ -172,7 +177,7 @@ function populateArray(){
         console.error('Error updating database:', error);
         // Handle the error appropriately in your application
         }
-    }   
+    } 
     
     function getCurrentDateTime() {
         let date = new Date();
@@ -194,10 +199,12 @@ function populateArray(){
 
    async function transactionStockUpdate(){
         let UpdatedCart = formatCart(itemsInCart)
-        
+        console.log(UpdatedCart)
         //foreach item in cart 
         UpdatedCart.forEach(item => {
+            item.qtyInMachine = item.qtyInMachine-1
             updateStock(item, item.productId, item.machineId)
+
             let myMachine = updateMachineStock(currentMachineInfo)
             updateMachine(myMachine, myMachine.machineId)
         }) 
