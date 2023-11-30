@@ -1,5 +1,6 @@
 let itemsInCart = []
 let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
+let orderInfo = []
 
 //Onload
 async function handleOnLoad() {
@@ -7,6 +8,7 @@ async function handleOnLoad() {
     await populateArray();
     populateReciptTable();
     populateCheckoutForm();
+    console.log("Items in cart after handleOnLoad:", itemsInCart);
 }
 
 //Manipulate DOM
@@ -89,7 +91,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
@@ -99,29 +101,36 @@ function populateCheckoutForm(){
 }
 
 // Call this function when handling the checkout
-function handleCheckout() {
+async function handleCheckout() {
+    try {
+        // Wait for AddTransaction to complete before moving to the next step
+        await AddTransaction();
 
+        // Wait for updateOrderDetails to complete before moving to the next step
+        await updateOrderDetails();
 
-   AddTransaction()
+        let cardNum = document.getElementById('card-num').value;
+        let cardName = document.getElementById('card-name').value;
+        let cardCVV = document.getElementById('cvv-num').value;
+        let cardExp = document.getElementById('exp-date').value;
+        let zipCode = document.getElementById('zip-code').value;
+        let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
 
-   transactionStockUpdate()
+        localStorage.setItem('cardInfo', JSON.stringify(myCard));
+        console.log('Card information received: ', JSON.stringify(myCard));
+        document.getElementById('checkout-form').reset();
 
-
-    // Rest of your checkout logic
-    let cardNum = document.getElementById('card-num').value;
-    let cardName = document.getElementById('card-name').value;
-    let cardCVV = document.getElementById('cvv-num').value;
-    let cardExp = document.getElementById('exp-date').value;
-    let zipCode = document.getElementById('zip-code').value;
-    let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
-
-    localStorage.setItem('cardInfo', JSON.stringify(myCard));
-    console.log('Card information received: ', JSON.stringify(myCard));
-    document.getElementById('checkout-form').reset();
-
-    //clear the cart after checkout
-    localStorage.removeItem('currentCartArray');
+        // Clear the cart after checkout
+        localStorage.removeItem('currentCartArray');
+        console.log('cleared array')
+        window.location.href = '../HTML/ThankYou.html';
+        console.log('Navigating to ThankYou.html');
+    } catch (error) {
+        console.error('Error during checkout:', error);
+        // Handle the error appropriately in your application
+    }
 }
+
 
 //Data Manipulation
 function populateArray(){
@@ -145,8 +154,9 @@ function populateArray(){
   } catch (error) {
 }
 }
- 
- async function AddTransaction() {
+
+async function AddTransaction() {
+    await transactionStockUpdate()
     const url = 'http://localhost:5141/api/Transaction';
 
     let myTransaction = {
@@ -167,12 +177,13 @@ function populateArray(){
 
         const data = await response.json();
         console.log('Transaction recorded:', data);
+        updateOrderDetails()
         
         } catch (error) {
         console.error('Error updating database:', error);
         // Handle the error appropriately in your application
         }
-    }   
+    } 
     
     function getCurrentDateTime() {
         let date = new Date();
@@ -180,28 +191,66 @@ function populateArray(){
         let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
         return formattedDate;
     }
-/* 
-     function createTransaction(){
-
-        let myTransaction = {
-        transactionDateTime: getCurrentDateTime()
-        }
-
-      updateDatabase(myTransaction)
-    } */
-
-   //J chillin
+    async function getTransactionIds()
+    { 
+      let url = 'http://localhost:5141/api/Transaction/'
+      try {
+        let response = await fetch(url);
+        let data = await response.json();
+        console.log('Data fetched:', data);
+    
+        orderInfo = data
+        console.log('current machine: ', orderInfo)
+        return data;
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error; // You might want to handle the error appropriately in your application
+    }
+    }
 
    async function transactionStockUpdate(){
         let UpdatedCart = formatCart(itemsInCart)
-        
+        console.log(UpdatedCart)
         //foreach item in cart 
         UpdatedCart.forEach(item => {
+            item.qtyInMachine = item.qtyInMachine-1
             updateStock(item, item.productId, item.machineId)
+
             let myMachine = updateMachineStock(currentMachineInfo)
             updateMachine(myMachine, myMachine.machineId)
         }) 
 
+    }
+
+    async function updateOrderDetails() {
+        await getTransactionIds();
+        
+        for (const item of itemsInCart) {
+            console.log(item)
+            try {
+                const data = {
+                    productId: item.id,
+                    machineId: item.machineId,
+                    order_id: orderInfo.orderID
+                };
+    
+                const response = await fetch("http://localhost:5141/api/OrderDetails", {
+                    method: "POST",
+                    body: JSON.stringify(data),
+                    headers: {
+                        "Content-type": "application/json; charset=UTF-8"
+                    }
+                });
+    
+                if (!response.ok) {
+                    throw new Error(`Failed to save stock. Status: ${response.status}`);
+                }
+            } catch (error) {
+                console.error(error);
+                // Handle the error as needed (e.g., show an error message to the user)
+                throw error; // Propagate the error to the higher level
+            }
+        }
     }
 
 
