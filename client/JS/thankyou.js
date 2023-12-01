@@ -22,6 +22,13 @@ function populateThankYou() {
         return;
     }
 
+    // Check if cardInfo is not null or undefined
+    if (!cardInfo) {
+        console.error('Card information is null or undefined');
+        // Handle the error appropriately
+        return;
+    }
+
     let firstName = cardInfo.Name ? cardInfo.Name.split(' ')[0] : 'Valued Customer';
     firstName = firstName.charAt(0).toUpperCase() + firstName.slice(1);
     console.log('all orders: ', orderInfo)
@@ -36,6 +43,7 @@ function populateThankYou() {
 
     document.getElementById('app').innerHTML += html;
 }
+
 
 
 //Data Manipulation
