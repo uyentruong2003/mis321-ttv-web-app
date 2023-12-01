@@ -280,6 +280,3 @@ async function increaseMachineQty(newStock) {
 // product table: productId, productName, productPrice, categoryId, productDescription
 // category table: categoryId, categoryName
 // machine table: machineId, machineLocation, machineRegion, machineQty, categoryId
-
-
-

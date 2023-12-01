@@ -63,4 +63,3 @@ async function SubmitEdits() {
     console.log(chosenStock) //testing
 }
     
-
