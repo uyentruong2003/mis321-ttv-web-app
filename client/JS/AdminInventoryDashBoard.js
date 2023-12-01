@@ -130,9 +130,31 @@ const apiUrl = 'http://localhost:5141/api/AdminDash';
 const salesDataURL = 'http://localhost:5141/api/SalesData'
 let inventoryAvailable = '';
 let soldInventory = '';
-let salesRevenue = '';
+let salesRevenue = 0;
 let salesData = [];
- 
+let adminsalesData =[];
+
+
+function HandleOnLoad(){
+  fetchData(apiUrl)
+  .then(apiResponse => {
+    inventoryData = apiResponse; // Assign the response to inventoryData
+    populateTable(inventoryData);
+    console.log(inventoryData);
+  })
+  .catch(error => console.error('Error fetching data:', error));
+  
+  fetchData(salesDataURL)
+  .then(apiResponse => {
+    salesData = apiResponse;
+    GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
+    getSoldInventory(salesData);
+    console.log(salesData);
+  })
+  .catch(error => console.error('Error fetching sales data:', error))
+}
+
+HandleOnLoad();
  
  
 //1. API FUNCTIONALITY
@@ -146,19 +168,13 @@ function fetchData(url) {
 }
 
 
-fetchData(apiUrl)
-  .then(apiResponse => {
-    inventoryData = apiResponse; // Assign the response to inventoryData
-    populateTable(inventoryData);
-    console.log(inventoryData);
-  })
-  .catch(error => console.error('Error fetching data:', error));
+
 
   fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse; // Assign the response to inventoryData
     CreateSalesDataList(salesData)
-    console.log(salesData)
+    // console.log(salesData)
   })
   .catch(error => console.error('Error fetching data:', error));
  
@@ -197,9 +213,15 @@ function populateTable(data) {
     tableBody.appendChild(row);
     }
   });
+  let totalAvailableInventory = calculateAvailableInventory(inventoryData);
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+
+  let totalRevenue = GetSalesRevenue(salesData);
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${totalRevenue}`;
 }
  
-populateTable(inventoryData);
+// populateTable(inventoryData);
+
  
 // END 2.
 
@@ -274,7 +296,7 @@ function filterByRegion(region) {
 function ClearFilters(){
   populateTable(inventoryData);
   document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: `;
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: `;
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;;
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory:`;
 }
  
@@ -287,13 +309,13 @@ function ClearFilters(){
 function CreateSalesDataList(){
 
   salesData.forEach(item => {
-    salesData.push({
+    adminsalesData.push({
     productPrice: item.productPrice,
     machineRegion : item.machineRegion
     
   });
 });
-console.log(salesData);
+console.log(adminsalesData);
 }
 
 // CreateSalesDataList();
@@ -325,33 +347,25 @@ function calculateAvailableInventory(filteredItems) {
 }
  
  
-function calculateSalesRevenue(transactions, inventoryData, filterCategory) {
-  let salesRevenue = 0;
- 
-  transactions.forEach(transaction => {
-    const { categoryid } = transaction;
-    const matchingInventory = inventoryData.find(item => item.categoryid === categoryid && item.categoryid === filterCategory);
- 
-    if (matchingInventory) {
-      salesRevenue += matchingInventory.price;
-    }
+function GetSalesRevenue(salesData){
+  salesRevenue = 0;
+  salesData.forEach(item => {
+    salesRevenue += item.productPrice;
   });
- 
-  return salesRevenue;
+  console.log(salesRevenue);
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
+  
 }
- 
- 
-function calculateSoldInventory(transactions, filterCategory) {
+
+function getSoldInventory(salesData){
   let soldInventory = 0;
- 
-  transactions.forEach(transaction => {
-    if (transaction.categoryid === filterCategory) {
-      soldInventory++;
-    }
+  salesData.forEach(item => {
+    soldInventory++;
   });
- 
-  return soldInventory;
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${soldInventory}`;
 }
+
+
  
 // END 4.
  
