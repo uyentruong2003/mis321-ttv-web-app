@@ -98,20 +98,3 @@ function getCurrentDateTime() {
 }
 
 // INPUT VALIDATION FOR BOTH FORMS ==============================================
-// check if qty entered makes the machine exceeds its 75 qty limit
-async function CheckIfQtyOverCap() {
-    let errorMessage = document.getElementById('overcap-message');
-    let stockQtyInput = parseInt(quantity.value);
-    let machineId = returnMachineId(vendingMachine.value);
-    // get the current inv quantity of the machine this stock is added to:
-    let machine = await fetchMachineById(machineId);
-
-    let avalaibleCap = 75 - machine.machineQty;
-
-    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
-        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
-        errorMessage.hidden = false;
-    } else {
-        errorMessage.hidden = true;
-    }
-}

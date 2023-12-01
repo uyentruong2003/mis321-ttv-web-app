@@ -44,7 +44,7 @@ vendingMachine.addEventListener('change',async () => {
     // check if the stock of this product in the select machine already existed
     CheckIfStockExisted();
     // check if the added qty makes the qty of the selected machine exceeds the 75 cap
-    CheckIfQtyOverCap();
+    CheckIfAddedQtyOverCap();
     // check if the product category is matched with the vending machine category:
     CheckIfCategoryMatched();
     // disable the submit button when error(s) occur
@@ -54,7 +54,7 @@ vendingMachine.addEventListener('change',async () => {
 // WHEN QUANTITY IS CHANGED:
 quantity.addEventListener('change', () => {
     // check if the added qty makes the qty of the selected machine exceeds the 75 cap
-    CheckIfQtyOverCap().then(() => {
+    CheckIfAddedQtyOverCap().then(() => {
         // disable the submit button when error(s) occur
         SetSubmitButtonStatus();
     })
@@ -169,6 +169,22 @@ function CheckIfStockExisted() {
         errorMessage.hidden = false;
         errorMessage.innerText = `Stock of product "${productName.value}" has already existed in vending machine "${vendingMachine.value}". Please edit existed stock's qty instead of adding new.`
     } else{
+        errorMessage.hidden = true;
+    }
+}
+async function CheckIfAddedQtyOverCap() {
+    let errorMessage = document.getElementById('overcap-message');
+    let stockQtyInput = parseInt(quantity.value);
+    let machineId = returnMachineId(vendingMachine.value);
+    // get the current inv quantity of the machine this stock is added to:
+    let machine = await fetchMachineById(machineId);
+
+    let avalaibleCap = 75 - machine.machineQty;
+
+    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
+        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
+        errorMessage.hidden = false;
+    } else {
         errorMessage.hidden = true;
     }
 }

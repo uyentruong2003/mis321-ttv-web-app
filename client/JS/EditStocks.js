@@ -8,7 +8,7 @@ let chosenProduct = {};
 SetUpEditForm();
 
 quantity.addEventListener('change',() => {
-    CheckIfQtyOverCap(); // make sure the newly added stock qty doesn't make the machine exceeds its qty limit of 75
+    CheckIfUpdatedQtyOverCap(); // make sure the newly added stock qty doesn't make the machine exceeds its qty limit of 75
 })
 
 document.getElementById('edit-stock-form').addEventListener('submit',(e) => {
@@ -62,4 +62,21 @@ async function SubmitEdits() {
     updateStock(chosenStock, chosenStock.productId,chosenStock.machineId); // PUT call to the DB
     console.log(chosenStock) //testing
 }
-    
+
+async function CheckIfUpdatedQtyOverCap() {
+    let errorMessage = document.getElementById('overcap-message');
+    let stockQtyInput = parseInt(quantity.value);
+    let machineId = returnMachineId(vendingMachine.value);
+    // get the current inv quantity of the machine this stock is added to:
+    let machine = await fetchMachineById(machineId);
+
+    // minus the original machineQty without counting the currently edited stock
+    let avalaibleCap = 75 - (machine.machineQty- chosenStock.stockQty);
+
+    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
+        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
+        errorMessage.hidden = false;
+    } else {
+        errorMessage.hidden = true;
+    }
+}

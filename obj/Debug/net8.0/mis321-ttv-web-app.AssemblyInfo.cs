@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("mis321-ttv-web-app")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a73c733b8fc6d543fc38eb6615506430ddfe642b")]
 [assembly: System.Reflection.AssemblyProductAttribute("mis321-ttv-web-app")]
 [assembly: System.Reflection.AssemblyTitleAttribute("mis321-ttv-web-app")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
