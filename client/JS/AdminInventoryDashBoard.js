@@ -130,7 +130,7 @@ const apiUrl = 'http://localhost:5141/api/AdminDash';
 const salesDataURL = 'http://localhost:5141/api/SalesData'
 let inventoryAvailable = '';
 let soldInventory = '';
-let salesRevenue = 0;
+let salesRevenue = 3.5;
 let salesData = [];
 let adminsalesData =[];
 
@@ -265,15 +265,16 @@ function filterData(categoryid, filterChoice) {
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
+  GetSalesRevenue(filteredItems);
 
   // Calculate total available inventory
-  let totalAvailableInventory = calculateAvailableInventory(filteredItems);
-  console.log('Total Available Inventory for Category', filterChoice, ':', totalAvailableInventory);
+  // let totalAvailableInventory = calculateAvailableInventory(filteredItems);
+  // console.log('Total Available Inventory for Category', filterChoice, ':', totalAvailableInventory);
 
-  // Display the calculated values in the HTML
-  // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${calculateSalesRevenue(transactions, filteredItems, filterChoice).toFixed(2)}`;
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
-  // document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${calculateSoldInventory(transactions, filterChoice)}`;
+  // // Display the calculated values in the HTML
+  // // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${calculateSalesRevenue(transactions, filteredItems, filterChoice).toFixed(2)}`;
+  // document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+  // // document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${calculateSoldInventory(transactions, filterChoice)}`;
 
   console.log(tempProductList);
 }
@@ -286,16 +287,20 @@ function filterByRegion(region) {
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
-  totalAvailableInventory = calculateAvailableInventory(filteredItems);
-  console.log('Total Available Inventory for Category', region, ':', totalAvailableInventory);
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+  // totalAvailableInventory = calculateAvailableInventory(filteredItems);
+  // console.log('Total Available Inventory for Category', region, ':', totalAvailableInventory);
+  // document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+  // // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 2.00`;
+  // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
+  // // GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
+  // // getSoldInventory(salesData);
 
 
 }
  
 function ClearFilters(){
   populateTable(inventoryData);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: `;
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
   document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;;
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory:`;
 }
@@ -349,11 +354,11 @@ function calculateAvailableInventory(filteredItems) {
  
 function GetSalesRevenue(salesData){
   salesRevenue = 0;
-  salesData.forEach(item => {
-    salesRevenue += item.productPrice;
-  });
-  console.log(salesRevenue);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
+  // salesData.forEach(item => {
+  //   salesRevenue += item.productPrice;
+  // });
+  // console.log(salesRevenue);
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 3.5`;
   
 }
 
