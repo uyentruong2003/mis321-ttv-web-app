@@ -181,7 +181,7 @@ async function CheckIfAddedQtyOverCap() {
 
     let avalaibleCap = 75 - machine.machineQty;
 
-    if (machine.machineQty + stockQtyInput > 75 && stockQtyInput !== 0 && vendingMachine.value !== '') {
+    if (stockQtyInput > avalaibleCap && stockQtyInput !== 0 && vendingMachine.value !== '') {
         errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
         errorMessage.hidden = false;
     } else {
