@@ -1193,3 +1193,5 @@ C:\Users\Ryan\Desktop\MIS321\GroupProject\mis321-ttv-web-app\API\obj\Debug\net8.
 C:\Users\Ryan\Desktop\MIS321\GroupProject\mis321-ttv-web-app\API\obj\Debug\net8.0\api.pdb
 C:\Users\Ryan\Desktop\MIS321\GroupProject\mis321-ttv-web-app\API\obj\Debug\net8.0\api.genruntimeconfig.cache
 C:\Users\Ryan\Desktop\MIS321\GroupProject\mis321-ttv-web-app\API\obj\Debug\net8.0\ref\api.dll
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\API\bin\Debug\net8.0\DotNetEnv.dll
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\API\bin\Debug\net8.0\Sprache.dll
