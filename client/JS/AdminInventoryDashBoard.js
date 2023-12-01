@@ -127,9 +127,11 @@ let tempProductList = [];
 // TODO FIGURE HOW DELETE IS BEING HANDELED
  
 const apiUrl = 'http://localhost:5141/api/AdminDash';
+const salesDataURL = 'http://localhost:5141/api/SalesData'
 let inventoryAvailable = '';
 let soldInventory = '';
 let salesRevenue = '';
+let salesData = [];
  
  
  
@@ -143,11 +145,20 @@ function fetchData(url) {
       });
 }
 
+
 fetchData(apiUrl)
   .then(apiResponse => {
     inventoryData = apiResponse; // Assign the response to inventoryData
     populateTable(inventoryData);
     console.log(inventoryData);
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
+  fetchData(salesDataURL)
+  .then(apiResponse => {
+    salesData = apiResponse; // Assign the response to inventoryData
+    CreateSalesDataList(salesData)
+    console.log(salesData)
   })
   .catch(error => console.error('Error fetching data:', error));
  
@@ -272,6 +283,37 @@ function ClearFilters(){
  
 // 4. BANNER LOGIC
  
+
+function CreateSalesDataList(){
+
+  salesData.forEach(item => {
+    salesData.push({
+    productPrice: item.productPrice,
+    machineRegion : item.machineRegion
+    
+  });
+});
+console.log(salesData);
+}
+
+// CreateSalesDataList();
+
+
+function populateTempArray(){
+  inventoryData.forEach(item => {
+    tempProductList.push({
+      id: item.id,
+      name: item.name,
+      categoryid: item.categoryid,
+      machineId: item.machineId,
+      qtyInMachine: item.qtyInMachine,
+      price: item.price,
+      region: item.region
+    });
+  });
+  }
+
+
 function calculateAvailableInventory(filteredItems) {
   let inventoryAvailable = 0;
  
