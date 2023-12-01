@@ -1,7 +1,6 @@
 // DUMMY DATA
 let tempProductList = [];
  
-
 // let inventoryData = [
 //   {
 //     id: 1,
@@ -130,21 +129,23 @@ const apiUrl = 'http://localhost:5141/api/AdminDash';
 const salesDataURL = 'http://localhost:5141/api/SalesData'
 let inventoryAvailable = '';
 let soldInventory = '';
-let salesRevenue = 3.5;
+let salesRevenue = 0;
 let salesData = [];
 let adminsalesData =[];
-
-
-function HandleOnLoad(){
-  fetchData(apiUrl)
+let regionSalesRevenue = 0;
+let regionSoldInventory = 0;
+ 
+ 
+async function HandleOnLoad(){
+  await fetchData(apiUrl)
   .then(apiResponse => {
     inventoryData = apiResponse; // Assign the response to inventoryData
     populateTable(inventoryData);
     console.log(inventoryData);
   })
   .catch(error => console.error('Error fetching data:', error));
-  
-  fetchData(salesDataURL)
+ 
+  await fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse;
     GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
@@ -153,23 +154,23 @@ function HandleOnLoad(){
   })
   .catch(error => console.error('Error fetching sales data:', error))
 }
-
+ 
 HandleOnLoad();
  
  
 //1. API FUNCTIONALITY
  
-function fetchData(url) {
+ function fetchData(url) {
   return fetch(url)
       .then(response => response.json())
       .catch(error => {
           console.error('Error fetching data:', error);
       });
 }
-
-
-
-
+ 
+ 
+ 
+ 
   fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse; // Assign the response to inventoryData
@@ -183,29 +184,37 @@ function fetchData(url) {
  
 // 2. POPULATE TABLE
  
-function populateTable(data) {
+
+ function populateTable(data) {
+  let tempName = '';
   const tableBody = document.getElementById('tableBody');
  
   tableBody.innerHTML = '';
  
   data.forEach(item => {
+    if(item.categoryid == 1){
+      tempName = "Drink";
+    }
+    else if(item.categoryid == 2){
+      tempName = "Snack";
+    }
     if (item.deleted !== 1) {
     const row = document.createElement('tr');
  
     row.innerHTML = `
 <td>${item.id}</td>
 <td>${item.name}</td>
-<td>${item.categoryid}</td>
+<td>${tempName}</td>
 <td>${item.machineId}</td>
 <td>${item.qtyInMachine}</td>
 <td>${item.price}</td>
 <td>${item.region}</td>
 <td>
 <a href="EditStocks.html">
-<button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit</button>
+<button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantitity</button>
 </a>
 <a href="#">
-<button type="button" class="btn btn-primary" style="background-color: red;" onclick="deleteItem(${item.id})">Delete</button>
+
 </a>
 </td>
     `;
@@ -215,42 +224,23 @@ function populateTable(data) {
   });
   let totalAvailableInventory = calculateAvailableInventory(inventoryData);
   document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
-
+ 
   let totalRevenue = GetSalesRevenue(salesData);
   document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${totalRevenue}`;
 }
  
-// populateTable(inventoryData);
-
+populateTable(inventoryData);
+ 
  
 // END 2.
-
-
+ 
+ 
 //3. HANDLE DELETE
+ 
+async function deleteItem(productId) {
 
-function deleteItem(productId) {
-  // Send an API request to update the 'deleted' property to 1 for the given product
-  const deleteUrl = `http://localhost:5141/api/AdminDash/${productId}`;
-
-  fetch(deleteUrl, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ deleted: 1 }),
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Failed to delete product');
-      }
-      // If the update is successful, refresh the page
-      location.reload();
-    })
-    .catch(error => {
-      console.error('Error deleting product:', error);
-    });
 }
-
+ 
 // end 3
  
  
@@ -260,49 +250,97 @@ console.log(tempProductList);
  
 let filterChoice = '';
  
-function filterData(categoryid, filterChoice) {
+async function filterData(categoryid, filterChoice) {
   const filteredItems = inventoryData.filter(item => item.categoryid == filterChoice);
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
-  GetSalesRevenue(filteredItems);
 
   // Calculate total available inventory
-  // let totalAvailableInventory = calculateAvailableInventory(filteredItems);
-  // console.log('Total Available Inventory for Category', filterChoice, ':', totalAvailableInventory);
+  let totalAvailableInventory = calculateAvailableInventory(filteredItems);
+  console.log('Total Available Inventory for Category', filterChoice, ':', totalAvailableInventory);
 
-  // // Display the calculated values in the HTML
-  // // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: $${calculateSalesRevenue(transactions, filteredItems, filterChoice).toFixed(2)}`;
-  // document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
-  // // document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${calculateSoldInventory(transactions, filterChoice)}`;
+  // Calculate sales revenue based on the filtered category
+  let salesRevenue = 0;
+  if (filterChoice == 1) {
+    salesRevenue = await FilterSoldInventoryDrink(); // Calculate sales revenue for Drink category
+  } else if (filterChoice == 2) {
+    salesRevenue = await FilterSoldInventorySnack(); // Calculate sales revenue for Snack category
+  }
 
-  console.log(tempProductList);
+  // Display the calculated values in the HTML
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue.toFixed(2)}`;
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
 }
 
+async function FilterSoldInventorySnack() {
+  let snackRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.productCategory === 2) {
+      snackRevenue += item.productPrice;
+    }
+  });
+  return snackRevenue;
+}
+
+async function FilterSoldInventoryDrink() {
+  let drinkRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.productCategory === 1) {
+      drinkRevenue += item.productPrice;
+    }
+  });
+  return drinkRevenue;
+}
+ 
+ 
 
 
+async function filterByRegion(region) {
+  // Fetch sales data again
+  await fetchData(salesDataURL)
+    .then(apiResponse => {
+      salesData = apiResponse;
+    })
+    .catch(error => console.error('Error fetching sales data:', error));
 
-function filterByRegion(region) {
   const filteredItems = inventoryData.filter(item => item.region === region);
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
-  // totalAvailableInventory = calculateAvailableInventory(filteredItems);
-  // console.log('Total Available Inventory for Category', region, ':', totalAvailableInventory);
-  // document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
-  // // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 2.00`;
-  // document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
-  // // GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
-  // // getSoldInventory(salesData);
 
+  // Calculate total available inventory
+  let totalAvailableInventory = calculateAvailableInventory(filteredItems);
+  console.log('Total Available Inventory for Region', region, ':', totalAvailableInventory);
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
 
+  // Calculate sales revenue based on the filtered region
+  regionSalesRevenue = 0;
+  regionSoldInventory = 0;
+
+  // Log the ids for debugging
+  console.log('Filtered Item IDs:', filteredItems.map(item => item.id));
+  console.log('Sales Data IDs:', salesData.map(item => item.productid));
+
+  // Iterate through salesData and sum the revenue for the filtered region
+  salesData.forEach(item => {
+    // Use findIndex to find the index of the item in filteredItems
+    const indexInFilteredItems = filteredItems.findIndex(product => product.id === item.productid);
+    if (indexInFilteredItems !== -1) {
+      regionSalesRevenue += item.productPrice;
+      regionSoldInventory++;
+    }
+  });
+
+  // Display the calculated values in the HTML
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${regionSoldInventory}`;
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${regionSalesRevenue.toFixed(2)}`;
 }
- 
-function ClearFilters(){
-  populateTable(inventoryData);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;;
-  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory:`;
+
+async function ClearFilters() {
+  location.reload();
 }
  
 // END 3.
@@ -310,37 +348,26 @@ function ClearFilters(){
  
 // 4. BANNER LOGIC
  
-
-function CreateSalesDataList(){
-
+ 
+ function CreateSalesDataList(){
+ 
   salesData.forEach(item => {
     adminsalesData.push({
+    productCategory : item.productCategory,
     productPrice: item.productPrice,
     machineRegion : item.machineRegion
-    
+   
   });
 });
 console.log(adminsalesData);
 }
-
+ 
 // CreateSalesDataList();
-
-
-function populateTempArray(){
-  inventoryData.forEach(item => {
-    tempProductList.push({
-      id: item.id,
-      name: item.name,
-      categoryid: item.categoryid,
-      machineId: item.machineId,
-      qtyInMachine: item.qtyInMachine,
-      price: item.price,
-      region: item.region
-    });
-  });
-  }
-
-
+ 
+ 
+ 
+ 
+ 
 function calculateAvailableInventory(filteredItems) {
   let inventoryAvailable = 0;
  
@@ -354,23 +381,25 @@ function calculateAvailableInventory(filteredItems) {
  
 function GetSalesRevenue(salesData){
   salesRevenue = 0;
-  // salesData.forEach(item => {
-  //   salesRevenue += item.productPrice;
-  // });
-  // console.log(salesRevenue);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 3.5`;
-  
+  salesData.forEach(item => {
+    salesRevenue += item.productPrice;
+  });
+  console.log(salesRevenue);
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
+ 
 }
-
-function getSoldInventory(salesData){
+ 
+ function getSoldInventory(salesData){
   let soldInventory = 0;
   salesData.forEach(item => {
     soldInventory++;
   });
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${soldInventory}`;
 }
-
-
+ 
+ 
+ 
+ 
  
 // END 4.
  
@@ -378,17 +407,17 @@ function getSoldInventory(salesData){
 // 5. EDIT STOCKS LOGIC
  
 // get corresponding fetchById url:
-function editItem(productId, machineId) {
+ function editItem(productId, machineId) {
   localStorage.setItem("product-id",productId);
   localStorage.setItem("machine-id",machineId);
   console.log(idList); //testing
 }
-
-
+ 
+ 
  
 // END 5.
  
-function populateTempArray(){
+ function populateTempArray(){
 inventoryData.forEach(item => {
   tempProductList.push({
     id: item.id,
@@ -403,4 +432,3 @@ inventoryData.forEach(item => {
 }
  
   // TEMPORARY PRODUCT LIST
- 
