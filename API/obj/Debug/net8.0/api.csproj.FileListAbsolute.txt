@@ -1199,3 +1199,5 @@ C:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\API\bin\Debug\ne
 C:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\API\bin\Debug\net8.0\Sprache.dll
 C:\Users\ryanl\Desktop\Group\mis321-ttv-web-app\API\bin\Debug\net8.0\DotNetEnv.dll
 C:\Users\ryanl\Desktop\Group\mis321-ttv-web-app\API\bin\Debug\net8.0\Sprache.dll
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\api\bin\Debug\net8.0\DotNetEnv.dll
+C:\Users\epicn\Desktop\CLASSES\MIS321\mis321-ttv-web-app\api\bin\Debug\net8.0\Sprache.dll

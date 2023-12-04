@@ -1,6 +1,6 @@
 let itemsInCart = []
 let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
-let orderInfo = []
+//let orderInfo = []
 
 //Onload
 async function handleOnLoad() {
@@ -58,7 +58,7 @@ function populateReciptTable(){
     
     html+=`
     <div class="extra-info-box">
-        <h5>Order Number: ${orderNumber}</h5>
+      
         <h5>${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} ID#${currentMachineInfo.machineId}</h5>
     </div>
     </div>
@@ -74,7 +74,7 @@ function populateCheckoutForm(){
         <div class="form-group">
             <label for="card-num">Card Number:</label>
             <input type="password" class="form-control" id="card-num" placeholder="XXXXXXXXXXXXXXXX (16 digits)">
-            <small id="card-num" class="form-text text-muted">on god all card information is secure</small>
+            <small id="card-num" class="form-text text-muted">All card information is secure</small>
         </div>
         <div class="form-group">
             <label for="card-name">Cardholder Name:</label>
@@ -91,13 +91,14 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="#"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
         </div>
         
         </form>
     </div>
     `
     document.getElementById('app').innerHTML+=html
+    //../HTML/ThankYou.html
 }
 
 // Call this function when handling the checkout
@@ -107,7 +108,7 @@ async function handleCheckout() {
         await AddTransaction();
 
         // Wait for updateOrderDetails to complete before moving to the next step
-        await updateOrderDetails();
+        //await updateOrderDetails();
 
         let cardNum = document.getElementById('card-num').value;
         let cardName = document.getElementById('card-name').value;
@@ -116,13 +117,14 @@ async function handleCheckout() {
         let zipCode = document.getElementById('zip-code').value;
         let myCard = { Number: cardNum, Name: cardName, CVV: cardCVV, Exp: cardExp, Zip: zipCode };
 
+        // Set the cardInfo in localStorage
         localStorage.setItem('cardInfo', JSON.stringify(myCard));
-        console.log('Card information received: ', JSON.stringify(myCard));
-        document.getElementById('checkout-form').reset();
 
         // Clear the cart after checkout
         localStorage.removeItem('currentCartArray');
-        console.log('cleared array')
+        console.log('Cleared array');
+
+        // Navigate to ThankYou.html
         window.location.href = '../HTML/ThankYou.html';
         console.log('Navigating to ThankYou.html');
     } catch (error) {
@@ -130,6 +132,7 @@ async function handleCheckout() {
         // Handle the error appropriately in your application
     }
 }
+
 
 
 //Data Manipulation
@@ -225,15 +228,18 @@ async function AddTransaction() {
     async function updateOrderDetails() {
         await getTransactionIds();
         
-        let orderDetails = []
-        orderDetails = OrderDetails()
-        
+        for (const item of itemsInCart) {
+            console.log(item)
             try {
-                
-                console.log('passing this: ', orderDetails)
+                const data = {
+                    productId: item.id,
+                    machineId: item.machineId,
+                    order_id: orderInfo.orderID
+                };
+    
                 const response = await fetch("http://localhost:5141/api/OrderDetails", {
                     method: "POST",
-                    body: JSON.stringify(orderDetails),
+                    body: JSON.stringify(data),
                     headers: {
                         "Content-type": "application/json; charset=UTF-8"
                     }
@@ -248,7 +254,7 @@ async function AddTransaction() {
                 throw error; // Propagate the error to the higher level
             }
         }
-    
+    }
 
 
     function formatCart(cart){
@@ -272,15 +278,4 @@ async function AddTransaction() {
         machine.machineQty = machine.machineQty - 1
         console.log("machine Updated Stock:",machine)
         return machine 
-    }
-
-    function OrderDetails(){
-        const orderDetails = itemsInCart.map(item => ({
-            productId: item.id,
-            machineId: item.machineId,
-            orderID: orderInfo.orderID
-        }));
-        
-        return orderDetails;
- 
     }
