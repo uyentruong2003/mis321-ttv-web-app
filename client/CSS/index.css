@@ -93,7 +93,7 @@
     font-weight: bold !important;
     text-decoration: underline;
 }
-.recipt-box{
+.receipt-box{
     margin-top: 50px;
     margin-left: 50px;
     width: 40%;
@@ -101,7 +101,7 @@
     border: 2px solid #000;
     box-sizing: border-box;
 }
-#recipt-title{
+#receipt-title{
     text-align: center;
     font-weight: bold;
     text-decoration: underline;
@@ -191,3 +191,8 @@
     padding: 5px;
     cursor: pointer;
   }
+
+  .exp-date-container {
+    display: flex;
+    gap: 10px; /* Adjust the gap as needed */
+}

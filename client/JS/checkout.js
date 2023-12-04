@@ -18,10 +18,10 @@ async function handleOnLoad() {
 function populateReciptTable(){
     let total = 0
     let html=`
-    <div class="recipt-box">
+    <div class="receipt-box">
         <table class="table">
             <thead>
-                <th id="recipt-title" colspan="2"><h3>Recipt</h3></th>
+                <th id="receipt-title" colspan="2"><h3>Receipt</h3></th>
                 <!-- <th>Price</th> -->
             </thead>
             <tbody>
@@ -56,7 +56,7 @@ function populateReciptTable(){
     `
 
     //Other information below the table
-    let orderNumber = Date.now() //generate AND OR pull recipt number here
+    let orderNumber = Date.now() //generate AND OR pull receipt number here
     localStorage.setItem("orderNumber", orderNumber)
     
     html+=`
@@ -72,36 +72,61 @@ function populateReciptTable(){
 function populateCheckoutForm(){
     let html=`
     <div class="card-info">
-        <form onsubmit="return false" id="checkout-form">
-        <h2 id="recipt-title">Card Information</h2>
+        <form id="checkout-form" onSubmit="return false">
+        <h2 id="receipt-title">Card Information</h2>
         <div class="form-group">
             <label for="card-num">Card Number:</label>
-            <input type="password" class="form-control" id="card-num" placeholder="XXXXXXXXXXXXXXXX (16 digits)">
+            <input type="password" class="form-control" id="card-num" placeholder="XXXXXXXXXXXXXXXX (16 digits)" required pattern="[0-9]{16}">
             <small id="card-num" class="form-text text-muted">All card information is secure</small>
         </div>
         <div class="form-group">
             <label for="card-name">Cardholder Name:</label>
-            <input type="card-name" class="form-control" id="card-name">
+            <input type="text" class="form-control" id="card-name" required>
         </div>
         <div class="form-group">
             <label for="cvv-num">CVV:</label>
-            <input type="password" class="form-control" id="cvv-num" placeholder="***">
+            <input type="password" class="form-control" id="cvv-num" placeholder="***" pattern="[0-9]{3}" required>
             <label for="exp-date">Exp Date:</label>
-            <input type="text" class="form-control" id="exp-date" placeholder="MM/YY">
+            <div id="exp-date" class="exp-date-container">
+                <input type="text" class="form-control" id="exp-date-month" placeholder="MM" required list="month-list">
+                <datalist id="month-list">
+                    <option value="01">01</option>
+                    <option value="02">02</option>
+                    <option value="03">03</option>
+                    <option value="04">04</option>
+                    <option value="05">05</option>
+                    <option value="06">06</option>
+                    <option value="07">07</option>
+                    <option value="08">08</option>
+                    <option value="09">09</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </datalist>
+                <input type="text" class="form-control" id="exp-date-month" placeholder="YY" required list="year-list">
+                <datalist id="year-list">
+                    <option value="24">2024</option>
+                    <option value="25">2025</option>
+                    <option value="26">2026</option>
+                    <option value="27">2027</option>
+                    <option value="28">2028</option>
+                    <option value="29">2029</option>
+                    <option value="30">2030</option>
+                </datalist>
+            </div>
         </div>
         <div class="form-group">
             <label for="zip-code">Zip Code:</label>
-            <input type="card-name" class="form-control" id="zip-code">
+            <input type="text" class="form-control" id="zip-code" required pattern="[0-9]{5}">
             </div>
         <div>
-            <button type="submit" class="btn btn-success" style="width: 200px;" id="submit-button" onClick="handleSubmitButton()">Submit</button>
+            <button type="submit" class="btn btn-success" style="width: 200px; margin-top: 15px;" id="submit-button" onClick="handleSubmitButton()">Submit</button>
         </div>
         
         </form>
     </div>
     `
     document.getElementById('app').innerHTML+=html
-    //../HTML/ThankYou.html
 }
 
 // Call this function when handling the checkout
@@ -130,12 +155,51 @@ async function handleCheckout() {
     }
 }
 
+// Validate form:
+function validateForm() {
+    // Check card number
+    const cardNumInput = document.getElementById('card-num');
+    if (!cardNumInput.checkValidity()) {
+        alert('Invalid card number. Please enter a valid 16-digit number.');
+        return false;
+    }
+
+    // Check cardholder name
+    const cardNameInput = document.getElementById('card-name');
+    if (!cardNameInput.checkValidity()) {
+        alert('Please enter the cardholder name.');
+        return false;
+    }
+
+    // Check CVV
+    const cvvInput = document.getElementById('cvv-num');
+    if (!cvvInput.checkValidity()) {
+        alert('Invalid CVV. Please enter a valid 3-digit number.');
+        return false;
+    }
+
+    // Check zip code
+    const zipCodeInput = document.getElementById('zip-code');
+    if (!zipCodeInput.checkValidity()) {
+        alert('Invalid zip code. Please enter a valid 5-digit number.');
+        return false;
+    }
+
+    // Additional checks for other fields if needed
+
+    // If all checks pass, allow form submission
+    return true;
+}
+
 //put in the onClick of the submit button
 async function handleSubmitButton (){
-    await handleCheckout();
-    await updateOrderDetails();
-    window.location.href = '../HTML/ThankYou.html';
-    console.log('Navigating to ThankYou.html');
+    //only if all inputs are valid
+    if(validateForm()==true) {
+        await handleCheckout();
+        await updateOrderDetails();
+        window.location.href = '../HTML/ThankYou.html';
+        console.log('Navigating to ThankYou.html');
+    }
 }
 //Data Manipulation
 function populateArray(){
