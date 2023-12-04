@@ -83,8 +83,10 @@ namespace MyApp.Namespace
 
         // DELETE api/<AdminDashController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public void Delete(int id, int machineId)
         {
+            AdminDashUtility utility = new AdminDashUtility();
+            utility.DeleteStock(id, machineId);
         }
     }
 }
