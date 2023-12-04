@@ -1,5 +1,6 @@
 //individualmachine.js
 let products = []
+let filteredProducts =[]
 let machineId = 0
 let currentCart = []
 let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
@@ -24,9 +25,10 @@ async function handleOnLoad() {
 
 //DOM Manipulation
 function populateProductTable() {
+    document.getElementById('app').innerHTML =' ';
     console.log("populating table");
 
-    const filteredProducts = products.filter(item => item.machineId === machineId);
+    filteredProducts = products.filter(item => item.machineId === machineId);
     console.log("filtered products: ", filteredProducts);
 
     let html = `
@@ -45,6 +47,7 @@ function populateProductTable() {
         for (let j = i; j < i + 3 && j < filteredProducts.length; j++) {
             if (filteredProducts[j].deleted == false) {
                 const item = filteredProducts[j];
+                console.log('qty: ',item.qtyInMachine)
                 html += `
                     <td>
                         <div class="card indiv-card" style="width: 18rem;">
@@ -70,6 +73,7 @@ function populateProductTable() {
     </table>
     `;
     document.getElementById('app').innerHTML += html;
+    console.log("ran populate")
 
     
 }
@@ -86,31 +90,41 @@ function populateMachineInfo(){
     var existingCart = existingCartString ? JSON.parse(existingCartString) : [];
 
     // Fetch the selected product based on the given id
-    const filteredProducts = products.filter(item => item.machineId === machineId);
-
-    let check = checkStockQuanity(id, filteredProducts)
-    if(check == 1){
+    filteredProducts = products.filter(item => item.machineId === machineId);
     
-    const addProduct = filteredProducts.find(item => item.id == id);
+    let check = checkStockQuanity(id, filteredProducts)
+    if(check == 1){   
+        const addProduct = filteredProducts.find(item => item.id == id);
+        // addProduct.qtyInMachine -= 1;
+        filteredProducts.forEach(item => {
+            if(item.id == id){
+                item.qtyInMachine -= 1
+                
+            }
+        })
+        
+        populateProductTable()
+        //document.getElementById('stock-atm').value = addProduct.qtyInMachine;
+        
+        // Add the selected product to the existing array
+        existingCart.push(addProduct);
 
-    // Add the selected product to the existing array
-    existingCart.push(addProduct);
+        // Convert the array to a JSON string
+        var updatedCartString = JSON.stringify(existingCart);
 
-    // Convert the array to a JSON string
-    var updatedCartString = JSON.stringify(existingCart);
+        // Update the currentCartArray in localStorage
+        localStorage.setItem("currentCartArray", updatedCartString);
 
-    // Update the currentCartArray in localStorage
-    localStorage.setItem("currentCartArray", updatedCartString);
+        console.log("Updated Cart:", existingCart);
 
-    console.log("Updated Cart:", existingCart);
-
-    const temporaryMessage = document.getElementById(`temporary-message-${id}`);
-    if (temporaryMessage) {
-        temporaryMessage.textContent = "Added to Cart!";
-        setTimeout(() => {
-            temporaryMessage.textContent = ""; // Clear the message after a short duration
-        }, 2000); // Adjust the duration (in milliseconds) as needed
-    }
+        const temporaryMessage = document.getElementById(`temporary-message-${id}`);
+        if (temporaryMessage) {
+            temporaryMessage.textContent = "Added to Cart!";
+            setTimeout(() => {
+                temporaryMessage.textContent = ""; // Clear the message after a short duration
+            }, 2000); // Adjust the duration (in milliseconds) as needed
+            //document.getElementById('stock-atm').value = addProduct.qtyInMachine;
+        }
     }
 
     else{
