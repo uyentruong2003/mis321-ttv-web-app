@@ -1,6 +1,6 @@
 // DUMMY DATA
 let tempProductList = [];
-
+ 
  
 // let inventoryData = [
 //   {
@@ -135,6 +135,7 @@ let salesData = [];
 let adminsalesData =[];
 let regionSalesRevenue = 0;
 let regionSoldInventory = 0;
+let deletedItems = [];
  
  
 async function HandleOnLoad(){
@@ -149,7 +150,7 @@ async function HandleOnLoad(){
   await fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse;
-  
+ 
   })
   .catch(error => console.error('Error fetching sales data:', error))
   GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
@@ -173,7 +174,7 @@ HandleOnLoad();
  
  
  
-  
+ 
 fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse; // Assign the response to inventoryData
@@ -187,48 +188,93 @@ fetchData(salesDataURL)
  
 // 2. POPULATE TABLE
  
-
- function populateTable(data) {
+ 
+function populateTable(data) {
   let tempName = '';
   const tableBody = document.getElementById('tableBody');
  
   tableBody.innerHTML = '';
  
   data.forEach(item => {
-    if(item.categoryid == 1){
-      tempName = "Drink";
+    if (item.categoryid === 1) {
+      tempName = 'Drink';
+    } else if (item.categoryid === 2) {
+      tempName = 'Snack';
     }
-    else if(item.categoryid == 2){
-      tempName = "Snack";
-    }
+ 
     if (item.deleted !== 1) {
+      const row = document.createElement('tr');
+ 
+      row.innerHTML = `
+        <td>${item.id}</td>
+        <td>${item.name}</td>
+        <td>${tempName}</td>
+        <td>${item.machineId}</td>
+        <td>${item.qtyInMachine}</td>
+        <td>${item.price}</td>
+        <td>${item.region}</td>
+        <td>
+          <a href="EditStocks.html">
+            <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
+          </a>
+          <a href="#">
+          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="#">Delete</button></a>
+        </td>
+      `;
+ 
+      // Append the row to the table
+      tableBody.appendChild(row);
+    } else {
+      // Store deleted items in the array
+      deletedItems.push(item);
+    }
+  });
+ 
+  // Use deletedItems array for further processing if needed
+  console.log('Deleted Items:', deletedItems);
+ 
+  let totalAvailableInventory = calculateAvailableInventory(inventoryData);
+  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+}
+ 
+ 
+ 
+ 
+function populateDeletedItemsTable(deletedItems) {
+ 
+  tableBody.innerHTML = '';
+ 
+  deletedItems.forEach(item => {
     const row = document.createElement('tr');
  
     row.innerHTML = `
-<td>${item.id}</td>
-<td>${item.name}</td>
-<td>${tempName}</td>
-<td>${item.machineId}</td>
-<td>${item.qtyInMachine}</td>
-<td>${item.price}</td>
-<td>${item.region}</td>
-<td>
-<a href="EditStocks.html">
-<button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantitity</button>
-</a>
-<a href="#">
-
-</a>
-</td>
+      <td>${item.id}</td>
+      <td>${item.name}</td>
+      <td>${item.categoryid === 1 ? 'Drink' : 'Snack'}</td>
+      <td>${item.machineId}</td>
+      <td>${item.qtyInMachine}</td>
+      <td>${item.price}</td>
+      <td>${item.region}</td>
+      <td>
+          <a href="EditStocks.html">
+            <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
+          </a>
+          <a href="#">
+          </a>
+        </td>
+        <td>
+          <a href="#">
+           
+          </a>
+          <a href="#">
+          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="#">Restore</button>
+          </a>
+        </td>
     `;
- // ../HTML/EditStocks.html
-    tableBody.appendChild(row);
-    }
-  });
-  let totalAvailableInventory = calculateAvailableInventory(inventoryData);
-  document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
  
-
+    // Append the row to the deleted items table
+    tableBody.appendChild(row);
+  });
 }
  
 populateTable(inventoryData);
@@ -240,7 +286,7 @@ populateTable(inventoryData);
 //3. HANDLE DELETE
  
 async function deleteItem(productId) {
-
+ 
 }
  
 // end 3
@@ -257,11 +303,11 @@ async function filterData(categoryid, filterChoice) {
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
-
+ 
   // Calculate total available inventory
   let totalAvailableInventory = calculateAvailableInventory(filteredItems);
   console.log('Total Available Inventory for Category', filterChoice, ':', totalAvailableInventory);
-
+ 
   // Calculate sales revenue based on the filtered category
   let salesRevenue = 0;
   if (filterChoice == 1) {
@@ -269,14 +315,14 @@ async function filterData(categoryid, filterChoice) {
   } else if (filterChoice == 2) {
     salesRevenue = await FilterSoldInventorySnack(); // Calculate sales revenue for Snack category
   }
-
+ 
   // Display the calculated values in the HTML
   document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue.toFixed(2)}`;
   document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
-
+ 
   FindSoldInventoryByCategory(categoryid)
 }
-
+ 
 async function FilterSoldInventorySnack() {
   let snackRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -287,7 +333,7 @@ async function FilterSoldInventorySnack() {
   });
   return snackRevenue;
 }
-
+ 
 async function FilterSoldInventoryDrink() {
   let drinkRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -298,7 +344,7 @@ async function FilterSoldInventoryDrink() {
   });
   return drinkRevenue;
 }
-
+ 
 async function FilterSoldInventoryWest() {
   let westRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -310,7 +356,7 @@ async function FilterSoldInventoryWest() {
   console.log(westRevenue);
   return westRevenue;
 }
-
+ 
 async function FilterSoldInventoryMidWest() {
   let MidWestRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -322,7 +368,7 @@ async function FilterSoldInventoryMidWest() {
   console.log(MidWestRevenue);
   return MidWestRevenue;
 }
-
+ 
 async function FilterSoldInventorySouthWest() {
   let SouthWestRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -334,7 +380,7 @@ async function FilterSoldInventorySouthWest() {
   console.log(SouthWestRevenue);
   return westRevenue;
 }
-
+ 
 async function FilterSoldInventoryEast() {
   let eastRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -346,7 +392,7 @@ async function FilterSoldInventoryEast() {
   console.log(eastRevenue);
   return eastRevenue;
 }
-
+ 
 async function FilterSoldInventoryNorthEast() {
   let NorthEastRevenue = 0;
   await CreateSalesDataList(salesData);
@@ -358,12 +404,12 @@ async function FilterSoldInventoryNorthEast() {
   console.log('Revenue',NorthEastRevenue);
   return NorthEastRevenue;
 }
-
-
  
  
-
-
+ 
+ 
+ 
+ 
 async function filterByRegion(region) {
   // Fetch sales data again
   await fetchData(salesDataURL)
@@ -371,39 +417,39 @@ async function filterByRegion(region) {
       salesData = apiResponse;
     })
     .catch(error => console.error('Error fetching sales data:', error));
-
+ 
   const filteredItems = inventoryData.filter(item => item.region === region);
   tempProductList = [];
   tempProductList.push(...filteredItems);
   populateTable(filteredItems);
-
+ 
   // Calculate total available inventory
   let totalAvailableInventory = calculateAvailableInventory(filteredItems);
   console.log('Total Available Inventory for Region', region, ':', totalAvailableInventory);
   document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
-
+ 
   // Calculate sales revenue based on the filtered region
   regionSalesRevenue = 0;
   regionSoldInventory = 0;
-
+ 
   // Log the ids for debugging
   console.log('Filtered Item IDs:', filteredItems.map(item => item.id));
   console.log('Sales Data IDs:', salesData.map(item => item.productid));
-
+ 
   // Iterate through salesData and sum the revenue for the filtered region
   salesData.forEach(item => {
     // Use findIndex to find the index of the item in filteredItems
       regionSalesRevenue += item.productPrice;
       regionSoldInventory++;
-    
+   
   });
-
+ 
   // Display the calculated values in the HTML
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${regionSoldInventory}`;
   FindRevenueByRegion(region);
   FindSoldInventoryByRegion(region)
 }
-
+ 
 async function ClearFilters() {
   location.reload();
 }
@@ -426,11 +472,11 @@ async function ClearFilters() {
 });
 console.log(adminsalesData);
 }
-
-
+ 
+ 
 function FindRevenueByRegion(machineRegion){
   filteredSalesRevenue = 0;
-
+ 
   fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse; // Assign the response to inventoryData
@@ -438,13 +484,13 @@ function FindRevenueByRegion(machineRegion){
     console.log(salesData)
   })
   .catch(error => console.error('Error fetching data:', error));
-
-
+ 
+ 
   salesData.forEach(item => {
     if(item.machineRegion === machineRegion){
       filteredSalesRevenue+= item.productPrice;
     }
-    
+   
   });
   console.log(filteredSalesRevenue);
   if(filteredSalesRevenue != 'undefined'){
@@ -452,10 +498,10 @@ function FindRevenueByRegion(machineRegion){
 }
 else{document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 0`;}
 }
-
+ 
 function FindSoldInventoryByRegion(machineRegion){
   filteredSoldInventory = 0;
-
+ 
   fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse; // Assign the response to inventoryData
@@ -463,13 +509,13 @@ function FindSoldInventoryByRegion(machineRegion){
     console.log(salesData)
   })
   .catch(error => console.error('Error fetching data:', error));
-
-
+ 
+ 
   salesData.forEach(item => {
     if(item.machineRegion === machineRegion){
       filteredSoldInventory += 1;
     }
-    
+   
   });
   console.log(filteredSoldInventory);
   if(filteredSoldInventory != 'undefined'){
@@ -477,8 +523,8 @@ function FindSoldInventoryByRegion(machineRegion){
 }
 else{document.getElementById('soldInventoryNumber').textContent = `Sales Revenue: 0`;}
 }
-
-
+ 
+ 
 function FindSoldInventoryByCategory(productCategory){
   filteredCatSoldInventory = 0;
   fetchData(salesDataURL)
@@ -488,13 +534,13 @@ function FindSoldInventoryByCategory(productCategory){
     console.log(salesData)
   })
   .catch(error => console.error('Error fetching data:', error));
-
-
+ 
+ 
   salesData.forEach(item => {
     if(item.productCategory === productCategory){
       filteredCatSoldInventory += 1;
     }
-    
+   
   });
   console.log(filteredCatSoldInventory);
   if(filteredCatSoldInventory != 'undefined'){
@@ -573,19 +619,19 @@ inventoryData.forEach(item => {
 }
  
   // TEMPORARY PRODUCT LIST
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
   // DELETING A STOCK
  
 async function DeleteStock() {
@@ -599,13 +645,13 @@ async function DeleteStock() {
       // Handle the error or display an error message
   }
 }
-
+ 
 async function deleteStock(productId, machineId) {
   try {
       const response = await fetch(`http://localhost:5141/api/Stock/${productId}/${machineId}`, {
           method: 'DELETE',
       });
-
+ 
       if (!response.ok) {
           throw new Error(`Failed to delete stock. Status: ${response.status}`);
       }

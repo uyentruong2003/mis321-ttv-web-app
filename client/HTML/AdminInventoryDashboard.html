@@ -45,7 +45,7 @@
 </div>
 </div>
 </div>
-
+ 
  
       <!-- <div class="form-outline mb-4" style="width: 500px; margin: auto; outline: black; outline-width: thick;">
 <input type="text" id="form2Example1" class="form-control" placeholder="Search for a product" />
@@ -62,10 +62,10 @@
 </div> -->
  
  
-      
-
-
-
+     
+ 
+ 
+ 
 <div class="container mt-4">
   <!-- Filter Buttons Row -->
   <div class="row">
@@ -100,10 +100,11 @@
         </ul>
       </div>
       <button class="btn btn-secondary btn-lg" style="background-color: red" onclick="ClearFilters()">Clear Filters</button>
+      <button class="btn btn-danger" onclick="populateDeletedItemsTable(deletedItems)">View Deleted Products</button>
     </div>
   </div>
   <!-- End Filter Buttons Row -->
-
+ 
   <!-- Add New Button Row -->
   <div class="row mt-2">
     <div class="col-md-12 text-end">
@@ -111,7 +112,7 @@
     </div>
   </div>
   <!-- End Add New Button Row -->
-
+ 
  
       <div class="inventoryTable">
 <table class="table table-striped" id="inventoryTable">
