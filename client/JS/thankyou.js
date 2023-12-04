@@ -12,7 +12,7 @@ let orderInfo = []
 async function populateThankYou() {
     let cardInfoString = localStorage.getItem("cardInfo");
     let cardInfo;
-        await getTransactionIds()
+        await getTransactionId()
         await setCurrentMachineInfo()
     try {
         cardInfo = JSON.parse(cardInfoString);
@@ -65,7 +65,7 @@ async function setCurrentMachineInfo(){
   }
   }
 
-  async function getTransactionIds()
+  async function getTransactionId()
   { 
     let url = 'http://localhost:5141/api/Transaction/'
     try {

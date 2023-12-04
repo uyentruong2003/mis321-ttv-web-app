@@ -39,13 +39,13 @@ namespace MyApp.Namespace
             if(product != null){
                 using var con = new MySqlConnection(cs);
                 con.Open();
-                string stm = @"INSERT INTO orderdetails(productId, machineId, order_id) 
+                string stm = @"INSERT INTO orderdetails(productId, machineId, orderId) 
                                     VALUES(@productId, @machineId, @orderId)";
                 using var cmd = new MySqlCommand(stm, con);
             
                 cmd.Parameters.AddWithValue("@productId", product.productId);
                 cmd.Parameters.AddWithValue("@machineId", product.machineId);
-                cmd.Parameters.AddWithValue("@orderId", product.order_id);
+                cmd.Parameters.AddWithValue("@orderId", product.orderId);
                 
 
                 cmd.Prepare();

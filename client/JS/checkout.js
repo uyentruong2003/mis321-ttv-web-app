@@ -1,6 +1,9 @@
 let itemsInCart = []
 let currentMachineInfo = {id: 0, location: 'null', region: 'null', machineType: 0, machineStock: 0}
-//let orderInfo = []
+let orderInfo = {
+    orderId: 1,
+    orderDate: ''
+}
 
 //Onload
 async function handleOnLoad() {
@@ -107,9 +110,6 @@ async function handleCheckout() {
         // Wait for AddTransaction to complete before moving to the next step
         await AddTransaction();
 
-        // Wait for updateOrderDetails to complete before moving to the next step
-        //await updateOrderDetails();
-
         let cardNum = document.getElementById('card-num').value;
         let cardName = document.getElementById('card-name').value;
         let cardCVV = document.getElementById('cvv-num').value;
@@ -133,7 +133,8 @@ async function handleCheckout() {
 //put in the onClick of the submit button
 async function handleSubmitButton (){
     await handleCheckout();
-    window.location.href = '../HTML/ThankYou.html';
+    await updateOrderDetails();
+    // window.location.href = '../HTML/ThankYou.html';
     console.log('Navigating to ThankYou.html');
 }
 //Data Manipulation
@@ -182,8 +183,6 @@ async function AddTransaction() {
 
         const data = await response.json();
         console.log('Transaction recorded:', data);
-        //add to the orderdetails table
-        updateOrderDetails()
         
         } catch (error) {
         console.error('Error updating database:', error);
@@ -197,7 +196,7 @@ async function AddTransaction() {
         let formattedDate = date.toISOString().slice(0, 19).replace('T', ' ');
         return formattedDate;
     }
-    async function getTransactionIds()
+    async function getTransactionId()
     { 
       let url = 'http://localhost:5141/api/Transaction/'
       try {
@@ -206,7 +205,7 @@ async function AddTransaction() {
         console.log('Data fetched:', data);
     
         orderInfo = data
-        console.log('current machine: ', orderInfo)
+        console.log('current transaction: ', orderInfo)
         return data;
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -229,37 +228,37 @@ async function AddTransaction() {
     }
 
     async function updateOrderDetails() {
-        await getTransactionIds();
-        
-        for (const item of itemsInCart) {
-            console.log(item)
-            try {
-                const data = {
-                    productId: item.id,
-                    machineId: item.machineId,
-                    order_id: orderInfo.orderID
-                };
-    
-                const response = await fetch("http://localhost:5141/api/OrderDetails", {
-                    method: "POST",
-                    body: JSON.stringify(data),
-                    headers: {
-                        "Content-type": "application/json; charset=UTF-8"
-                    }
-                });
-    
-                if (!response.ok) {
-                    throw new Error(`Failed to save stock. Status: ${response.status}`);
-                }
-            } catch (error) {
-                console.error(error);
-                // Handle the error as needed (e.g., show an error message to the user)
-                throw error; // Propagate the error to the higher level
+        await getTransactionId();
+        console.log(itemsInCart);
+        itemsInCart.forEach((item) => {
+            let orderDetail = {
+                productId: item.id,
+                machineId: item.machineId,
+                orderId: orderInfo.orderId
             }
+            console.log(orderDetail); //print out each orderDetail
+            postOrderDetailsToTable(orderDetail);
+        })
+
+    }
+    async function postOrderDetailsToTable(newOrderDetail){
+        try {
+            const response = await fetch("http://localhost:5141/api/OrderDetails", {
+                method: "POST",
+                body: JSON.stringify(newOrderDetail),
+                headers: {
+                    "Content-type": "application/json; charset=UTF-8"
+                }
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Failed to save product. Status: ${response.status}.`);
+            }
+        } catch (error) {
+            console.error(error);
+            // Handle the error as needed (e.g., show an error message to the user)
         }
     }
-
-
     function formatCart(cart){
 
         let UpdatedCart = []

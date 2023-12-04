@@ -4,6 +4,6 @@ namespace API.Models
     {
         public int productId {get; set;}
         public int machineId {get; set;}
-        public int order_id {get; set;}
+        public int orderId {get; set;}
     }
 }

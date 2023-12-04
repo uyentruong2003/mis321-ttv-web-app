@@ -23,11 +23,11 @@ namespace API.Models
                 {
                     connection.Open();
                     using (MySqlCommand command = new MySqlCommand(
-                        "INSERT INTO transaction (orderDate, orderID) " +
-                        "VALUES (@orderDate, @orderID)", connection))
+                        "INSERT INTO transaction (orderDate, orderId) " +
+                        "VALUES (@orderDate, @orderId)", connection))
                     {
                         command.Parameters.AddWithValue("@orderDate", transaction.date);
-                        command.Parameters.AddWithValue("@orderID", transaction.orderID);
+                        command.Parameters.AddWithValue("@orderId", transaction.orderId);
 
                         command.Prepare();
                         command.ExecuteNonQuery();
@@ -65,7 +65,7 @@ namespace API.Models
                                 transactions.Add(new Transaction
                                 {
                                     date = Convert.ToString(reader["orderDate"]),
-                                    orderID = Convert.ToInt32(reader["orderID"])
+                                    orderId = Convert.ToInt32(reader["orderId"])
                                     // Add other properties as needed
                                 });
                             }
@@ -103,7 +103,7 @@ namespace API.Models
                                 transaction = new Transaction
                                 {
                                     date = Convert.ToString(reader["orderDate"]),
-                                    orderID = Convert.ToInt32(reader["orderID"]),
+                                    orderId = Convert.ToInt32(reader["orderId"]),
                                     // Add other properties as needed
                                 };
                             }
