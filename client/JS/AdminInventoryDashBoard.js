@@ -149,12 +149,12 @@ async function HandleOnLoad(){
   await fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse;
-    GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
-    getSoldInventory(salesData);
-    console.log(salesData);
+  
   })
   .catch(error => console.error('Error fetching sales data:', error))
-  FindRevenueByRegion();
+  GetSalesRevenue(salesData); // Calculate sales revenue after fetching sales data
+  getSoldInventory(salesData);
+    console.log(salesData);
 }
  
 HandleOnLoad();
@@ -228,8 +228,7 @@ fetchData(salesDataURL)
   let totalAvailableInventory = calculateAvailableInventory(inventoryData);
   document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
  
-  let totalRevenue = GetSalesRevenue(salesData);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${totalRevenue}`;
+
 }
  
 populateTable(inventoryData);
@@ -274,6 +273,8 @@ async function filterData(categoryid, filterChoice) {
   // Display the calculated values in the HTML
   document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue.toFixed(2)}`;
   document.getElementById('availableInventoryDisplay').textContent = `Available Inventory: ${totalAvailableInventory}`;
+
+  FindSoldInventoryByCategory(categoryid)
 }
 
 async function FilterSoldInventorySnack() {
@@ -473,6 +474,31 @@ function FindSoldInventoryByRegion(machineRegion){
   console.log(filteredSoldInventory);
   if(filteredSoldInventory != 'undefined'){
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${filteredSoldInventory}`;
+}
+else{document.getElementById('soldInventoryNumber').textContent = `Sales Revenue: 0`;}
+}
+
+
+function FindSoldInventoryByCategory(productCategory){
+  filteredCatSoldInventory = 0;
+  fetchData(salesDataURL)
+  .then(apiResponse => {
+    salesData = apiResponse; // Assign the response to inventoryData
+    CreateSalesDataList(salesData)
+    console.log(salesData)
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
+
+  salesData.forEach(item => {
+    if(item.productCategory === productCategory){
+      filteredCatSoldInventory += 1;
+    }
+    
+  });
+  console.log(filteredCatSoldInventory);
+  if(filteredCatSoldInventory != 'undefined'){
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${filteredCatSoldInventory}`;
 }
 else{document.getElementById('soldInventoryNumber').textContent = `Sales Revenue: 0`;}
 }
