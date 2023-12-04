@@ -573,3 +573,44 @@ inventoryData.forEach(item => {
 }
  
   // TEMPORARY PRODUCT LIST
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // DELETING A STOCK
+ 
+async function DeleteStock() {
+  try {
+      // Perform the delete operation
+      await deleteStock(chosenProductId, chosenMachineId);
+      // Optionally, redirect or display a success message
+      console.log('Stock deleted successfully');
+  } catch (error) {
+      console.error('Error deleting stock:', error);
+      // Handle the error or display an error message
+  }
+}
+
+async function deleteStock(productId, machineId) {
+  try {
+      const response = await fetch(`http://localhost:5141/api/Stock/${productId}/${machineId}`, {
+          method: 'DELETE',
+      });
+
+      if (!response.ok) {
+          throw new Error(`Failed to delete stock. Status: ${response.status}`);
+      }
+  } catch (error) {
+      console.error(error);
+      throw error; // Propagate the error to the calling function if needed
+  }
+}

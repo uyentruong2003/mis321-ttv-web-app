@@ -103,6 +103,29 @@ namespace API
 }
 
 
+ // DELETE REQUEST
+public void DeleteStock(int productId, int machineId) {
+    using var con = new MySqlConnection(cs);
+    con.Open();
+    string stm = @"UPDATE stockdetails SET deleted = 1
+                    WHERE productId = @productId AND machineId = @machineId";
+    using var cmd = new MySqlCommand(stm, con);
+    cmd.Parameters.AddWithValue("@productId", productId);
+    cmd.Parameters.AddWithValue("@machineId", machineId);
+ 
+    // Execute the UPDATE statement and get the number of affected rows
+    int rowsAffected = cmd.ExecuteNonQuery();
+ 
+    if (rowsAffected > 0) {
+        // The delete was successful
+        con.Close(); // Close the connection after the delete
+    } else {
+        // No rows matched the delete condition, handle it as appropriate
+        con.Close(); // Close the connection
+        Console.WriteLine("No rows matched the delete condition");
+    }
+}
+
 
 
 
