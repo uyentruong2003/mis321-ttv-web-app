@@ -71,10 +71,10 @@ async function CheckIfUpdatedQtyOverCap() {
     let machine = await fetchMachineById(machineId);
 
     // minus the original machineQty without counting the currently edited stock
-    let avalaibleCap = 75 - (machine.machineQty- chosenStock.stockQty);
+    let availableCap = 75 - (machine.machineQty- chosenStock.stockQty);
 
-    if (mstockQtyInput > availableCap && stockQtyInput !== 0 && vendingMachine.value !== '') {
-        errorMessage.textContent = `You can only add ${avalaibleCap} more items to this machine`;
+    if (stockQtyInput > availableCap && stockQtyInput !== 0 && vendingMachine.value !== '') {
+        errorMessage.textContent = `You can only add ${availableCap} more items to this machine`;
         errorMessage.hidden = false;
     } else {
         errorMessage.hidden = true;
