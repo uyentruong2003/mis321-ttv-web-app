@@ -4,3 +4,9 @@ C:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\obj\Debug\net8.0
 C:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.AssemblyInfo.cs
 C:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.csproj.CoreCompileInputs.cache
 C:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.sourcelink.json
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.csproj.AssemblyReference.cache
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.AssemblyInfoInputs.cache
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.AssemblyInfo.cs
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.csproj.CoreCompileInputs.cache
+C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\obj\Debug\net8.0\mis321-ttv-web-app.sourcelink.json
