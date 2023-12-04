@@ -1,5 +1,6 @@
 // DUMMY DATA
 let tempProductList = [];
+
  
 // let inventoryData = [
 //   {
@@ -153,6 +154,7 @@ async function HandleOnLoad(){
     console.log(salesData);
   })
   .catch(error => console.error('Error fetching sales data:', error))
+  FindRevenueByRegion();
 }
  
 HandleOnLoad();
@@ -171,7 +173,8 @@ HandleOnLoad();
  
  
  
-  fetchData(salesDataURL)
+  
+fetchData(salesDataURL)
   .then(apiResponse => {
     salesData = apiResponse; // Assign the response to inventoryData
     CreateSalesDataList(salesData)
@@ -294,6 +297,68 @@ async function FilterSoldInventoryDrink() {
   });
   return drinkRevenue;
 }
+
+async function FilterSoldInventoryWest() {
+  let westRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.machineRegion === 'West') {
+      westRevenue += item.productPrice;
+    }
+  });
+  console.log(westRevenue);
+  return westRevenue;
+}
+
+async function FilterSoldInventoryMidWest() {
+  let MidWestRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.machineRegion === 'MidWest') {
+      MidWestRevenue += item.productPrice;
+    }
+  });
+  console.log(MidWestRevenue);
+  return MidWestRevenue;
+}
+
+async function FilterSoldInventorySouthWest() {
+  let SouthWestRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.machineRegion === 'SouthWest') {
+      SouthWestRevenue += item.productPrice;
+    }
+  });
+  console.log(SouthWestRevenue);
+  return westRevenue;
+}
+
+async function FilterSoldInventoryEast() {
+  let eastRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.machineRegion === 'east') {
+      eastRevenue += item.productPrice;
+    }
+  });
+  console.log(eastRevenue);
+  return eastRevenue;
+}
+
+async function FilterSoldInventoryNorthEast() {
+  let NorthEastRevenue = 0;
+  await CreateSalesDataList(salesData);
+  salesData.forEach(item => {
+    if (item.machineRegion === 'Northeast') {
+      eastRevenue += item.productPrice;
+    }
+  });
+  console.log('Revenue',NorthEastRevenue);
+  return NorthEastRevenue;
+}
+
+
  
  
 
@@ -327,16 +392,15 @@ async function filterByRegion(region) {
   // Iterate through salesData and sum the revenue for the filtered region
   salesData.forEach(item => {
     // Use findIndex to find the index of the item in filteredItems
-    const indexInFilteredItems = filteredItems.findIndex(product => product.id === item.productid);
-    if (indexInFilteredItems !== -1) {
       regionSalesRevenue += item.productPrice;
       regionSoldInventory++;
-    }
+    
   });
 
   // Display the calculated values in the HTML
   document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${regionSoldInventory}`;
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${regionSalesRevenue.toFixed(2)}`;
+  FindRevenueByRegion(region);
+  FindSoldInventoryByRegion(region)
 }
 
 async function ClearFilters() {
@@ -360,6 +424,57 @@ async function ClearFilters() {
   });
 });
 console.log(adminsalesData);
+}
+
+
+function FindRevenueByRegion(machineRegion){
+  filteredSalesRevenue = 0;
+
+  fetchData(salesDataURL)
+  .then(apiResponse => {
+    salesData = apiResponse; // Assign the response to inventoryData
+    CreateSalesDataList(salesData)
+    console.log(salesData)
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
+
+  salesData.forEach(item => {
+    if(item.machineRegion === machineRegion){
+      filteredSalesRevenue+= item.productPrice;
+    }
+    
+  });
+  console.log(filteredSalesRevenue);
+  if(filteredSalesRevenue != 'undefined'){
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${filteredSalesRevenue}`;
+}
+else{document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 0`;}
+}
+
+function FindSoldInventoryByRegion(machineRegion){
+  filteredSoldInventory = 0;
+
+  fetchData(salesDataURL)
+  .then(apiResponse => {
+    salesData = apiResponse; // Assign the response to inventoryData
+    CreateSalesDataList(salesData)
+    console.log(salesData)
+  })
+  .catch(error => console.error('Error fetching data:', error));
+
+
+  salesData.forEach(item => {
+    if(item.machineRegion === machineRegion){
+      filteredSoldInventory += 1;
+    }
+    
+  });
+  console.log(filteredSoldInventory);
+  if(filteredSoldInventory != 'undefined'){
+  document.getElementById('soldInventoryNumber').textContent = `Sold Inventory: ${filteredSoldInventory}`;
+}
+else{document.getElementById('soldInventoryNumber').textContent = `Sales Revenue: 0`;}
 }
  
 // CreateSalesDataList();
