@@ -1,7 +1,7 @@
 using mis321_ttv_web_app.API.Models;
-using MySql.Data.MySqlClient; 
+using MySql.Data.MySqlClient;
 using mis321_ttv_web_app;
-
+ 
 namespace API
 {
     public class AdminDashUtility
@@ -14,9 +14,9 @@ namespace API
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
-
+ 
                 var AdminDashProducts = new List<AdminDashProduct>();
-
+ 
                 using (MySqlCommand command = new MySqlCommand("SELECT product.productId, product.productName, product.categoryId, stockdetails.machineId, stockdetails.stockQty, product.productPrice, machine.machineRegion, stockdetails.deleted FROM product JOIN stockdetails ON product.productid = stockdetails.productid JOIN machine ON stockdetails.machineid = machine.machineid;", connection))
                 {
                     using (MySqlDataReader reader = command.ExecuteReader())
@@ -41,16 +41,16 @@ namespace API
                 return AdminDashProducts;
             }
         }
-
+ 
         public List<AdminDashProduct> GetAvailableStock(string filterOption)
 {
     using (MySqlConnection connection = new MySqlConnection(cs))
     {
         connection.Open();
-
+ 
         var availableStock = new List<AdminDashProduct>();
-
-        string query = @"SELECT 
+ 
+        string query = @"SELECT
                             product.productId,
                             product.productName,
                             product.categoryId,
@@ -58,13 +58,13 @@ namespace API
                             SUM(stockdetails.stockQty) AS TotalInventory,
                             product.productPrice,
                             machine.machineRegion
-                        FROM 
+                        FROM
                             product
-                        JOIN 
+                        JOIN
                             stockdetails ON product.productid = stockdetails.productid
-                        JOIN 
+                        JOIN
                             machine ON stockdetails.machineid = machine.machineid
-                        WHERE 
+                        WHERE
                             (
                                 (product.categoryId = (SELECT categoryId FROM category WHERE categoryName = 'Drink')) OR
                                 (product.categoryId = (SELECT categoryId FROM category WHERE categoryName = 'Snack')) OR
@@ -76,7 +76,7 @@ namespace API
                             )
                         GROUP BY
                             product.productId, product.productName, product.categoryId, stockdetails.machineId, product.productPrice, machine.machineRegion;";
-
+ 
         using (MySqlCommand command = new MySqlCommand(query, connection))
         {
             using (MySqlDataReader reader = command.ExecuteReader())
@@ -96,13 +96,13 @@ namespace API
                 }
             }
         }
-
+ 
         connection.Close();
         return availableStock;
     }
 }
-
-
+ 
+ 
  // DELETE REQUEST
 public void DeleteStock(int productId, int machineId) {
     using var con = new MySqlConnection(cs);
@@ -125,9 +125,31 @@ public void DeleteStock(int productId, int machineId) {
         Console.WriteLine("No rows matched the delete condition");
     }
 }
-
-
-
-
+ 
+public void RestoreStock(int productId, int machineId) {
+    using var con = new MySqlConnection(cs);
+    con.Open();
+    string stm = @"UPDATE stockdetails SET deleted = 0
+                    WHERE productId = @productId AND machineId = @machineId";
+    using var cmd = new MySqlCommand(stm, con);
+    cmd.Parameters.AddWithValue("@productId", productId);
+    cmd.Parameters.AddWithValue("@machineId", machineId);
+ 
+    // Execute the UPDATE statement and get the number of affected rows
+    int rowsAffected = cmd.ExecuteNonQuery();
+ 
+    if (rowsAffected > 0) {
+        // The restore was successful
+        con.Close(); // Close the connection after the restore
+    } else {
+        // No rows matched the restore condition, handle it as appropriate
+        con.Close(); // Close the connection
+        Console.WriteLine("No rows matched the restore condition");
+    }
+}
+ 
+ 
+ 
+ 
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using mis321_ttv_web_app;
 using mis321_ttv_web_app.API.Models;
 using API;
-
+ 
 namespace MyApp.Namespace
 {
     [Route("api/[controller]")]
@@ -27,7 +27,7 @@ namespace MyApp.Namespace
             AdminDashProducts = admindashtutil.GetAllAdminDashProducts();
             return AdminDashProducts;
         }
-
+ 
         // GET api/<AdminDashController>/5
         [HttpGet("{id}")]
         public IActionResult Get(int id)
@@ -35,11 +35,11 @@ namespace MyApp.Namespace
             using (MySqlConnection connection = new MySqlConnection(cs))
             {
                 connection.Open();
-
+ 
                 using (MySqlCommand command = new MySqlCommand("SELECT product.productId, product.productName, product.categoryId, stockdetails.machineId, stockdetails.stockQty, product.productPrice, machine.machineRegion FROM product JOIN stockdetails ON product.productid = stockdetails.productid JOIN machine ON stockdetails.machineid = machine.machineid;", connection))
                 {
                     command.Parameters.AddWithValue("@id", id);
-
+ 
                     using (MySqlDataReader reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -65,22 +65,24 @@ namespace MyApp.Namespace
                         }
                     }
                 }
-                
+               
             }
         }
-
+ 
         // POST api/<AdminDashController>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
-
+ 
         // PUT api/<AdminDashController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, int machineId)
         {
+            AdminDashUtility utility = new AdminDashUtility();
+            utility.RestoreStock(id, machineId);
         }
-
+ 
         // DELETE api/<AdminDashController>/5
         [HttpDelete("{id}")]
         public void Delete(int id, int machineId)
@@ -90,6 +92,3 @@ namespace MyApp.Namespace
         }
     }
 }
-
-
-
