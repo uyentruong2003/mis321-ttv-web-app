@@ -91,7 +91,7 @@ function populateCheckoutForm(){
             <input type="card-name" class="form-control" id="zip-code">
             </div>
         <div>
-            <a href="../HTML/ThankYou.html"><button type="button" class="btn btn-success" style="width: 200px;" onclick="handleCheckout()">Submit</button></a>
+            <button type="submit" class="btn btn-success" style="width: 200px;" id="submit-button" onClick="handleSubmitButton()">Submit</button>
         </div>
         
         </form>
@@ -124,17 +124,18 @@ async function handleCheckout() {
         localStorage.removeItem('currentCartArray');
         console.log('Cleared array');
 
-        // Navigate to ThankYou.html
-        window.location.href = '../HTML/ThankYou.html';
-        console.log('Navigating to ThankYou.html');
     } catch (error) {
         console.error('Error during checkout:', error);
         // Handle the error appropriately in your application
     }
 }
 
-
-
+//put in the onClick of the submit button
+async function handleSubmitButton (){
+    await handleCheckout();
+    window.location.href = '../HTML/ThankYou.html';
+    console.log('Navigating to ThankYou.html');
+}
 //Data Manipulation
 function populateArray(){
     var storedCartString = localStorage.getItem("currentCartArray");
@@ -159,6 +160,7 @@ function populateArray(){
 }
 
 async function AddTransaction() {
+    // update machine qty
     await transactionStockUpdate()
     const url = 'http://localhost:5141/api/Transaction';
 
@@ -180,6 +182,7 @@ async function AddTransaction() {
 
         const data = await response.json();
         console.log('Transaction recorded:', data);
+        //add to the orderdetails table
         updateOrderDetails()
         
         } catch (error) {

@@ -2,17 +2,18 @@ let currentMachineInfo = {machineId: 0, machineLocation: 'null', machineRegion: 
 
 let orderInfo = []
 //onload
-async function handleOnLoad() {
-    await getTransactionIds()
-    await setCurrentMachineInfo()
-    populateThankYou()   
-}
+// async function handleOnLoad() {
+//     await getTransactionIds()
+//     await setCurrentMachineInfo()
+//     populateThankYou()   
+// }
 
 //DOM Manipulation
-function populateThankYou() {
+async function populateThankYou() {
     let cardInfoString = localStorage.getItem("cardInfo");
     let cardInfo;
-
+        await getTransactionIds()
+        await setCurrentMachineInfo()
     try {
         cardInfo = JSON.parse(cardInfoString);
         console.log(cardInfo);
