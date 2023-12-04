@@ -218,7 +218,7 @@ function populateTable(data) {
             <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
           </a>
           <a href="#">
-          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="#">Delete</button></a>
+          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="DeleteStock(${item.id}, ${item.machineId})">Delete</button></a>
         </td>
       `;
  
@@ -267,7 +267,7 @@ function populateDeletedItemsTable(deletedItems) {
            
           </a>
           <a href="#">
-          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="#">Restore</button>
+          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="RestoreStock(${item.id}, ${item.machineId})">Restore</button>
           </a>
         </td>
     `;
@@ -634,21 +634,21 @@ inventoryData.forEach(item => {
  
   // DELETING A STOCK
  
-async function DeleteStock() {
-  try {
-      // Perform the delete operation
-      await deleteStock(chosenProductId, chosenMachineId);
-      // Optionally, redirect or display a success message
-      console.log('Stock deleted successfully');
-  } catch (error) {
-      console.error('Error deleting stock:', error);
-      // Handle the error or display an error message
-  }
-}
+// async function DeleteStock() {
+//   try {
+//       // Perform the delete operation
+//       await deleteStock(id, machineId);
+//       // Optionally, redirect or display a success message
+//       console.log('Stock deleted successfully');
+//   } catch (error) {
+//       console.error('Error deleting stock:', error);
+//       // Handle the error or display an error message
+//   }
+// }
  
-async function deleteStock(productId, machineId) {
+async function DeleteStock(productId, machineId) {
   try {
-      const response = await fetch(`http://localhost:5141/api/Stock/${productId}/${machineId}`, {
+      const response = await fetch(`http://localhost:5141/api/AdminDash/${productId}/${machineId}`, {
           method: 'DELETE',
       });
  
@@ -659,4 +659,23 @@ async function deleteStock(productId, machineId) {
       console.error(error);
       throw error; // Propagate the error to the calling function if needed
   }
+  location.reload();
 }
+
+async function RestoreStock(productId, machineId) {
+  try {
+      const response = await fetch(`http://localhost:5141/api/AdminDash/${productId}/${machineId}`, {
+          method: 'PUT',
+      });
+ 
+      if (!response.ok) {
+          throw new Error(`Failed to delete stock. Status: ${response.status}`);
+      }
+  } catch (error) {
+      console.error(error);
+      throw error; // Propagate the error to the calling function if needed
+  }
+  location.reload();
+  populateDeletedItemsTable();
+}
+
