@@ -76,7 +76,7 @@ namespace MyApp.Namespace
         }
  
         // PUT api/<AdminDashController>/5
-        [HttpPut("{id}")]
+        [HttpPut("{id}/{machineId}")]
         public void Put(int id, int machineId)
         {
             AdminDashUtility utility = new AdminDashUtility();
@@ -84,7 +84,7 @@ namespace MyApp.Namespace
         }
  
         // DELETE api/<AdminDashController>/5
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/{machineId}")]
         public void Delete(int id, int machineId)
         {
             AdminDashUtility utility = new AdminDashUtility();
