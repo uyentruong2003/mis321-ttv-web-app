@@ -134,7 +134,7 @@ async function handleCheckout() {
 async function handleSubmitButton (){
     await handleCheckout();
     await updateOrderDetails();
-    // window.location.href = '../HTML/ThankYou.html';
+    window.location.href = '../HTML/ThankYou.html';
     console.log('Navigating to ThankYou.html');
 }
 //Data Manipulation

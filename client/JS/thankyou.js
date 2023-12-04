@@ -37,7 +37,7 @@ async function populateThankYou() {
     <div class="thank-you-box">
         <h1>Thank You for Your Purchase, ${firstName}!</h1>
         <p>We appreciate your business. If you have any questions, feel free to contact us.</p>
-        <p>Order ID: ${orderInfo.orderID}</p>
+        <p>Order ID: ${orderInfo.orderId}</p>
         <p>(#${currentMachineInfo.machineId})${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation}</p>
     </div>
     `;
