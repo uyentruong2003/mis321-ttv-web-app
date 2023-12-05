@@ -8,6 +8,7 @@ const SouthEast = [];
 const MidWest = [];
 
 async function handleOnLoad() {
+    localStorage.clear()
     await populateArrays();
     displayRedDropdowns();
 }

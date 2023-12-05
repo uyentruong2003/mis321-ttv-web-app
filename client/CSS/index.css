@@ -167,10 +167,10 @@
 
 #more-info-img{
     padding-top: 15px;
-    height: 75px;
+    height: 150px;
     object-fit: contain;
 }
-#more-info-card{
+#more-info-card {
     height: 400px;
     width: 100px;
     position: fixed;
@@ -178,8 +178,15 @@
     left: 50%;
     transform: translate(-50%, -50%);
     z-index: 1000;
-    border: #000;
-    
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.1); /* Increased blur radius to 30px */
+}
+#more-info-button{
+    margin-top: 5px;
+    height: 25px;
+    font-size: small;
+    text-align: center;
+    line-height: 1px;
+
 }
 
 .close-btn {

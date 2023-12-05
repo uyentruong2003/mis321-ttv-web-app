@@ -60,7 +60,7 @@ function populateProductTable() {
                                 <span id="temporary-message-${item.id}" class="temporary-message"></span>
                                 
                                 <!-- Add button to display content here -->
-                                <button type="button" class="btn btn-info" onclick="handleMoreInfo(${item.id})">More Info</button>
+                                <button type="button" class="btn btn-secondary" onclick="handleMoreInfo(${item.id})" id="more-info-button">More Info</h5></button>
                         </div>
                     </td>
                 `;
