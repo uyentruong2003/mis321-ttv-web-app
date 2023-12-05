@@ -215,10 +215,10 @@ function populateTable(data) {
         <td>${item.region}</td>
         <td>
           <a href="EditStocks.html">
-            <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
+            <button type="button" class="btn btn-primary" style="background-color: blue;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
           </a>
           <a href="#">
-          <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="DeleteStock(${item.id}, ${item.machineId})">Delete</button></a>
+          <button type="button" class="btn btn-primary" style="background-color: red;" onclick="DeleteStock(${item.id}, ${item.machineId})">Delete</button></a>
         </td>
       `;
  
@@ -257,7 +257,7 @@ function populateDeletedItemsTable(deletedItems) {
       <td>${item.region}</td>
       <td>
           <a href="EditStocks.html">
-            <button type="button" class="btn btn-primary" style="background-color: yellowgreen;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
+            <button type="button" class="btn btn-primary" style="background-color: blue;" onclick="editItem(${item.id}, ${item.machineId})">Edit Quantity</button>
           </a>
           <a href="#">
           </a>
