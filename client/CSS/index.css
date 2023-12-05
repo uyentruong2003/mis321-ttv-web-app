@@ -192,7 +192,7 @@
     cursor: pointer;
   }
 
-  .exp-date-container {
+.exp-date-container {
     display: flex;
     gap: 10px; /* Adjust the gap as needed */
 }

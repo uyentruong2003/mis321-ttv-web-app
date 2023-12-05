@@ -58,10 +58,10 @@ function populateReciptTable(){
     //Other information below the table
     let orderNumber = Date.now() //generate AND OR pull receipt number here
     localStorage.setItem("orderNumber", orderNumber)
-    
+   
     html+=`
     <div class="extra-info-box">
-      
+     
         <h5>${currentMachineInfo.machineRegion} Region > ${currentMachineInfo.machineLocation} ID#${currentMachineInfo.machineId}</h5>
     </div>
     </div>
@@ -122,7 +122,7 @@ function populateCheckoutForm(){
         <div>
             <button type="submit" class="btn btn-success" style="width: 200px; margin-top: 15px;" id="submit-button" onClick="handleSubmitButton()">Submit</button>
         </div>
-        
+       
         </form>
     </div>
     `
@@ -207,7 +207,7 @@ function populateArray(){
     itemsInCart = JSON.parse(storedCartString)
     let i = 0
     console.log('parsed cart string: ', itemsInCart)
-    
+   
   }
   async function setCurrentMachineInfo(){
     let url = 'http://localhost:5141/api/vending/'
@@ -216,7 +216,7 @@ function populateArray(){
       let response = await fetch(targetURL);
       let data = await response.json();
       console.log('Data fetched:', data);
-  
+ 
       currentMachineInfo = data
       console.log('current machine: ', currentMachineInfo)
       return data;
@@ -247,13 +247,13 @@ async function AddTransaction() {
 
         const data = await response.json();
         console.log('Transaction recorded:', data);
-        
+       
         } catch (error) {
         console.error('Error updating database:', error);
         // Handle the error appropriately in your application
         }
-    } 
-    
+    }
+   
     function getCurrentDateTime() {
         let date = new Date();
         // Format the date to 'YYYY-MM-DD HH:MM:SS' format
@@ -261,13 +261,13 @@ async function AddTransaction() {
         return formattedDate;
     }
     async function getTransactionId()
-    { 
+    {
       let url = 'http://localhost:5141/api/Transaction/'
       try {
         let response = await fetch(url);
         let data = await response.json();
         console.log('Data fetched:', data);
-    
+   
         orderInfo = data
         console.log('current transaction: ', orderInfo)
         return data;
@@ -280,14 +280,14 @@ async function AddTransaction() {
    async function transactionStockUpdate(){
         let UpdatedCart = formatCart(itemsInCart)
         console.log(UpdatedCart)
-        //foreach item in cart 
+        //foreach item in cart
         UpdatedCart.forEach(item => {
             item.qtyInMachine = item.qtyInMachine-1
             updateStock(item, item.productId, item.machineId)
 
             let myMachine = updateMachineStock(currentMachineInfo)
             updateMachine(myMachine, myMachine.machineId)
-        }) 
+        })
 
     }
 
@@ -314,7 +314,7 @@ async function AddTransaction() {
                     "Content-type": "application/json; charset=UTF-8"
                 }
             });
-    
+   
             if (!response.ok) {
                 throw new Error(`Failed to save product. Status: ${response.status}.`);
             }
@@ -328,7 +328,7 @@ async function AddTransaction() {
         let UpdatedCart = []
         for(let i = 0; i < cart.length; i++){
             console.log("cart", cart[i])
-            UpdatedCart[i] = {}; 
+            UpdatedCart[i] = {};
             UpdatedCart[i].productId = cart[i].id
             UpdatedCart[i].machineId = cart[i].machineId
             UpdatedCart[i].stockQty = cart[i].qtyInMachine - 1
