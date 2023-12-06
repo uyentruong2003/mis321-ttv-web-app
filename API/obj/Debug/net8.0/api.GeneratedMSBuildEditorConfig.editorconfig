@@ -17,11 +17,19 @@ build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = api
 build_property.RootNamespace = api
+<<<<<<< HEAD
 build_property.ProjectDir = C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\API\
+=======
+build_property.ProjectDir = c:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\API\
+>>>>>>> f08b2d2f71a43878cbd49c5746976e26a08673e7
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+<<<<<<< HEAD
 build_property.MSBuildProjectDirectory = C:\Users\uyenk\OneDrive - The University of Alabama\MIS321_Repos\mis321-ttv-web-app\API
+=======
+build_property.MSBuildProjectDirectory = c:\Users\dylan\Documents\source\repos\fall23\mis321-ttv-web-app\API
+>>>>>>> f08b2d2f71a43878cbd49c5746976e26a08673e7
 build_property._RazorSourceGeneratorDebug = 

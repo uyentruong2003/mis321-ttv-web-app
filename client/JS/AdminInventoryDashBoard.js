@@ -494,7 +494,7 @@ function FindRevenueByRegion(machineRegion){
   });
   console.log(filteredSalesRevenue);
   if(filteredSalesRevenue != 'undefined'){
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${filteredSalesRevenue}`;
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${filteredSalesRevenue.toFixed(2)}`;
 }
 else{document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: 0`;}
 }
@@ -559,7 +559,9 @@ function calculateAvailableInventory(filteredItems) {
   let inventoryAvailable = 0;
  
   filteredItems.forEach(item => {
+    if(item.deleted != 1){
     inventoryAvailable += item.qtyInMachine;
+    }
   });
  
   return inventoryAvailable;
@@ -572,7 +574,7 @@ function GetSalesRevenue(salesData){
     salesRevenue += item.productPrice;
   });
   console.log(salesRevenue);
-  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue}`;
+  document.getElementById('salesRevenueDisplay').textContent = `Sales Revenue: ${salesRevenue.toFixed(2)}`;
  
 }
  

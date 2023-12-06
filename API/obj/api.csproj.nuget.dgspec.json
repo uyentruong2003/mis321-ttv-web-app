@@ -1,6 +1,7 @@
 {
   "format": 1,
   "restore": {
+<<<<<<< HEAD
     "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj": {}
   },
   "projects": {
@@ -12,9 +13,22 @@
         "projectPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
         "packagesPath": "C:\\Users\\uyenk\\.nuget\\packages\\",
         "outputPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\obj\\",
+=======
+    "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\api.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\api.csproj",
+        "projectName": "api",
+        "projectPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\api.csproj",
+        "packagesPath": "C:\\Users\\dylan\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\dylan\\Documents\\source\\repos\\fall23\\mis321-ttv-web-app\\API\\obj\\",
+>>>>>>> f08b2d2f71a43878cbd49c5746976e26a08673e7
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\uyenk\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\dylan\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
