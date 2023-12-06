@@ -64,8 +64,9 @@ quantity.addEventListener('change', () => {
 document.getElementById("add-new-stock-form").addEventListener('submit', async (e) => {
     e.preventDefault();
     try {
-        saveToProductTable().then(() => {
-            saveToStockTable();
+        saveToProductTable().then(async () => {
+            await saveToStockTable();
+            window.location.href = "./AdminInventoryDashBoard.html";
         })
     } catch (error) {
         // Handle or log the error as needed
