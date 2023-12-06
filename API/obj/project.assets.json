@@ -11293,19 +11293,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\epicn\\.nuget\\packages\\": {}
+    "C:\\Users\\uyenk\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
+      "projectUniqueName": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
       "projectName": "api",
-      "projectPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\api.csproj",
-      "packagesPath": "C:\\Users\\epicn\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\epicn\\Desktop\\CLASSES\\MIS321\\mis321-ttv-web-app\\api\\obj\\",
+      "projectPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\api.csproj",
+      "packagesPath": "C:\\Users\\uyenk\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\uyenk\\OneDrive - The University of Alabama\\MIS321_Repos\\mis321-ttv-web-app\\API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\epicn\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\uyenk\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
